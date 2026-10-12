@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Promer Yönetim Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        promer: {
+                            navy: '#0f2b5c', blue: '#1e40af', lightBlue: '#3b82f6',
+                            accent: '#f97316', green: '#16a34a', greenDark: '#15803d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-slate-950 text-white min-h-screen antialiased">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-shield-virus text-promer-accent"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v2.0</span>
+                </div>
+            </div>
+            <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Siteye Dön
+            </a>
+        </div>
+    </header>
+
+    <!-- İSTATİSTİK KARTLARI -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Bugünkü Randevu</span>
+                    <i class="fa-solid fa-calendar-day text-promer-lightBlue"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-today">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Toplam Randevu</span>
+                    <i class="fa-solid fa-list-check text-emerald-400"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-total">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Dolu Saat</span>
+                    <i class="fa-solid fa-clock text-red-400"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-blocked">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Aylık Ciro</span>
+                    <i class="fa-solid fa-turkish-lira-sign text-amber-400"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-revenue">0</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAKVİM -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="font-extrabold text-lg" id="calendar-title">Ekim 2026</h3>
+                    <p class="text-xs text-slate-500">Randevu ve doluluk durumunu görüntüleyin</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="prevMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button onclick="goToday()" class="px-4 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold text-xs transition-all">
+                        Bugün
+                    </button>
+                    <button onclick="nextMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hafta Başlıkları -->
+            <div class="grid grid-cols-7 gap-2 mb-2">
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Pzt</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Sal</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Çar</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Per</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cum</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cmt</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Paz</div>
+            </div>
+
+            <!-- Takvim Günleri -->
+            <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+
+            <!-- Legend -->
+            <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Boş Gün</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span>Kısmen Dolu</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    <span>Tamamen Dolu</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span>
+                    <span>Bloklu</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇİLİ GÜN DETAYI -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="font-extrabold text-base flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-promer-lightBlue"></i>
+                        <span id="selected-day-title">Gün Seçin</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1" id="selected-day-subtitle">Yukarıdaki takvimden bir gün seçin</p>
+                </div>
+                <button onclick="openManualBooking()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-4 py-2 rounded-lg font-bold hover:bg-emerald-500/30 transition-all hidden" id="add-manual-btn">
+                    <i class="fa-solid fa-plus mr-1"></i> Manuel Randevu
+                </button>
+            </div>
+
+            <div id="selected-day-content">
+                <div class="text-center py-8 text-slate-500 text-xs">
+                    <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
+                    <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TÜM RANDEVULAR -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+                <h4 class="font-extrabold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-inbox text-promer-green"></i>
+                    Tüm Randevu Talepleri
+                </h4>
+                <button onclick="clearBookings()" class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1.5 rounded-lg font-bold hover:bg-red-500/30">
+                    <i class="fa-solid fa-trash-can mr-1"></i>Tümünü Sil
+                </button>
+            </div>
+            <div id="bookings-list" class="space-y-2 max-h-[500px] overflow-y-auto"></div>
+        </div>
+    </section>
+
+    <!-- MANUEL RANDEVU MODAL -->
+    <div id="manual-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-lg">Manuel Randevu Ekle</h3>
+                <button onclick="closeManualBooking()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Ad Soyad *</label>
+                    <input type="text" id="m-name" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="Müşteri adı">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Telefon *</label>
+                        <input type="tel" id="m-phone" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="05XX">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">İlçe *</label>
+                        <input type="text" id="m-ilce" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="İlçe">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Adres</label>
+                    <input type="text" id="m-address" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="İsteğe bağlı">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tarih *</label>
+                        <input type="date" id="m-date" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Saat *</label>
+                        <select id="m-saat" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Mekan *</label>
+                        <select id="m-place" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+                            <option>Ev / Daire</option>
+                            <option>İş Yeri / Ofis</option>
+                            <option>Restoran / Gıda Tesisi</option>
+                            <option>Bina / Site Ortak Alanı</option>
+                            <option>Fabrika / Depo / Ticari Tesis</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">m² *</label>
+                        <input type="number" id="m-m2" value="85" min="10" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Haşere Türü *</label>
+                    <input type="text" id="m-pest" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="Hamam Böceği İlaçlama">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Tutar (KDV Dahil)</label>
+                    <input type="text" id="m-price" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white" placeholder="3.000 TL (KDV Dahil)">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeManualBooking()" class="flex-1 bg-slate-800 hover:bg-slate-700 py-3 rounded-lg font-bold text-sm">İptal</button>
+                <button onclick="saveManualBooking()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-lg font-bold text-sm">
+                    <i class="fa-solid fa-check mr-1"></i>Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================
+        // Promer Yönetim Paneli v2.0 — Takvim + Randevu Yönetimi
+        // =====================================================
+
+        const SLOTS_KEY = 'promer_blocked_slots';
+        const BOOKINGS_KEY = 'promer_bookings';
+        const DAY_BLOCKED_KEY = 'promer_blocked_days';
+
+        const ALL_SLOTS = [
+            '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
+            '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
+            '18:00 – 19:30'
+        ];
+
+        const AY_ADLARI = [
+            'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+        ];
+
+        let currentDate = new Date();
+        let selectedDate = null;
+
+        // ---------- STORAGE ----------
+        function loadBookings() {
+            return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]');
+        }
+        function saveBookings(arr) {
+            localStorage.setItem(BOOKINGS_KEY, JSON.stringify(arr));
+        }
+        function loadBlockedSlots() {
+            return JSON.parse(localStorage.getItem(SLOTS_KEY) || '{}');
+        }
+        function saveBlockedSlots(obj) {
+            localStorage.setItem(SLOTS_KEY, JSON.stringify(obj));
+        }
+        function loadBlockedDays() {
+            return JSON.parse(localStorage.getItem(DAY_BLOCKED_KEY) || '{}');
+        }
+        function saveBlockedDays(obj) {
+            localStorage.setItem(DAY_BLOCKED_KEY, JSON.stringify(obj));
+        }
+
+        // ---------- YARDIMCILAR ----------
+        function formatDateKey(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function todayKey() {
+            return formatDateKey(new Date());
+        }
+
+        // ---------- TAKVİM RENDER ----------
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('calendar-title').textContent = `${AY_ADLARI[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            let startDay = firstDay.getDay() - 1;
+            if (startDay < 0) startDay = 6;
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            const bookings = loadBookings();
+            const blockedSlots = loadBlockedSlots();
+            const blockedDays = loadBlockedDays();
+
+            for (let i = 0; i < startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'aspect-square rounded-lg';
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const dateKey = formatDateKey(dateObj);
+                const isToday = dateKey === todayKey();
+                const isSelected = dateKey === selectedDate;
+                const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
+
+                const dayBookings = bookings.filter(b => b.date === dateKey);
+                const bookingCount = dayBookings.length;
+
+                let blockedCount = 0;
+                ALL_SLOTS.forEach(slot => {
+                    if (blockedSlots[`${dateKey}|${slot}`]) blockedCount++;
+                });
+
+                const isDayFullyBlocked = blockedDays[dateKey] === true;
+
+                let statusColor = 'bg-emerald-500';
+                if (isDayFullyBlocked) {
+                    statusColor = 'bg-slate-700';
+                } else if (bookingCount >= 5 || blockedCount >= 7) {
+                    statusColor = 'bg-red-500';
+                } else if (bookingCount > 0 || blockedCount > 0) {
+                    statusColor = 'bg-amber-500';
+                }
+
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.onclick = () => selectDay(dateKey);
+                cell.className = `aspect-square rounded-lg relative transition-all p-1.5 text-left flex flex-col justify-between ${
+                    isSelected
+                        ? 'bg-promer-blue ring-2 ring-promer-lightBlue shadow-lg'
+                        : isToday
+                            ? 'bg-slate-800 ring-2 ring-amber-500/60 hover:bg-slate-700'
+                            : 'bg-slate-950 hover:bg-slate-800 border border-slate-800'
+                }`;
+
+                cell.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <span class="text-sm font-black ${isWeekend ? 'text-amber-400' : 'text-white'}">${day}</span>
+                        <span class="w-2 h-2 rounded-full ${statusColor}"></span>
+                    </div>
+                    ${bookingCount > 0 ? `
+                        <div class="text-[9px] text-emerald-400 font-bold">
+                            <i class="fa-solid fa-circle-check"></i> ${bookingCount}
+                        </div>
+                    ` : isDayFullyBlocked ? `
+                        <div class="text-[9px] text-slate-500 font-bold">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                    ` : blockedCount > 0 ? `
+                        <div class="text-[9px] text-amber-400 font-bold">
+                            <i class="fa-solid fa-clock"></i> ${blockedCount}
+                        </div>
+                    ` : `
+                        <div class="text-[9px] text-emerald-500/60">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                    `}
+                `;
+                grid.appendChild(cell);
+            }
+        }
+
+        // ---------- GÜN SEÇİMİ ----------
+        function selectDay(dateKey) {
+            selectedDate = dateKey;
+            renderCalendar();
+            renderSelectedDay();
+        }
+
+        function renderSelectedDay() {
+            const content = document.getElementById('selected-day-content');
+            const addBtn = document.getElementById('add-manual-btn');
+            const title = document.getElementById('selected-day-title');
+            const subtitle = document.getElementById('selected-day-subtitle');
+
+            if (!selectedDate) {
+                title.textContent = 'Gün Seçin';
+                subtitle.textContent = 'Yukarıdaki takvimden bir gün seçin';
+                addBtn.classList.add('hidden');
+                content.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
+                        <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const [y, m, d] = selectedDate.split('-');
+            const dateObj = new Date(y, m - 1, d);
+            title.textContent = dateObj.toLocaleDateString('tr-TR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            const bookings = loadBookings().filter(b => b.date === selectedDate);
+            const blockedSlots = loadBlockedSlots();
+            const blockedDays = loadBlockedDays();
+            const isDayBlocked = blockedDays[selectedDate] === true;
+
+            subtitle.textContent = `${bookings.length} randevu · ${ALL_SLOTS.length} saat dilimi`;
+            addBtn.classList.remove('hidden');
+
+            let html = '';
+
+            if (isDayBlocked) {
+                html += `
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-lock text-slate-400 text-lg"></i>
+                            <div>
+                                <div class="font-bold text-sm">Bu gün tamamen kapatıldı</div>
+                                <div class="text-xs text-slate-500">Müşteriler bu tarihi seçemez</div>
+                            </div>
+                        </div>
+                        <button onclick="toggleDayBlock()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-lg font-bold hover:bg-emerald-500/30">
+                            <i class="fa-solid fa-lock-open mr-1"></i> Aç
+                        </button>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="flex justify-end mb-3">
+                        <button onclick="toggleDayBlock()" class="text-xs bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-2 rounded-lg font-bold hover:bg-red-500/30">
+                            <i class="fa-solid fa-lock mr-1"></i> Günü Tamamen Kapat
+                        </button>
+                    </div>
+                `;
+            }
+
+            html += '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
+
+            ALL_SLOTS.forEach(slot => {
+                const slotKey = `${selectedDate}|${slot}`;
+                const isBlocked = !!blockedSlots[slotKey];
+                const slotBookings = bookings.filter(b => b.saat === slot);
+
+                let statusBadge = '';
+                if (slotBookings.length > 0) {
+                    statusBadge = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">${slotBookings.length} RANDEVU</span>`;
+                } else if (isBlocked) {
+                    statusBadge = `<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>`;
+                } else {
+                    statusBadge = `<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>`;
+                }
+
+                html += `
+                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <i class="fa-regular fa-clock text-slate-500 text-xs"></i>
+                            <span class="font-bold text-xs">${slot}</span>
+                            ${statusBadge}
+                        </div>
+                        <button onclick="toggleSlot('${selectedDate}', '${slot}')" class="text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${
+                            isBlocked 
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30' 
+                            : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'
+                        }">
+                            ${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}
+                        </button>
+                    </div>
+                `;
+
+                slotBookings.forEach((b, i) => {
+                    html += `
+                        <div class="sm:col-span-2 p-3 bg-promer-navy/40 border border-promer-blue/40 rounded-xl text-xs space-y-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-black text-white text-sm">${b.name}</div>
+                                    <div class="text-slate-400 text-[11px]">
+                                        <i class="fa-solid fa-phone mr-1"></i>${b.phone} · 
+                                        <i class="fa-solid fa-location-dot mr-1"></i>${b.ilce}
+                                    </div>
+                                    <div class="text-slate-500 text-[10px] mt-1">
+                                        ${b.place} · ${b.m2}m² · ${b.pest}
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-emerald-400 font-black text-sm">${b.price}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            html += '</div>';
+
+            content.innerHTML = html;
+        }
+
+        // ---------- SAAT BLOKLAMA ----------
+        function toggleSlot(dateKey, slot) {
+            const key = `${dateKey}|${slot}`;
+            const blocked = loadBlockedSlots();
+            if (blocked[key]) {
+                delete blocked[key];
+            } else {
+                blocked[key] = true;
+            }
+            saveBlockedSlots(blocked);
+            renderCalendar();
+            renderSelectedDay();
+            updateStats();
+        }
+
+        function toggleDayBlock() {
+            if (!selectedDate) return;
+            const blocked = loadBlockedDays();
+            if (blocked[selectedDate]) {
+                delete blocked[selectedDate];
+            } else {
+                blocked[selectedDate] = true;
+            }
+            saveBlockedDays(blocked);
+            renderCalendar();
+            renderSelectedDay();
+            updateStats();
+        }
+
+        // ---------- AY GEZİNTİSİ ----------
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+        function goToday() {
+            currentDate = new Date();
+            selectedDate = todayKey();
+            renderCalendar();
+            renderSelectedDay();
+        }
+
+        // ---------- MANUEL RANDEVU ----------
+        function openManualBooking() {
+            document.getElementById('manual-modal').classList.remove('hidden');
+            document.getElementById('m-date').value = selectedDate || todayKey();
+
+            const saatSel = document.getElementById('m-saat');
+            saatSel.innerHTML = ALL_SLOTS.map(s => `<option>${s}</option>`).join('');
+        }
+
+        function closeManualBooking() {
+            document.getElementById('manual-modal').classList.add('hidden');
+        }
+
+        function saveManualBooking() {
+            const name = document.getElementById('m-name').value.trim();
+            const phone = document.getElementById('m-phone').value.trim();
+            const ilce = document.getElementById('m-ilce').value.trim();
+
+            if (!name || !phone || !ilce) {
+                alert('Lütfen Ad Soyad, Telefon ve İlçe alanlarını doldurun.');
+                return;
+            }
+
+            const bookings = loadBookings();
+            bookings.push({
+                name,
+                phone,
+                ilce,
+                address: document.getElementById('m-address').value || 'Belirtilmedi',
+                date: document.getElementById('m-date').value,
+                saat: document.getElementById('m-saat').value,
+                place: document.getElementById('m-place').value,
+                m2: document.getElementById('m-m2').value,
+                pest: document.getElementById('m-pest').value || 'Belirtilmedi',
+                price: document.getElementById('m-price').value || '—',
+                createdAt: new Date().toLocaleString('tr-TR') + ' (Manuel)'
+            });
+            saveBookings(bookings);
+
+            closeManualBooking();
+            renderCalendar();
+            renderSelectedDay();
+            renderBookings();
+            updateStats();
+
+            ['m-name', 'm-phone', 'm-ilce', 'm-address', 'm-pest', 'm-price'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        // ---------- RANDEVU LİSTESİ ----------
+        function clearBookings() {
+            if (!confirm('Tüm randevu kayıtlarını silmek istediğinize emin misiniz?')) return;
+            saveBookings([]);
+            renderBookings();
+            renderCalendar();
+            renderSelectedDay();
+            updateStats();
+        }
+
+        function deleteBooking(index) {
+            if (!confirm('Bu randevuyu silmek istediğinize emin misiniz?')) return;
+            const arr = loadBookings();
+            arr.splice(index, 1);
+            saveBookings(arr);
+            renderBookings();
+            renderCalendar();
+            renderSelectedDay();
+            updateStats();
+        }
+
+        function renderBookings() {
+            const list = document.getElementById('bookings-list');
+            const bookings = loadBookings();
+
+            if (bookings.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-12 text-slate-500 text-xs">
+                        <i class="fa-solid fa-inbox text-3xl mb-3 opacity-30"></i>
+                        <p>Henüz randevu talebi yok.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = '';
+            bookings.slice().reverse().forEach((b, revIdx) => {
+                const realIdx = bookings.length - 1 - revIdx;
+                const row = document.createElement('div');
+                row.className = 'p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2 hover:border-slate-700 transition-all';
+                row.innerHTML = `
+                    <div class="flex justify-between items-start gap-3">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                                <span class="font-black text-sm text-white">${b.name}</span>
+                                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] px-2 py-0.5 rounded-full font-bold">
+                                    ${b.price || '—'}
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1 text-slate-400 text-[11px]">
+                                <div><i class="fa-solid fa-phone mr-1 text-slate-600"></i>${b.phone}</div>
+                                <div><i class="fa-solid fa-location-dot mr-1 text-slate-600"></i>${b.ilce}</div>
+                                <div><i class="fa-solid fa-calendar mr-1 text-slate-600"></i>${b.date}</div>
+                                <div><i class="fa-solid fa-clock mr-1 text-slate-600"></i>${b.saat}</div>
+                                <div class="col-span-2"><i class="fa-solid fa-bug mr-1 text-slate-600"></i>${b.pest} — ${b.m2}m² (${b.place})</div>
+                            </div>
+                        </div>
+                        <button onclick="deleteBooking(${realIdx})" class="text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 p-2 rounded-lg transition-all flex-shrink-0">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div class="text-[10px] text-slate-600 pt-1 border-t border-slate-800">
+                        <i class="fa-regular fa-clock mr-1"></i>${b.createdAt || '—'}
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // ---------- İSTATİSTİK ----------
+        function updateStats() {
+            const bookings = loadBookings();
+            const blockedSlots = loadBlockedSlots();
+            const today = todayKey();
+            const currentMonth = today.slice(0, 7);
+
+            const todayCount = bookings.filter(b => b.date === today).length;
+            const blockedCount = Object.keys(blockedSlots).length;
+
+            let revenue = 0;
+            bookings.forEach(b => {
+                if (b.date && b.date.startsWith(currentMonth)) {
+                    const num = parseFloat((b.price || '0').replace(/[^\d.,]/g, '').replace(/\./g, '').replace(',', '.'));
+                    if (!isNaN(num)) revenue += num;
+                }
+            });
+
+            document.getElementById('stat-today').textContent = todayCount;
+            document.getElementById('stat-total').textContent = bookings.length;
+            document.getElementById('stat-blocked').textContent = blockedCount;
+            document.getElementById('stat-revenue').textContent = revenue.toLocaleString('tr-TR') + ' ₺';
+        }
+
+        // ---------- BAŞLAT ----------
+        window.addEventListener('load', () => {
+            selectedDate = todayKey();
+            currentDate = new Date();
+            renderCalendar();
+            renderSelectedDay();
+            renderBookings();
+            updateStats();
+        });
+
+        window.addEventListener('storage', (e) => {
+            if ([SLOTS_KEY, BOOKINGS_KEY, DAY_BLOCKED_KEY].includes(e.key)) {
+                renderCalendar();
+                renderSelectedDay();
+                renderBookings();
+                updateStats();
+            }
+        });
+    </script>
+</body>
+</html>
