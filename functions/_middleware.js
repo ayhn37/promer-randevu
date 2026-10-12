@@ -28,8 +28,8 @@ export async function onRequest(context) {
   const [username, password] = decoded.split(':');
 
   // ⚠️⚠️⚠️ BURAYA KENDİ KULLANICI ADI VE ŞİFRENİZİ YAZIN ⚠️⚠️⚠️
-  const VALID_USERNAME = 'promer';
-  const VALID_PASSWORD = 'GucluSifre2026!';
+  const VALID_USERNAME = 'yonetici';
+  const VALID_PASSWORD = 'Mert751953..';
 
   if (username !== VALID_USERNAME || password !== VALID_PASSWORD) {
     return new Response('Invalid credentials', {
