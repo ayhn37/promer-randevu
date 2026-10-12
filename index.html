@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -12,19 +13,12 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         promer: {
-                            navy: '#0f2b5c',
-                            navyDark: '#0a1d3f',
-                            blue: '#1e40af',
-                            lightBlue: '#3b82f6',
-                            accent: '#f97316',
-                            green: '#16a34a',
-                            greenDark: '#15803d',
-                            lightGreen: '#dcfce7'
+                            navy: '#0f2b5c', navyDark: '#0a1d3f', blue: '#1e40af',
+                            lightBlue: '#3b82f6', accent: '#f97316', green: '#16a34a',
+                            greenDark: '#15803d', lightGreen: '#dcfce7'
                         }
                     }
                 }
@@ -33,24 +27,16 @@
     </script>
     <style>
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 26px;
-            width: 26px;
-            border-radius: 50%;
-            background: #1e40af;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4);
-            border: 3px solid #ffffff;
+            -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%;
+            background: #1e40af; cursor: pointer;
+            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
         }
         input[type=range]::-moz-range-thumb {
-            height: 26px;
-            width: 26px;
-            border-radius: 50%;
-            background: #1e40af;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4);
-            border: 3px solid #ffffff;
+            height: 26px; width: 26px; border-radius: 50%;
+            background: #1e40af; cursor: pointer;
+            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
         }
+        .slot-blocked { background: #fef2f2 !important; color: #991b1b !important; text-decoration: line-through; opacity: 0.6; }
     </style>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-promer-blue selection:text-white">
@@ -69,14 +55,12 @@
                     <span class="block text-[10px] font-bold tracking-wider text-slate-500 uppercase">T.C. Sağlık Bakanlığı Ruhsatlı Çözümler</span>
                 </div>
             </a>
-            
             <nav class="hidden lg:flex items-center gap-7 font-semibold text-sm text-slate-700">
                 <a href="#hesapla" class="hover:text-promer-blue transition-colors">Fiyat Hesapla</a>
                 <a href="#tarife-tablosu" class="hover:text-promer-blue transition-colors">Tarife Cetveli</a>
                 <a href="#randevu" class="hover:text-promer-blue transition-colors">Randevu Al</a>
                 <a href="#hakkimizda" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
             </nav>
-
             <div class="hidden sm:flex items-center gap-3">
                 <a href="https://wa.me/908504660022" target="_blank" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
                     <i class="fa-brands fa-whatsapp text-xl text-emerald-600"></i>
@@ -86,12 +70,10 @@
                     </div>
                 </a>
             </div>
-
             <button id="menu-btn" class="lg:hidden text-slate-800 p-2 focus:outline-none">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
         </div>
-
         <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-xl">
             <a href="#hesapla" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Fiyat Hesaplama</a>
             <a href="#tarife-tablosu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Tarife Cetveli</a>
@@ -106,7 +88,6 @@
 
     <section class="relative pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-slate-900 via-promer-navy to-slate-900 text-white overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
@@ -130,23 +111,12 @@
                             <span>Hızlı Randevu Al</span>
                         </a>
                     </div>
-
                     <div class="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 text-center lg:text-left">
-                        <div>
-                            <div class="text-xl sm:text-2xl font-black text-white">20+ Yıl</div>
-                            <div class="text-xs text-slate-400 font-medium">Sektörel Tecrübe</div>
-                        </div>
-                        <div>
-                            <div class="text-xl sm:text-2xl font-black text-emerald-400">%100</div>
-                            <div class="text-xs text-slate-400 font-medium">Müşteri Memnuniyeti</div>
-                        </div>
-                        <div>
-                            <div class="text-xl sm:text-2xl font-black text-blue-300">Garanti</div>
-                            <div class="text-xs text-slate-400 font-medium">İkinci Seans İndirimi</div>
-                        </div>
+                        <div><div class="text-xl sm:text-2xl font-black text-white">20+ Yıl</div><div class="text-xs text-slate-400 font-medium">Sektörel Tecrübe</div></div>
+                        <div><div class="text-xl sm:text-2xl font-black text-emerald-400">%100</div><div class="text-xs text-slate-400 font-medium">Müşteri Memnuniyeti</div></div>
+                        <div><div class="text-xl sm:text-2xl font-black text-blue-300">Garanti</div><div class="text-xs text-slate-400 font-medium">İkinci Seans İndirimi</div></div>
                     </div>
                 </div>
-
                 <div class="lg:col-span-5">
                     <div class="bg-white/95 text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 space-y-6 backdrop-blur-md">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -183,43 +153,33 @@
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Promer İlaçlama Ücret Hesaplama</h2>
                 <p class="text-slate-600">Mekan türü, haşere çeşidi ve alan büyüklüğünü girerek net faturanızı anında görün.</p>
             </div>
-
             <div class="max-w-5xl mx-auto bg-white border border-slate-200/80 rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-                
                 <div class="lg:col-span-7 p-6 sm:p-10 space-y-8">
                     <div>
                         <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">1</span>
-                            Mekan Türünü Seçiniz
+                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">1</span> Mekan Türünü Seçiniz
                         </label>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                             <button type="button" onclick="setPlaceType('ev', this)" class="place-btn active border-2 border-promer-blue bg-blue-50/60 text-slate-900 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all">
-                                <i class="fa-solid fa-house text-promer-blue text-lg"></i>
-                                <span>Ev / Daire</span>
+                                <i class="fa-solid fa-house text-promer-blue text-lg"></i><span>Ev / Daire</span>
                             </button>
                             <button type="button" onclick="setPlaceType('isyeri', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-building text-slate-500 text-lg"></i>
-                                <span>İş Yeri / Ofis</span>
+                                <i class="fa-solid fa-building text-slate-500 text-lg"></i><span>İş Yeri / Ofis</span>
                             </button>
                             <button type="button" onclick="setPlaceType('restoran', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-utensils text-slate-500 text-lg"></i>
-                                <span>Restoran / Gıda</span>
+                                <i class="fa-solid fa-utensils text-slate-500 text-lg"></i><span>Restoran / Gıda</span>
                             </button>
                             <button type="button" onclick="setPlaceType('apartman', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-city text-slate-500 text-lg"></i>
-                                <span>Bina / Site Ortak</span>
+                                <i class="fa-solid fa-city text-slate-500 text-lg"></i><span>Bina / Site Ortak</span>
                             </button>
                             <button type="button" onclick="setPlaceType('fabrika', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300 col-span-2 sm:col-span-2">
-                                <i class="fa-solid fa-industry text-slate-500 text-lg"></i>
-                                <span>Fabrika / Depo / Ticari Tesis</span>
+                                <i class="fa-solid fa-industry text-slate-500 text-lg"></i><span>Fabrika / Depo / Ticari Tesis</span>
                             </button>
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">2</span>
-                            Haşere & Zararlı Türü
+                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">2</span> Haşere & Zararlı Türü
                         </label>
                         <select id="pest-select" onchange="recalculatePrice()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-bold rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-promer-blue focus:outline-none transition-all">
                             <option value="Susam Böceği İlaçlama">Susam Böceği İlaçlama</option>
@@ -247,77 +207,51 @@
                             <option value="Tespih Böceği İlaçlama">Tespih Böceği İlaçlama</option>
                             <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
                         </select>
-                        
                         <div id="pest-info-box" class="mt-3 p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-2 text-slate-800">
                             <div class="flex items-start gap-2.5">
                                 <i class="fa-solid fa-circle-info text-promer-blue text-sm mt-0.5"></i>
                                 <div id="pest-info-text">Seçilen haşere türüne özel Sağlık Bakanlığı onaylı uygulama dökümü.</div>
                             </div>
-                            <div class="flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl" id="pest-time-container">
+                            <div id="pest-time-container" class="flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl">
                                 <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
                                 <span id="pest-time-text">İlaç Kuruyana Kadar (6-8 Saat) Kimse Olmamalıdır.</span>
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <label class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span>
-                                Alan Büyüklüğü (m²)
+                                <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span> Alan Büyüklüğü (m²)
                             </label>
                             <div class="flex items-center gap-2">
                                 <input type="number" id="m2-number-input" min="10" max="2000" value="85" oninput="syncFromInput(this.value)" class="w-24 bg-blue-50/80 border-2 border-promer-blue rounded-xl px-3 py-1.5 font-extrabold text-slate-900 text-right focus:outline-none">
                                 <span class="font-bold text-slate-600 text-sm">m²</span>
                             </div>
                         </div>
-
                         <input type="range" id="m2-slider" min="10" max="500" value="85" step="5" oninput="syncFromSlider(this.value)" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-promer-blue">
                         <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-semibold">
-                            <span>10 m²</span>
-                            <span>100 m² (Taban Limit)</span>
-                            <span>250 m²</span>
-                            <span>500+ m²</span>
+                            <span>10 m²</span><span>100 m² (Taban Limit)</span><span>250 m²</span><span>500+ m²</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="lg:col-span-5 bg-promer-navy text-white p-6 sm:p-10 flex flex-col justify-between relative">
+                <div class="lg:col-span-5 bg-promer-navy text-white p-6 sm:p-10 flex flex-col justify-between">
                     <div class="space-y-6">
                         <div class="flex items-center justify-between border-b border-white/10 pb-4">
                             <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Resmi Hesap Özeti</span>
                             <span id="tariff-badge" class="bg-blue-500/20 text-blue-200 border border-blue-400/30 text-[11px] font-bold px-3 py-1 rounded-full">0 - 100 m² Tarifesi</span>
                         </div>
-
                         <div class="space-y-2.5 text-sm text-slate-300">
-                            <div class="flex justify-between">
-                                <span class="text-slate-300">1. Seans Ücreti (0-100 m²):</span>
-                                <span class="font-extrabold text-white">2.500 TL</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-300">Ek Alan Kademe Tutarı:</span>
-                                <span id="extra-m2-cost" class="font-extrabold text-emerald-400">+0 TL</span>
-                            </div>
-                            <div class="border-t border-white/10 my-3 pt-3 flex justify-between text-slate-300">
-                                <span>KDV Hariç Ara Toplam:</span>
-                                <span id="subtotal-display" class="font-extrabold text-white">2.500 TL</span>
-                            </div>
-                            <div class="flex justify-between text-slate-300">
-                                <span>KDV Tutar (%20):</span>
-                                <span id="tax-display" class="font-extrabold text-white">500 TL</span>
-                            </div>
+                            <div class="flex justify-between"><span>1. Seans Ücreti (0-100 m²):</span><span class="font-extrabold text-white">2.500 TL</span></div>
+                            <div class="flex justify-between"><span>Ek Alan Kademe Tutarı:</span><span id="extra-m2-cost" class="font-extrabold text-emerald-400">+0 TL</span></div>
+                            <div class="border-t border-white/10 my-3 pt-3 flex justify-between"><span>KDV Hariç Ara Toplam:</span><span id="subtotal-display" class="font-extrabold text-white">2.500 TL</span></div>
+                            <div class="flex justify-between"><span>KDV Tutar (%20):</span><span id="tax-display" class="font-extrabold text-white">500 TL</span></div>
                         </div>
-
                         <div class="bg-white/10 rounded-2xl p-5 border border-white/15 space-y-2 backdrop-blur-md">
                             <span class="block text-xs text-slate-300 font-bold uppercase tracking-wider">TOPLAM NET TUTAR (KDV DAHİL)</span>
-                            <div class="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight" id="grand-total-display">
-                                3.000 TL
-                            </div>
-                            <div id="second-session-info" class="text-xs text-blue-200 bg-blue-950/70 p-3 rounded-xl border border-blue-800/80 mt-3 leading-relaxed">
-                            </div>
+                            <div class="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight" id="grand-total-display">3.000 TL</div>
+                            <div id="second-session-info" class="text-xs text-blue-200 bg-blue-950/70 p-3 rounded-xl border border-blue-800/80 mt-3 leading-relaxed"></div>
                         </div>
                     </div>
-
                     <div class="pt-8">
                         <button onclick="transferCalcToBooking()" class="w-full bg-promer-accent hover:bg-orange-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-orange-500/20 transition-all flex items-center justify-center gap-2 text-base">
                             <span>Bu Fiyatla Randevu Adımına Geç</span>
@@ -325,7 +259,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -337,20 +270,17 @@
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Promer Metrekare Dilim Tarifesi</h2>
                 <p class="text-slate-500 text-sm">Aşağıdaki tablodan kendi alanınızın hangi resmi fiyat bandına girdiğini doğrudan görebilirsiniz.</p>
             </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="tariff-cards-container">
-            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="tariff-cards-container"></div>
         </div>
     </section>
 
-    <section id="randevu" class="py-20 bg-slate-100/80 relative">
+    <section id="randevu" class="py-20 bg-slate-100/80">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-promer-green font-extrabold text-xs uppercase tracking-widest bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Anında Rezervasyon</span>
                 <h2 class="text-3xl font-black text-slate-900 mt-2">Promer Online Randevu Oluşturma</h2>
                 <p class="text-slate-600 text-sm">Bilgilerinizi ve uygun olduğunuz saat dilimini seçip doğrudan WhatsApp hattımıza randevunuzu iletin.</p>
             </div>
-
             <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-10">
                 <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -363,7 +293,6 @@
                             <input type="tel" id="cust-phone" required placeholder="05XX XXX XX XX" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-2">İstanbul İlçesi Seçiniz *</label>
@@ -376,7 +305,6 @@
                             <input type="text" id="cust-address" placeholder="Mahalle, sokak, bina no" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Randevu Tarihi *</label>
@@ -389,7 +317,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="p-4 bg-blue-50/80 rounded-2xl border border-blue-200/80 flex flex-col sm:flex-row justify-between items-center gap-3">
                         <div class="text-sm">
                             <span class="text-slate-600 font-semibold">Seçilen Hizmet Tutarı:</span>
@@ -397,13 +324,11 @@
                         </div>
                         <span id="booking-summary-details" class="text-xs bg-white px-3.5 py-2 rounded-xl border border-blue-200 font-extrabold text-slate-800 shadow-sm">Ev / 85m² / Hamam Böceği</span>
                     </div>
-
                     <button type="submit" class="w-full bg-promer-green hover:bg-promer-greenDark text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 transition-all flex items-center justify-center gap-3 text-lg">
                         <i class="fa-solid fa-check-circle text-xl"></i>
                         <span>Randevuyu Onayla ve WhatsApp'a İlet</span>
                     </button>
                 </form>
-
                 <div id="confirmation-card" class="hidden mt-8 p-6 sm:p-8 bg-emerald-50 border-2 border-emerald-500 rounded-3xl space-y-6">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md">
@@ -414,10 +339,7 @@
                             <p class="text-xs text-emerald-800 font-medium">Talebiniz 0850 466 00 22 numaralı hattımıza iletilmek üzere formatlandı.</p>
                         </div>
                     </div>
-
-                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner" id="sms-summary-text">
-                    </div>
-
+                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner" id="sms-summary-text"></div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a id="whatsapp-btn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-md">
                             <i class="fa-brands fa-whatsapp text-xl"></i>
@@ -428,7 +350,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -437,25 +358,17 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-blue text-white rounded-xl flex items-center justify-center font-bold text-lg">
-                        <i class="fa-solid fa-certificate"></i>
-                    </div>
+                    <div class="w-10 h-10 bg-promer-blue text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-certificate"></i></div>
                     <h3 class="font-extrabold text-slate-900 text-base">Sağlık Bakanlığı Ruhsatlı</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama, T.C. Sağlık Bakanlığı Biyosidal Ürün Uygulama İzin Belgesi ile tam yetkili profesyonel haşere kontrol firmasıdır.</p>
                 </div>
-
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-green text-white rounded-xl flex items-center justify-center font-bold text-lg">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
+                    <div class="w-10 h-10 bg-promer-green text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-leaf"></i></div>
                     <h3 class="font-extrabold text-slate-900 text-base">Çevre & İnsan Sağlığı Dostu</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Kullandığımız ilaçlar WHO (Dünya Sağlık Örgütü) standartlarında olup, evcil hayvanlar ve insan sağlığı gözetilerek uygulanır.</p>
                 </div>
-
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-accent text-white rounded-xl flex items-center justify-center font-bold text-lg">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
+                    <div class="w-10 h-10 bg-promer-accent text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-user-shield"></i></div>
                     <h3 class="font-extrabold text-slate-900 text-base">%100 Memnuniyet & Garanti</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama güvencesiyle yapılan uygulamalarda ihtiyaç halinde 2. seans indirim garantisi ve teknik destek sağlanır.</p>
                 </div>
@@ -515,16 +428,7 @@
         let state = {
             placeType: 'ev',
             pestType: 'Hamam Böceği İlaçlama',
-            m2: 85,
-            timeSlots: [
-                { time: '09:00 – 10:30', blocked: false },
-                { time: '10:30 – 12:00', blocked: false },
-                { time: '12:00 – 13:30', blocked: false },
-                { time: '13:30 – 15:00', blocked: false },
-                { time: '15:00 – 16:30', blocked: false },
-                { time: '16:30 – 18:00', blocked: false },
-                { time: '18:00 – 19:30', blocked: false }
-            ]
+            m2: 85
         };
 
         const PLACE_LABELS = {
@@ -550,7 +454,6 @@
                 b.classList.remove('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
                 b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
             });
-
             btnElement.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
             btnElement.classList.add('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
             recalculatePrice();
@@ -641,11 +544,33 @@
             });
         }
 
+        // ⭐ GÜNCELLENDİ: Kapalı saatleri filtreler
         function renderTimeSlots() {
             const sel = document.getElementById('cust-saat');
-            const availableSlots = state.timeSlots.filter(s => !s.blocked);
+            const dateInput = document.getElementById('cust-date').value;
             
-            sel.innerHTML = '<option value="">Saat Seçin</option>' + availableSlots.map(s => `<option value="${s.time}">${s.time}</option>`).join('');
+            // Yönetim panelinden kapatılan saatleri oku
+            const blockedSlots = JSON.parse(localStorage.getItem('promer_blocked_slots') || '{}');
+            
+            const allSlots = [
+                '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
+                '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
+                '18:00 – 19:30'
+            ];
+            
+            // Kapalı saatleri filtrele: "2026-10-15|09:00 – 10:30" formatında
+            const availableSlots = allSlots.filter(slot => {
+                const key = `${dateInput}|${slot}`;
+                return !blockedSlots[key];
+            });
+            
+            if (availableSlots.length === 0) {
+                sel.innerHTML = '<option value="">Bu tarihte müsait saat bulunmamaktadır</option>';
+                return;
+            }
+            
+            sel.innerHTML = '<option value="">Saat Seçin</option>' + 
+                availableSlots.map(s => `<option value="${s}">${s}</option>`).join('');
         }
 
         function transferCalcToBooking() {
