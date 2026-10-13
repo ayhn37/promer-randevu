@@ -222,7 +222,7 @@
                                 <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span> Alan Büyüklüğü (m²)
                             </label>
                             <div class="flex items-center gap-2">
-                                <input type="number" id="m2-number-input" min="10" max="2000" value="85" oninput="syncFromInput(this.value)" class="w-24 bg-blue-50/80 border-2 border-promer-blue rounded-xl px-3 py-1.5 font-extrabold text-slate-900 text-right focus:outline-none">
+                                <input type="number" id="m2-number-input" min="10" max="50000" value="85" oninput="syncFromInput(this.value)" class="w-28 bg-blue-50/80 border-2 border-promer-blue rounded-xl px-3 py-1.5 font-extrabold text-slate-900 text-right focus:outline-none">
                                 <span class="font-bold text-slate-600 text-sm">m²</span>
                             </div>
                         </div>
@@ -397,28 +397,28 @@
         const PROMER_WA_NO = "908504660022";
 
         const PEST_DETAILS = {
-            "Susam Böceği İlaçlama": { desc: "Nemli ve rutubetli alanlara özel kokusuz sıvı mikro kapsül rezidüel uygulama.", time: "1-2 Saat havalandırma yeterlidir. Mekanı terk etmenize gerek kalmaz.", isWarning: false },
-            "Hamam Böceği İlaçlama": { desc: "Alman, Doğu ve Amerikan hamam böceklerine özel jel yem ve entegre kokusuz sıvı çözümü.", time: "Evden çıkış gerektirmez. Günlük yaşama ara vermeden hemen devam edebilirsiniz.", isWarning: false },
-            "Uyuz Böceği İlaçlama": { desc: "Kişisel eşyalar, yatak ve kumaş dokulara nüfuz eden Promer derinlemesine ilaçlama protokolü.", time: "İlaç tamamen kuruyana kadar 6-8 saat boyunca alanda insan ve evcil hayvan bulunmamalıdır.", isWarning: true },
-            "Tahta Kurusu İlaçlama": { desc: "İki aşamalı özel konsantre ve yumurta kırıcı uygulama. Her seans aynı ücrete tabidir.", time: "Uygulama sonrası ilaç kuruyana kadar 6-8 saat boyunca alan kapalı tutulmalıdır.", isWarning: true },
-            "Kene İlaçlama": { desc: "Bahçe, peyzaj ve bina çevrelerine yönelik koruyucu bariyer ilaçlaması.", time: "İlaç kuruyana kadar 6-8 saat boyunca uygulama alanına girilmemelidir.", isWarning: true },
+            "Susam Böceği İlaçlama": { desc: "Nemli ve rutubetli alanlara özel kokusuz sıvı mikro kapsül rezidüel uygulama.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
+            "Hamam Böceği İlaçlama": { desc: "Alman, Doğu ve Amerikan hamam böceklerine özel jel yem ve entegre kokusuz sıvı çözümü.", time: "Evden çıkış gerektirmez. Günlük yaşama devam edebilirsiniz.", isWarning: false },
+            "Uyuz Böceği İlaçlama": { desc: "Kişisel eşyalar, yatak ve kumaş dokulara nüfuz eden Promer derinlemesine ilaçlama protokolü.", time: "İlaç kuruyana kadar 6-8 saat alanda insan ve evcil hayvan bulunmamalıdır.", isWarning: true },
+            "Tahta Kurusu İlaçlama": { desc: "İki aşamalı özel konsantre ve yumurta kırıcı uygulama. Her seans aynı ücrete tabidir.", time: "Uygulama sonrası 6-8 saat alan kapalı tutulmalıdır.", isWarning: true },
+            "Kene İlaçlama": { desc: "Bahçe, peyzaj ve bina çevrelerine yönelik koruyucu bariyer ilaçlaması.", time: "İlaç kuruyana kadar 6-8 saat uygulama alanına girilmemelidir.", isWarning: true },
             "Tahta Kurdu İlaçlama": { desc: "Ahşap eşyalara ve strüktürlere enjeksiyon & yüzey emprenye yöntemi.", time: "2-3 Saat havalandırma yapılması yeterlidir.", isWarning: false },
             "Gümüşcün Gümüş Böceği İlaçlama": { desc: "Banyo, lavabo ve tesisat boşluklarına jel ve kokusuz sıvı uygulaması.", time: "1 Saat havalandırma yeterlidir.", isWarning: false },
             "Çıyan & Kırkayak İlaçlama": { desc: "Bodrum ve zemin kat giriş hatlarına koruyucu bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Güve İlaçlama": { desc: "Gardırop, halı ve kumaş depolama alanlarına yönelik özel buharlı ilaçlama.", time: "Havalandırma sonrası kıyafetler güvenle kullanılabilir.", isWarning: false },
             "Karınca İlaçlama": { desc: "Kraliçeyi ve tüm koloniyi yok eden özel organik jel yem tekniği.", time: "Mekandan çıkış gerektirmez.", isWarning: false },
-            "Kuş Biti İlaçlama": { desc: "Çatı arası, tavan ve pencere önlerine yoğunlaştırılmış likit bariyer.", time: "İlaç kuruyana kadar 6-8 saat boyunca alanda durulmamalıdır.", isWarning: true },
+            "Kuş Biti İlaçlama": { desc: "Çatı arası, tavan ve pencere önlerine yoğunlaştırılmış likit bariyer.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
             "Kalorifer Böceği İlaçlama": { desc: "Mutfak motor aksamları ve ısı kaynaklarına özel jel.", time: "Evden çıkış gerektirmez.", isWarning: false },
             "Örümcek İlaçlama": { desc: "Tavan araları ve dış cephe köşelerine ağ engelleyici sıvı.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Yılan İlaçlama": { desc: "Bahçe ve bina çevresi için doğal içerikli kovucu bariyer.", time: "Uygulama sonrası 3-4 saat sahaya girilmez.", isWarning: false },
             "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma.", time: "İşlem süresince 1 saat alan boş tutulur.", isWarning: false },
             "Karafatma İlaçlama": { desc: "Logar hatları, bodrum ve zemin kat odaklı kalıcı sıvı ilaçlama.", time: "2-3 Saat havalandırma yeterlidir.", isWarning: false },
             "Sinek & Kara Sinek İlaçlama": { desc: "Uçkun mücadelesine yönelik Sağlık Bakanlığı onaylı püskürtme.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
+            "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
             "Fare & Kemirgen İlaçlama": { desc: "Kilitli güvenlik istasyonları (rodentisit) bina ve daire çevrelerine yerleştirilir.", time: "Kapalı kalma süresi yoktur, günlük yaşama engel olmaz.", isWarning: false },
             "Salyangoz İlaçlama": { desc: "Peyzaj ve bahçelere özel granül bariyer.", time: "Uygulama sonrası 2 saat çim alanlara basılmamalıdır.", isWarning: false },
             "Akrep İlaçlama": { desc: "Dış cephe ve kapı altı geçiş noktalarına güçlü koruyucu bariyer.", time: "3-4 Saat havalandırma yeterlidir.", isWarning: false },
-            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
+            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
             "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
         };
@@ -430,11 +430,8 @@
         };
 
         const PLACE_LABELS = {
-            ev: 'Ev / Daire',
-            isyeri: 'İş Yeri / Ofis',
-            restoran: 'Restoran / Gıda Tesisi',
-            apartman: 'Bina / Site Ortak Alanı',
-            fabrika: 'Fabrika / Depo / Ticari Tesis'
+            ev: 'Ev / Daire', isyeri: 'İş Yeri / Ofis', restoran: 'Restoran / Gıda Tesisi',
+            apartman: 'Bina / Site Ortak Alanı', fabrika: 'Fabrika / Depo / Ticari Tesis'
         };
 
         const TARIFF_STEPS = [
@@ -465,7 +462,7 @@
 
         function syncFromInput(val) {
             let num = parseInt(val) || 10;
-            if (num > 2000) num = 2000;
+            if (num > 50000) num = 50000;
             state.m2 = num;
             document.getElementById('m2-slider').value = Math.min(num, 500);
             recalculatePrice();
@@ -488,6 +485,23 @@
                 timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
             }
 
+            // ⭐ 500 m² ÜZERİ: ÖZEL TEKLİF
+            if (state.m2 > 500) {
+                document.getElementById('extra-m2-cost').innerText = '—';
+                document.getElementById('subtotal-display').innerText = '—';
+                document.getElementById('tax-display').innerText = '—';
+                document.getElementById('grand-total-display').innerHTML = '<span class="text-2xl">ÖZEL TEKLİF</span>';
+                document.getElementById('second-session-info').innerHTML = 
+                    '<strong>Büyük Alan (500 m²+):</strong> Bu büyüklükteki alanlar için özel fiyatlandırma yapılmaktadır. Lütfen <strong>0850 466 00 22</strong> numaralı hattımızdan teklif alın.';
+                document.getElementById('booking-summary-price').innerText = 'Özel Teklif';
+                document.getElementById('booking-summary-details').innerText = 
+                    `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
+                document.getElementById('tariff-badge').innerText = '500 m²+ Özel Fiyat';
+                renderTariffCards();
+                return;
+            }
+
+            // 500 m² VE ALTI: NORMAL HESAPLAMA
             let basePrice = 2500;
             let extraCost = 0;
 
@@ -516,6 +530,13 @@
 
             document.getElementById('booking-summary-price').innerText = grandTotal.toLocaleString('tr-TR') + ' TL (KDV Dahil)';
             document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
+            document.getElementById('tariff-badge').innerText = 
+                state.m2 <= 100 ? '0 - 100 m² Tarifesi' :
+                state.m2 <= 130 ? '101 - 130 m² Tarifesi' :
+                state.m2 <= 160 ? '131 - 160 m² Tarifesi' :
+                state.m2 <= 190 ? '161 - 190 m² Tarifesi' :
+                state.m2 <= 220 ? '191 - 220 m² Tarifesi' :
+                state.m2 <= 250 ? '221 - 250 m² Tarifesi' : '251 - 500 m² Tarifesi';
 
             renderTariffCards();
         }
@@ -542,7 +563,6 @@
             });
         }
 
-        // ⭐ FIREBASE ENTEGRE: Kapalı saatleri Firebase'den oku
         async function renderTimeSlots() {
             const sel = document.getElementById('cust-saat');
             const dateInput = document.getElementById('cust-date').value;
@@ -553,11 +573,9 @@
                 '18:00 – 19:30'
             ];
             
-            // Önce tüm saatleri göster (Firebase yüklenmemişse de çalışsın)
             let blockedSlots = {};
             
             try {
-                // Firebase'den kapalı saatleri oku
                 if (window.firebaseDB && window.firebaseGetDocs) {
                     const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
                     const snapshot = await window.firebaseGetDocs(blockedRef);
@@ -572,7 +590,6 @@
                 console.log('Firebase hatası (önemsiz):', error);
             }
             
-            // Kapalı saatleri filtrele
             const availableSlots = allSlots.filter(slot => !blockedSlots[slot]);
             
             if (availableSlots.length === 0) {
@@ -638,18 +655,10 @@
             };
 
             recalculatePrice();
-            
-            // Firebase hazır olduğunda da çalıştır
-            window.addEventListener('firebaseReady', () => {
-                renderTimeSlots();
-            });
-            
-            // Sayfa yüklendiğinde hemen çalıştır (Firebase'i bekleme)
             renderTimeSlots();
         };
     </script>
 
-    <!-- FIREBASE SDK - Sayfa yüklendikten sonra yükle -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
@@ -671,7 +680,6 @@
             window.firebaseGetDocs = getDocs;
             window.firebaseCollection = collection;
             
-            // Firebase hazır, saat listesini güncelle
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
             console.log('Firebase başlatma hatası:', error);
