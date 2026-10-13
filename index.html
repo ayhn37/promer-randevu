@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
+    <title>Promer Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,644 +15,429 @@
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         promer: {
-                            navy: '#0f2b5c', navyDark: '#0a1d3f', blue: '#1e40af',
-                            lightBlue: '#3b82f6', accent: '#f97316', green: '#16a34a',
-                            greenDark: '#15803d', lightGreen: '#dcfce7'
+                            navy: '#0f2b5c', blue: '#1e40af', lightBlue: '#3b82f6',
+                            accent: '#f97316', green: '#16a34a', greenDark: '#15803d'
                         }
                     }
                 }
             }
         }
     </script>
-    <style>
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%;
-            background: #1e40af; cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
-        }
-        input[type=range]::-moz-range-thumb {
-            height: 26px; width: 26px; border-radius: 50%;
-            background: #1e40af; cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
-        }
-    </style>
 </head>
-<body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-promer-blue selection:text-white">
+<body class="font-sans bg-slate-950 text-white min-h-screen antialiased">
 
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b border-slate-100 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-shield-virus text-2xl text-promer-accent"></i>
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-shield-virus text-promer-accent"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-2xl font-black tracking-tight text-promer-navy">PROMER</span>
-                        <span class="text-2xl font-extrabold tracking-tight text-promer-green">İLAÇLAMA</span>
-                    </div>
-                    <span class="block text-[10px] font-bold tracking-wider text-slate-500 uppercase">T.C. Sağlık Bakanlığı Ruhsatlı Çözümler</span>
+                    <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.0</span>
                 </div>
-            </a>
-            <nav class="hidden lg:flex items-center gap-7 font-semibold text-sm text-slate-700">
-                <a href="#hesapla" class="hover:text-promer-blue transition-colors">Fiyat Hesapla</a>
-                <a href="#tarife-tablosu" class="hover:text-promer-blue transition-colors">Tarife Cetveli</a>
-                <a href="#randevu" class="hover:text-promer-blue transition-colors">Randevu Al</a>
-                <a href="#hakkimizda" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
-            </nav>
-            <div class="hidden sm:flex items-center gap-3">
-                <a href="https://wa.me/908504660022" target="_blank" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
-                    <i class="fa-brands fa-whatsapp text-xl text-emerald-600"></i>
-                    <div class="text-left leading-tight">
-                        <span class="block text-[10px] text-emerald-600 font-bold uppercase">7/24 Destek Hattı</span>
-                        <span>0850 466 00 22</span>
-                    </div>
-                </a>
             </div>
-            <button id="menu-btn" class="lg:hidden text-slate-800 p-2 focus:outline-none">
-                <i class="fa-solid fa-bars text-2xl"></i>
-            </button>
-        </div>
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-xl">
-            <a href="#hesapla" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Fiyat Hesaplama</a>
-            <a href="#tarife-tablosu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Tarife Cetveli</a>
-            <a href="#randevu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Randevu Al</a>
-            <a href="#hakkimizda" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Promer Hakkında</a>
-            <a href="https://wa.me/908504660022" target="_blank" class="flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-xl mt-2">
-                <i class="fa-brands fa-whatsapp text-lg"></i>
-                <span>0850 466 00 22 WhatsApp</span>
+            <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Siteye Dön
             </a>
         </div>
     </header>
 
-    <section class="relative pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-slate-900 via-promer-navy to-slate-900 text-white overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-xs font-bold tracking-wide text-emerald-300">
-                        <i class="fa-solid fa-certificate text-promer-accent text-sm"></i>
-                        <span>T.C. Sağlık Bakanlığı Ruhsatlı & ISO 9001/14001 Sertifikalı</span>
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-                        Promer Güvencesiyle <br class="hidden sm:inline"/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-emerald-300 to-emerald-400">Şeffaf Fiyatlı İlaçlama</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                        Sürpriz maliyet yok! Alan metrekarenizi girin, Sağlık Bakanlığı onaylı biyosidal ilaçlama tarifesinden net faturanızı anında hesaplayıp randevunuzu oluşturun.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                        <a href="#hesapla" class="bg-promer-accent hover:bg-orange-600 text-white font-extrabold px-8 py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-center flex items-center justify-center gap-3 text-base">
-                            <i class="fa-solid fa-calculator text-lg"></i>
-                            <span>Canlı Fiyat Hesapla</span>
-                        </a>
-                        <a href="#randevu" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-8 py-4 rounded-2xl transition-all text-center flex items-center justify-center gap-3 backdrop-blur-md">
-                            <i class="fa-solid fa-calendar-check text-emerald-400 text-lg"></i>
-                            <span>Hızlı Randevu Al</span>
-                        </a>
-                    </div>
-                    <div class="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 text-center lg:text-left">
-                        <div><div class="text-xl sm:text-2xl font-black text-white">20+ Yıl</div><div class="text-xs text-slate-400 font-medium">Sektörel Tecrübe</div></div>
-                        <div><div class="text-xl sm:text-2xl font-black text-emerald-400">%100</div><div class="text-xs text-slate-400 font-medium">Müşteri Memnuniyeti</div></div>
-                        <div><div class="text-xl sm:text-2xl font-black text-blue-300">Garanti</div><div class="text-xs text-slate-400 font-medium">İkinci Seans İndirimi</div></div>
-                    </div>
+    <!-- İSTATİSTİK KARTLARI -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Bugünkü Randevu</span>
+                    <i class="fa-solid fa-calendar-day text-promer-lightBlue"></i>
                 </div>
-                <div class="lg:col-span-5">
-                    <div class="bg-white/95 text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 space-y-6 backdrop-blur-md">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                            <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
-                                <i class="fa-solid fa-shield-halved text-promer-green"></i> 2026 Promer Taban Tarifesi
-                            </h3>
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full">Resmi Onaylı</span>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                                <span class="text-slate-700 font-semibold">0 - 100 m² Standart Alan</span>
-                                <span class="font-extrabold text-promer-navy text-base">2.500 TL <span class="text-xs text-slate-500 font-normal">+ KDV</span></span>
-                            </div>
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                                <span class="text-slate-700 font-semibold">100 m² Üzeri Ek Kademe</span>
-                                <span class="font-extrabold text-promer-blue">+250 TL <span class="text-xs text-slate-500 font-normal">/ her 30m²</span></span>
-                            </div>
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
-                                <span class="text-emerald-950 font-bold">2. Seans Destek Uygulaması</span>
-                                <span class="font-extrabold text-emerald-700">%50 İndirimli</span>
-                            </div>
-                        </div>
-                        <a href="#tarife-tablosu" class="block text-center text-xs text-promer-blue font-bold hover:underline">Tüm Metrekare Kademe Tablosunu İncele &rarr;</a>
-                    </div>
+                <div class="text-3xl font-black" id="stat-today">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Toplam Randevu</span>
+                    <i class="fa-solid fa-list-check text-emerald-400"></i>
                 </div>
+                <div class="text-3xl font-black" id="stat-total">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Dolu Saat</span>
+                    <i class="fa-solid fa-clock text-red-400"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-blocked">0</div>
+            </div>
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Aylık Ciro</span>
+                    <i class="fa-solid fa-turkish-lira-sign text-amber-400"></i>
+                </div>
+                <div class="text-3xl font-black" id="stat-revenue">0</div>
             </div>
         </div>
     </section>
 
-    <section id="hesapla" class="py-20 bg-slate-100/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-                <span class="text-promer-blue font-extrabold text-xs uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">Anlık Canlı Hesaplayıcı</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Promer İlaçlama Ücret Hesaplama</h2>
-                <p class="text-slate-600">Mekan türü, haşere çeşidi ve alan büyüklüğünü girerek net faturanızı anında görün.</p>
-            </div>
-            <div class="max-w-5xl mx-auto bg-white border border-slate-200/80 rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-                <div class="lg:col-span-7 p-6 sm:p-10 space-y-8">
-                    <div>
-                        <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">1</span> Mekan Türünü Seçiniz
-                        </label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                            <button type="button" onclick="setPlaceType('ev', this)" class="place-btn active border-2 border-promer-blue bg-blue-50/60 text-slate-900 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all">
-                                <i class="fa-solid fa-house text-promer-blue text-lg"></i><span>Ev / Daire</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('isyeri', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-building text-slate-500 text-lg"></i><span>İş Yeri / Ofis</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('restoran', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-utensils text-slate-500 text-lg"></i><span>Restoran / Gıda</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('apartman', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-city text-slate-500 text-lg"></i><span>Bina / Site Ortak</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('fabrika', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300 col-span-2 sm:col-span-2">
-                                <i class="fa-solid fa-industry text-slate-500 text-lg"></i><span>Fabrika / Depo / Ticari Tesis</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">2</span> Haşere & Zararlı Türü
-                        </label>
-                        <select id="pest-select" onchange="recalculatePrice()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-bold rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-promer-blue focus:outline-none transition-all">
-                            <option value="Susam Böceği İlaçlama">Susam Böceği İlaçlama</option>
-                            <option value="Hamam Böceği İlaçlama" selected>Hamam Böceği İlaçlama</option>
-                            <option value="Uyuz Böceği İlaçlama">Uyuz Böceği İlaçlama</option>
-                            <option value="Tahta Kurusu İlaçlama">Tahta Kurusu İlaçlama</option>
-                            <option value="Kene İlaçlama">Kene İlaçlama</option>
-                            <option value="Tahta Kurdu İlaçlama">Tahta Kurdu İlaçlama</option>
-                            <option value="Gümüşcün Gümüş Böceği İlaçlama">Gümüşcün Gümüş Böceği İlaçlama</option>
-                            <option value="Çıyan & Kırkayak İlaçlama">Çıyan & Kırkayak İlaçlama</option>
-                            <option value="Güve İlaçlama">Güve İlaçlama</option>
-                            <option value="Karınca İlaçlama">Karınca İlaçlama</option>
-                            <option value="Kuş Biti İlaçlama">Kuş Biti İlaçlama</option>
-                            <option value="Kalorifer Böceği İlaçlama">Kalorifer Böceği İlaçlama</option>
-                            <option value="Örümcek İlaçlama">Örümcek İlaçlama</option>
-                            <option value="Yılan İlaçlama">Yılan İlaçlama</option>
-                            <option value="Arı & Yaban Arısı İlaçlama">Arı & Yaban Arısı İlaçlama</option>
-                            <option value="Karafatma İlaçlama">Karafatma İlaçlama</option>
-                            <option value="Sinek & Kara Sinek İlaçlama">Sinek & Kara Sinek İlaçlama</option>
-                            <option value="Bit İlaçlama">Bit İlaçlama</option>
-                            <option value="Fare & Kemirgen İlaçlama">Fare & Kemirgen (Rodentisit) İlaçlama</option>
-                            <option value="Salyangoz İlaçlama">Salyangoz İlaçlama</option>
-                            <option value="Akrep İlaçlama">Akrep İlaçlama</option>
-                            <option value="Pire İlaçlama">Pire İlaçlama</option>
-                            <option value="Tespih Böceği İlaçlama">Tespih Böceği İlaçlama</option>
-                            <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
-                        </select>
-                        <div id="pest-info-box" class="mt-3 p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-2 text-slate-800">
-                            <div class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-info text-promer-blue text-sm mt-0.5"></i>
-                                <div id="pest-info-text">Seçilen haşere türüne özel Sağlık Bakanlığı onaylı uygulama dökümü.</div>
-                            </div>
-                            <div id="pest-time-container" class="flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-                                <span id="pest-time-text">İlaç Kuruyana Kadar (6-8 Saat) Kimse Olmamalıdır.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <label class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span> Alan Büyüklüğü (m²)
-                            </label>
-                            <div class="flex items-center gap-2">
-                                <input type="number" id="m2-number-input" min="10" max="2000" value="85" oninput="syncFromInput(this.value)" class="w-24 bg-blue-50/80 border-2 border-promer-blue rounded-xl px-3 py-1.5 font-extrabold text-slate-900 text-right focus:outline-none">
-                                <span class="font-bold text-slate-600 text-sm">m²</span>
-                            </div>
-                        </div>
-                        <input type="range" id="m2-slider" min="10" max="500" value="85" step="5" oninput="syncFromSlider(this.value)" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-promer-blue">
-                        <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-semibold">
-                            <span>10 m²</span><span>100 m² (Taban Limit)</span><span>250 m²</span><span>500+ m²</span>
-                        </div>
-                    </div>
+    <!-- TAKVİM -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="font-extrabold text-lg" id="calendar-title">Ekim 2026</h3>
+                    <p class="text-xs text-slate-500">Randevu ve doluluk durumunu görüntüleyin</p>
                 </div>
-                <div class="lg:col-span-5 bg-promer-navy text-white p-6 sm:p-10 flex flex-col justify-between">
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between border-b border-white/10 pb-4">
-                            <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Resmi Hesap Özeti</span>
-                            <span id="tariff-badge" class="bg-blue-500/20 text-blue-200 border border-blue-400/30 text-[11px] font-bold px-3 py-1 rounded-full">0 - 100 m² Tarifesi</span>
-                        </div>
-                        <div class="space-y-2.5 text-sm text-slate-300">
-                            <div class="flex justify-between"><span>1. Seans Ücreti (0-100 m²):</span><span class="font-extrabold text-white">2.500 TL</span></div>
-                            <div class="flex justify-between"><span>Ek Alan Kademe Tutarı:</span><span id="extra-m2-cost" class="font-extrabold text-emerald-400">+0 TL</span></div>
-                            <div class="border-t border-white/10 my-3 pt-3 flex justify-between"><span>KDV Hariç Ara Toplam:</span><span id="subtotal-display" class="font-extrabold text-white">2.500 TL</span></div>
-                            <div class="flex justify-between"><span>KDV Tutar (%20):</span><span id="tax-display" class="font-extrabold text-white">500 TL</span></div>
-                        </div>
-                        <div class="bg-white/10 rounded-2xl p-5 border border-white/15 space-y-2 backdrop-blur-md">
-                            <span class="block text-xs text-slate-300 font-bold uppercase tracking-wider">TOPLAM NET TUTAR (KDV DAHİL)</span>
-                            <div class="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight" id="grand-total-display">3.000 TL</div>
-                            <div id="second-session-info" class="text-xs text-blue-200 bg-blue-950/70 p-3 rounded-xl border border-blue-800/80 mt-3 leading-relaxed"></div>
-                        </div>
-                    </div>
-                    <div class="pt-8">
-                        <button onclick="transferCalcToBooking()" class="w-full bg-promer-accent hover:bg-orange-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-orange-500/20 transition-all flex items-center justify-center gap-2 text-base">
-                            <span>Bu Fiyatla Randevu Adımına Geç</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="tarife-tablosu" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
-                <span class="text-promer-blue font-extrabold text-xs uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Kademeli İlaçlama Cetveli</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Promer Metrekare Dilim Tarifesi</h2>
-                <p class="text-slate-500 text-sm">Aşağıdaki tablodan kendi alanınızın hangi resmi fiyat bandına girdiğini doğrudan görebilirsiniz.</p>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="tariff-cards-container"></div>
-        </div>
-    </section>
-
-    <section id="randevu" class="py-20 bg-slate-100/80">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-promer-green font-extrabold text-xs uppercase tracking-widest bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Anında Rezervasyon</span>
-                <h2 class="text-3xl font-black text-slate-900 mt-2">Promer Online Randevu Oluşturma</h2>
-                <p class="text-slate-600 text-sm">Bilgilerinizi ve uygun olduğunuz saat dilimini seçip doğrudan WhatsApp hattımıza randevunuzu iletin.</p>
-            </div>
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-10">
-                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Ad Soyad *</label>
-                            <input type="text" id="cust-name" required placeholder="Örn: Ahmet Yılmaz" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Telefon Numarası *</label>
-                            <input type="tel" id="cust-phone" required placeholder="05XX XXX XX XX" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">İstanbul İlçesi Seçiniz *</label>
-                            <select id="cust-ilce" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                                <option value="">İlçe Seçin</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Adres / Detay (İsteğe Bağlı)</label>
-                            <input type="text" id="cust-address" placeholder="Mahalle, sokak, bina no" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Randevu Tarihi *</label>
-                            <input type="date" id="cust-date" required onchange="renderTimeSlots()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Saat Dilimi Seçin *</label>
-                            <select id="cust-saat" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                                <option value="">Saat Seçin</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-blue-50/80 rounded-2xl border border-blue-200/80 flex flex-col sm:flex-row justify-between items-center gap-3">
-                        <div class="text-sm">
-                            <span class="text-slate-600 font-semibold">Seçilen Hizmet Tutarı:</span>
-                            <span id="booking-summary-price" class="font-black text-promer-navy ml-2 text-base">3.000 TL (KDV Dahil)</span>
-                        </div>
-                        <span id="booking-summary-details" class="text-xs bg-white px-3.5 py-2 rounded-xl border border-blue-200 font-extrabold text-slate-800 shadow-sm">Ev / 85m² / Hamam Böceği</span>
-                    </div>
-                    <button type="submit" class="w-full bg-promer-green hover:bg-promer-greenDark text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 transition-all flex items-center justify-center gap-3 text-lg">
-                        <i class="fa-solid fa-check-circle text-xl"></i>
-                        <span>Randevuyu Onayla ve WhatsApp'a İlet</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="prevMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
                     </button>
-                </form>
-                <div id="confirmation-card" class="hidden mt-8 p-6 sm:p-8 bg-emerald-50 border-2 border-emerald-500 rounded-3xl space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-emerald-950">Promer Randevu Fişiniz Hazır!</h3>
-                            <p class="text-xs text-emerald-800 font-medium">Talebiniz 0850 466 00 22 numaralı hattımıza iletilmek üzere formatlandı.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner" id="sms-summary-text"></div>
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <a id="whatsapp-btn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-md">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            <span>WhatsApp İle Tek Tıkla Gönder (0850 466 00 22)</span>
-                        </a>
-                        <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold px-6 py-4 rounded-xl text-sm shadow-sm">
-                            <i class="fa-solid fa-print mr-1"></i> Yazdır
-                        </button>
-                    </div>
+                    <button onclick="goToday()" class="px-4 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold text-xs transition-all">
+                        Bugün
+                    </button>
+                    <button onclick="nextMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-7 gap-2 mb-2">
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Pzt</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Sal</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Çar</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Per</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cum</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cmt</div>
+                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Paz</div>
+            </div>
+
+            <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+
+            <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Boş Gün</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span>Kısmen Dolu</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    <span>Tamamen Dolu</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="hakkimizda" class="py-16 bg-white border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-blue text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-certificate"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">Sağlık Bakanlığı Ruhsatlı</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama, T.C. Sağlık Bakanlığı Biyosidal Ürün Uygulama İzin Belgesi ile tam yetkili profesyonel haşere kontrol firmasıdır.</p>
+    <!-- SEÇİLİ GÜN DETAYI -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="font-extrabold text-base flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-promer-lightBlue"></i>
+                        <span id="selected-day-title">Gün Seçin</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1" id="selected-day-subtitle">Yukarıdaki takvimden bir gün seçin</p>
                 </div>
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-green text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-leaf"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">Çevre & İnsan Sağlığı Dostu</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Kullandığımız ilaçlar WHO (Dünya Sağlık Örgütü) standartlarında olup, evcil hayvanlar ve insan sağlığı gözetilerek uygulanır.</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-accent text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-user-shield"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">%100 Memnuniyet & Garanti</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama güvencesiyle yapılan uygulamalarda ihtiyaç halinde 2. seans indirim garantisi ve teknik destek sağlanır.</p>
+            </div>
+
+            <div id="selected-day-content">
+                <div class="text-center py-8 text-slate-500 text-xs">
+                    <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
+                    <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-            <div class="flex items-center justify-center gap-2">
-                <span class="text-lg font-black text-white">PROMER</span>
-                <span class="text-lg font-extrabold text-promer-green">İLAÇLAMA</span>
-            </div>
-            <p class="text-slate-400">T.C. Sağlık Bakanlığı Biyosidal İzinli Profesyonel İlaçlama Hizmetleri — Call Center: 0850 466 00 22</p>
-            <p>&copy; 2026 Promer İlaçlama San. ve Tic. Ltd. Şti. Tüm Hakları Saklıdır.</p>
-        </div>
-    </footer>
 
     <script>
-        const ILCELER = [
-            "Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy",
-            "Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece",
-            "Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa",
-            "Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Sancaktepe",
-            "Sarıyer","Sultanbeyli","Sultangazi","Şişli","Ümraniye","Üsküdar","Zeytinburnu"
+        // =====================================================
+        // Promer Yönetim Paneli v3.0 — Firebase Entegre
+        // =====================================================
+
+        const ALL_SLOTS = [
+            '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
+            '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
+            '18:00 – 19:30'
         ];
 
-        const PROMER_WA_NO = "908504660022";
-
-        const PEST_DETAILS = {
-            "Susam Böceği İlaçlama": { desc: "Nemli ve rutubetli alanlara özel kokusuz sıvı mikro kapsül rezidüel uygulama.", time: "1-2 Saat havalandırma yeterlidir. Mekanı terk etmenize gerek kalmaz.", isWarning: false },
-            "Hamam Böceği İlaçlama": { desc: "Alman, Doğu ve Amerikan hamam böceklerine özel jel yem ve entegre kokusuz sıvı çözümü.", time: "Evden çıkış gerektirmez. Günlük yaşama ara vermeden hemen devam edebilirsiniz.", isWarning: false },
-            "Uyuz Böceği İlaçlama": { desc: "Kişisel eşyalar, yatak ve kumaş dokulara nüfuz eden Promer derinlemesine ilaçlama protokolü.", time: "İlaç tamamen kuruyana kadar 6-8 saat boyunca alanda insan ve evcil hayvan bulunmamalıdır.", isWarning: true },
-            "Tahta Kurusu İlaçlama": { desc: "İki aşamalı özel konsantre ve yumurta kırıcı uygulama. Her seans aynı ücrete tabidir.", time: "Uygulama sonrası ilaç kuruyana kadar 6-8 saat boyunca alan kapalı tutulmalıdır.", isWarning: true },
-            "Kene İlaçlama": { desc: "Bahçe, peyzaj ve bina çevrelerine yönelik koruyucu bariyer ilaçlaması.", time: "İlaç kuruyana kadar 6-8 saat boyunca uygulama alanına girilmemelidir.", isWarning: true },
-            "Tahta Kurdu İlaçlama": { desc: "Ahşap eşyalara ve strüktürlere enjeksiyon & yüzey emprenye yöntemi.", time: "2-3 Saat havalandırma yapılması yeterlidir.", isWarning: false },
-            "Gümüşcün Gümüş Böceği İlaçlama": { desc: "Banyo, lavabo ve tesisat boşluklarına jel ve kokusuz sıvı uygulaması.", time: "1 Saat havalandırma yeterlidir.", isWarning: false },
-            "Çıyan & Kırkayak İlaçlama": { desc: "Bodrum ve zemin kat giriş hatlarına koruyucu bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Güve İlaçlama": { desc: "Gardırop, halı ve kumaş depolama alanlarına yönelik özel buharlı ilaçlama.", time: "Havalandırma sonrası kıyafetler güvenle kullanılabilir.", isWarning: false },
-            "Karınca İlaçlama": { desc: "Kraliçeyi ve tüm koloniyi yok eden özel organik jel yem tekniği.", time: "Mekandan çıkış gerektirmez.", isWarning: false },
-            "Kuş Biti İlaçlama": { desc: "Çatı arası, tavan ve pencere önlerine yoğunlaştırılmış likit bariyer.", time: "İlaç kuruyana kadar 6-8 saat boyunca alanda durulmamalıdır.", isWarning: true },
-            "Kalorifer Böceği İlaçlama": { desc: "Mutfak motor aksamları ve ısı kaynaklarına özel jel.", time: "Evden çıkış gerektirmez.", isWarning: false },
-            "Örümcek İlaçlama": { desc: "Tavan araları ve dış cephe köşelerine ağ engelleyici sıvı.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Yılan İlaçlama": { desc: "Bahçe ve bina çevresi için doğal içerikli kovucu bariyer.", time: "Uygulama sonrası 3-4 saat sahaya girilmez.", isWarning: false },
-            "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma.", time: "İşlem süresince 1 saat alan boş tutulur.", isWarning: false },
-            "Karafatma İlaçlama": { desc: "Logar hatları, bodrum ve zemin kat odaklı kalıcı sıvı ilaçlama.", time: "2-3 Saat havalandırma yeterlidir.", isWarning: false },
-            "Sinek & Kara Sinek İlaçlama": { desc: "Uçkun mücadelesine yönelik Sağlık Bakanlığı onaylı püskürtme.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
-            "Fare & Kemirgen İlaçlama": { desc: "Kilitli güvenlik istasyonları (rodentisit) bina ve daire çevrelerine yerleştirilir.", time: "Kapalı kalma süresi yoktur, günlük yaşama engel olmaz.", isWarning: false },
-            "Salyangoz İlaçlama": { desc: "Peyzaj ve bahçelere özel granül bariyer.", time: "Uygulama sonrası 2 saat çim alanlara basılmamalıdır.", isWarning: false },
-            "Akrep İlaçlama": { desc: "Dış cephe ve kapı altı geçiş noktalarına güçlü koruyucu bariyer.", time: "3-4 Saat havalandırma yeterlidir.", isWarning: false },
-            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
-            "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
-        };
-
-        let state = {
-            placeType: 'ev',
-            pestType: 'Hamam Böceği İlaçlama',
-            m2: 85
-        };
-
-        const PLACE_LABELS = {
-            ev: 'Ev / Daire',
-            isyeri: 'İş Yeri / Ofis',
-            restoran: 'Restoran / Gıda Tesisi',
-            apartman: 'Bina / Site Ortak Alanı',
-            fabrika: 'Fabrika / Depo / Ticari Tesis'
-        };
-
-        const TARIFF_STEPS = [
-            { range: '0 - 100 m²', maxM2: 100, price: 2500 },
-            { range: '101 - 130 m²', maxM2: 130, price: 2750 },
-            { range: '131 - 160 m²', maxM2: 160, price: 3000 },
-            { range: '161 - 190 m²', maxM2: 190, price: 3250 },
-            { range: '191 - 220 m²', maxM2: 220, price: 3500 },
-            { range: '221 - 250 m²', maxM2: 250, price: 3750 }
+        const AY_ADLARI = [
+            'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
         ];
 
-        function setPlaceType(type, btnElement) {
-            state.placeType = type;
-            document.querySelectorAll('.place-btn').forEach(b => {
-                b.classList.remove('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
-                b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
-            });
-            btnElement.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
-            btnElement.classList.add('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
-            recalculatePrice();
+        let currentDate = new Date();
+        let selectedDate = null;
+        let blockedSlotsCache = {}; // Firebase'den gelen kapalı saatler
+
+        // Firebase referansları (global)
+        let db, firebaseAddDoc, firebaseSetDoc, firebaseDeleteDoc, firebaseDoc, firebaseCollection, firebaseGetDocs, firebaseQuery, firebaseWhere;
+
+        // ---------- YARDIMCILAR ----------
+        function formatDateKey(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
         }
 
-        function syncFromSlider(val) {
-            state.m2 = parseInt(val) || 10;
-            document.getElementById('m2-number-input').value = state.m2;
-            recalculatePrice();
+        function todayKey() {
+            return formatDateKey(new Date());
         }
 
-        function syncFromInput(val) {
-            let num = parseInt(val) || 10;
-            if (num > 2000) num = 2000;
-            state.m2 = num;
-            document.getElementById('m2-slider').value = Math.min(num, 500);
-            recalculatePrice();
-        }
-
-        function recalculatePrice() {
-            const pestSelect = document.getElementById('pest-select');
-            state.pestType = pestSelect.value;
-
-            const details = PEST_DETAILS[state.pestType] || { desc: "Promer standart ilaçlama protokolü uygulanır.", time: "1 Saat havalandırma yeterlidir.", isWarning: false };
-            document.getElementById('pest-info-text').innerText = details.desc;
-            document.getElementById('pest-time-text').innerText = details.time;
-
-            const timeContainer = document.getElementById('pest-time-container');
-            if (details.isWarning) {
-                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl";
-                timeContainer.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600"></i><span id="pest-time-text">${details.time}</span>`;
-            } else {
-                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-emerald-950 bg-emerald-50/90 p-2.5 rounded-xl";
-                timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
-            }
-
-            let basePrice = 2500;
-            let extraCost = 0;
-
-            if (state.m2 > 100) {
-                const extraM2 = state.m2 - 100;
-                const steps = Math.ceil(extraM2 / 30);
-                extraCost = steps * 250;
-            }
-
-            const subtotal = basePrice + extraCost;
-            const tax = Math.round(subtotal * 0.20);
-            const grandTotal = subtotal + tax;
-
-            document.getElementById('extra-m2-cost').innerText = '+' + extraCost.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('subtotal-display').innerText = subtotal.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('tax-display').innerText = tax.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('grand-total-display').innerText = grandTotal.toLocaleString('tr-TR') + ' TL';
-
-            const secondSessionBox = document.getElementById('second-session-info');
-            if (state.pestType === 'Tahta Kurusu İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Tahtakurusu Protokolü:</strong> Yumurta kırma evresi gereği 2. seans bağımsız standart seans ücretinden uygulanır.';
-            } else {
-                const secondPrice = Math.round((subtotal * 0.5) * 1.20);
-                secondSessionBox.innerHTML = `<strong>2. Seans Promer İndirimi:</strong> İhtiyaç duyulması halinde yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak <strong>${secondPrice.toLocaleString('tr-TR')} TL</strong> (KDV Dahil) fiyattan uygulanır.`;
-            }
-
-            document.getElementById('booking-summary-price').innerText = grandTotal.toLocaleString('tr-TR') + ' TL (KDV Dahil)';
-            document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
-
-            renderTariffCards();
-        }
-
-        function renderTariffCards() {
-            const container = document.getElementById('tariff-cards-container');
-            container.innerHTML = '';
-
-            TARIFF_STEPS.forEach(step => {
-                const isActive = (state.m2 <= step.maxM2 && (step.maxM2 === 100 || state.m2 > (step.maxM2 - 30)));
-                const card = document.createElement('div');
-                card.className = `p-4 rounded-2xl border text-center transition-all ${
-                    isActive 
-                    ? 'bg-promer-blue text-white border-promer-blue shadow-lg scale-105 font-bold' 
-                    : 'bg-slate-50 border-slate-200 text-slate-700'
-                }`;
-
-                card.innerHTML = `
-                    <span class="block text-xs uppercase tracking-wider ${isActive ? 'text-blue-100' : 'text-slate-400'} font-semibold">${step.range}</span>
-                    <span class="block text-lg font-black my-1">${step.price.toLocaleString('tr-TR')} TL</span>
-                    <span class="text-[10px] ${isActive ? 'text-white' : 'text-slate-500'} font-normal">+ KDV Hariç</span>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // ⭐ FIREBASE ENTEGRE: Kapalı saatleri Firebase'den oku
-        async function renderTimeSlots() {
-            const sel = document.getElementById('cust-saat');
-            const dateInput = document.getElementById('cust-date').value;
-            
-            const allSlots = [
-                '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
-                '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
-                '18:00 – 19:30'
-            ];
-            
-            // Önce tüm saatleri göster (Firebase yüklenmemişse de çalışsın)
-            let blockedSlots = {};
+        // ---------- FIREBASE'DEN VERİ OKU ----------
+        async function loadBlockedSlots() {
+            if (!db || !firebaseGetDocs || !firebaseCollection) return;
             
             try {
-                // Firebase'den kapalı saatleri oku
-                if (window.firebaseDB && window.firebaseGetDocs) {
-                    const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
-                    const snapshot = await window.firebaseGetDocs(blockedRef);
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        if (data.date === dateInput && data.blocked) {
-                            blockedSlots[data.slot] = true;
-                        }
-                    });
-                }
+                const blockedRef = firebaseCollection(db, 'blocked_slots');
+                const snapshot = await firebaseGetDocs(blockedRef);
+                
+                blockedSlotsCache = {};
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.blocked) {
+                        const key = `${data.date}|${data.slot}`;
+                        blockedSlotsCache[key] = doc.id; // Firebase doc ID'sini sakla
+                    }
+                });
+                
+                renderCalendar();
+                renderSelectedDay();
+                updateStats();
             } catch (error) {
-                console.log('Firebase hatası (önemsiz):', error);
+                console.error('Firebase okuma hatası:', error);
             }
-            
-            // Kapalı saatleri filtrele
-            const availableSlots = allSlots.filter(slot => !blockedSlots[slot]);
-            
-            if (availableSlots.length === 0) {
-                sel.innerHTML = '<option value="">Bu tarihte müsait saat yok</option>';
+        }
+
+        // ---------- TAKVİM RENDER ----------
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('calendar-title').textContent = `${AY_ADLARI[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            let startDay = firstDay.getDay() - 1;
+            if (startDay < 0) startDay = 6;
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'aspect-square rounded-lg';
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const dateKey = formatDateKey(dateObj);
+                const isToday = dateKey === todayKey();
+                const isSelected = dateKey === selectedDate;
+                const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
+
+                // Bu günün kapalı saatlerini say
+                let blockedCount = 0;
+                ALL_SLOTS.forEach(slot => {
+                    if (blockedSlotsCache[`${dateKey}|${slot}`]) blockedCount++;
+                });
+
+                let statusColor = 'bg-emerald-500';
+                if (blockedCount >= 7) {
+                    statusColor = 'bg-red-500';
+                } else if (blockedCount > 0) {
+                    statusColor = 'bg-amber-500';
+                }
+
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.onclick = () => selectDay(dateKey);
+                cell.className = `aspect-square rounded-lg relative transition-all p-1.5 text-left flex flex-col justify-between ${
+                    isSelected
+                        ? 'bg-promer-blue ring-2 ring-promer-lightBlue shadow-lg'
+                        : isToday
+                            ? 'bg-slate-800 ring-2 ring-amber-500/60 hover:bg-slate-700'
+                            : 'bg-slate-950 hover:bg-slate-800 border border-slate-800'
+                }`;
+
+                cell.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <span class="text-sm font-black ${isWeekend ? 'text-amber-400' : 'text-white'}">${day}</span>
+                        <span class="w-2 h-2 rounded-full ${statusColor}"></span>
+                    </div>
+                    ${blockedCount > 0 ? `
+                        <div class="text-[9px] text-amber-400 font-bold">
+                            <i class="fa-solid fa-lock"></i> ${blockedCount}
+                        </div>
+                    ` : `
+                        <div class="text-[9px] text-emerald-500/60">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                    `}
+                `;
+                grid.appendChild(cell);
+            }
+        }
+
+        // ---------- GÜN SEÇİMİ ----------
+        function selectDay(dateKey) {
+            selectedDate = dateKey;
+            renderCalendar();
+            renderSelectedDay();
+        }
+
+        function renderSelectedDay() {
+            const content = document.getElementById('selected-day-content');
+            const title = document.getElementById('selected-day-title');
+            const subtitle = document.getElementById('selected-day-subtitle');
+
+            if (!selectedDate) {
+                title.textContent = 'Gün Seçin';
+                subtitle.textContent = 'Yukarıdaki takvimden bir gün seçin';
+                content.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
+                        <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
+                    </div>
+                `;
                 return;
             }
-            
-            sel.innerHTML = '<option value="">Saat Seçin</option>' + 
-                availableSlots.map(s => `<option value="${s}">${s}</option>`).join('');
-        }
 
-        function transferCalcToBooking() {
-            document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function submitBooking(e) {
-            e.preventDefault();
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const ilce = document.getElementById('cust-ilce').value;
-            const address = document.getElementById('cust-address').value || "Belirtilmedi";
-            const date = document.getElementById('cust-date').value;
-            const saat = document.getElementById('cust-saat').value;
-            const grandTotal = document.getElementById('grand-total-display').innerText;
-
-            const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
-----------------------------------
-• Ad Soyad   : ${name}
-• Telefon    : ${phone}
-• İlçe       : ${ilce}
-• Adres      : ${address}
-• Tarih / Saat: ${date} - ${saat}
-• Mekan      : ${PLACE_LABELS[state.placeType]} (${state.m2} m²)
-• Haşere Türü: ${state.pestType}
-----------------------------------
-• Toplam Tutar: ${grandTotal} (KDV Dahil)`;
-
-            document.getElementById('sms-summary-text').innerText = summaryText;
-
-            const waMsg = encodeURIComponent(summaryText);
-            document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
-
-            document.getElementById('confirmation-card').classList.remove('hidden');
-            document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        window.onload = function() {
-            const ilceSelect = document.getElementById('cust-ilce');
-            ilceSelect.innerHTML = '<option value="">İlçe Seçin</option>' + ILCELER.map(i => `<option value="${i}">${i}</option>`).join('');
-
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const yyyy = tomorrow.getFullYear();
-            const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-            const dd = String(tomorrow.getDate()).padStart(2, '0');
-            
-            const dateInput = document.getElementById('cust-date');
-            dateInput.min = `${yyyy}-${mm}-${dd}`;
-            dateInput.value = `${yyyy}-${mm}-${dd}`;
-
-            document.getElementById('menu-btn').onclick = () => {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            };
-
-            recalculatePrice();
-            
-            // Firebase hazır olduğunda da çalıştır
-            window.addEventListener('firebaseReady', () => {
-                renderTimeSlots();
+            const [y, m, d] = selectedDate.split('-');
+            const dateObj = new Date(y, m - 1, d);
+            title.textContent = dateObj.toLocaleDateString('tr-TR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
+
+            // Bu günün kapalı saatlerini say
+            let blockedCount = 0;
+            ALL_SLOTS.forEach(slot => {
+                if (blockedSlotsCache[`${selectedDate}|${slot}`]) blockedCount++;
+            });
+
+            subtitle.textContent = `${blockedCount} kapalı · ${ALL_SLOTS.length} saat dilimi`;
+
+            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
+
+            ALL_SLOTS.forEach(slot => {
+                const key = `${selectedDate}|${slot}`;
+                const isBlocked = !!blockedSlotsCache[key];
+
+                html += `
+                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <i class="fa-regular fa-clock text-slate-500 text-xs"></i>
+                            <span class="font-bold text-xs">${slot}</span>
+                            ${isBlocked ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>' : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}
+                        </div>
+                        <button onclick="toggleSlot('${selectedDate}', '${slot}')" class="text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${
+                            isBlocked 
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30' 
+                            : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'
+                        }">
+                            ${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}
+                        </button>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        // ---------- SAAT BLOKLAMA (FIREBASE) ----------
+        async function toggleSlot(dateKey, slot) {
+            const key = `${dateKey}|${slot}`;
+            const existingDocId = blockedSlotsCache[key];
+
+            try {
+                if (existingDocId) {
+                    // Aç - Firebase'den sil
+                    await firebaseDeleteDoc(firebaseDoc(db, 'blocked_slots', existingDocId));
+                    delete blockedSlotsCache[key];
+                } else {
+                    // Kapat - Firebase'e ekle
+                    const newDocRef = await firebaseAddDoc(firebaseCollection(db, 'blocked_slots'), {
+                        date: dateKey,
+                        slot: slot,
+                        blocked: true,
+                        createdAt: new Date().toISOString()
+                    });
+                    blockedSlotsCache[key] = newDocRef.id;
+                }
+
+                renderCalendar();
+                renderSelectedDay();
+                updateStats();
+            } catch (error) {
+                console.error('Firebase yazma hatası:', error);
+                alert('Hata oluştu: ' + error.message);
+            }
+        }
+
+        // ---------- AY GEZİNTİSİ ----------
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+        function goToday() {
+            currentDate = new Date();
+            selectedDate = todayKey();
+            renderCalendar();
+            renderSelectedDay();
+        }
+
+        // ---------- İSTATİSTİK ----------
+        function updateStats() {
+            const today = todayKey();
             
-            // Sayfa yüklendiğinde hemen çalıştır (Firebase'i bekleme)
-            renderTimeSlots();
-        };
+            let todayCount = 0;
+            let totalBlocked = 0;
+            
+            Object.keys(blockedSlotsCache).forEach(key => {
+                const [date] = key.split('|');
+                if (date === today) todayCount++;
+                totalBlocked++;
+            });
+
+            document.getElementById('stat-today').textContent = todayCount;
+            document.getElementById('stat-total').textContent = '0'; // Firebase'den randevu sayısı gelecek
+            document.getElementById('stat-blocked').textContent = totalBlocked;
+            document.getElementById('stat-revenue').textContent = '0 ₺';
+        }
+
+        // ---------- FIREBASE BAŞLAT ----------
+        window.addEventListener('firebaseReady', () => {
+            loadBlockedSlots();
+        });
+
+        // Firebase modülünden gelecek event'i bekle
+        window.addEventListener('load', () => {
+            selectedDate = todayKey();
+            currentDate = new Date();
+            renderCalendar();
+            renderSelectedDay();
+            
+            // Firebase hazırsa hemen yükle
+            if (window.firebaseDB) {
+                loadBlockedSlots();
+            }
+        });
     </script>
 
-    <!-- FIREBASE SDK - Sayfa yüklendikten sonra yükle -->
+    <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { 
+            getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc, query, where 
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
@@ -667,14 +452,32 @@
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
             
+            // Global referanslar
             window.firebaseDB = db;
-            window.firebaseGetDocs = getDocs;
+            window.firebaseAddDoc = addDoc;
+            window.firebaseSetDoc = setDoc;
+            window.firebaseDeleteDoc = deleteDoc;
+            window.firebaseDoc = doc;
             window.firebaseCollection = collection;
+            window.firebaseGetDocs = getDocs;
+            window.firebaseQuery = query;
+            window.firebaseWhere = where;
             
-            // Firebase hazır, saat listesini güncelle
+            // Global değişkenlere ata
+            db = window.firebaseDB;
+            firebaseAddDoc = window.firebaseAddDoc;
+            firebaseSetDoc = window.firebaseSetDoc;
+            firebaseDeleteDoc = window.firebaseDeleteDoc;
+            firebaseDoc = window.firebaseDoc;
+            firebaseCollection = window.firebaseCollection;
+            firebaseGetDocs = window.firebaseGetDocs;
+            firebaseQuery = window.firebaseQuery;
+            firebaseWhere = window.firebaseWhere;
+            
+            // Firebase hazır event'i
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
-            console.log('Firebase başlatma hatası:', error);
+            console.error('Firebase başlatma hatası:', error);
         }
     </script>
 </body>
