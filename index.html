@@ -8,34 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FIREBASE SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
-            authDomain: "promer-randevu.firebaseapp.com",
-            projectId: "promer-randevu",
-            storageBucket: "promer-randevu.firebasestorage.app",
-            messagingSenderId: "406588092985",
-            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        // Global erişim
-        window.firebaseDB = db;
-        window.firebaseGetDocs = getDocs;
-        window.firebaseCollection = collection;
-        window.firebaseReady = true;
-        
-        // Firebase hazır olduğunda saat listesini güncelle
-        window.dispatchEvent(new Event('firebaseReady'));
-    </script>
-    
     <script>
         tailwind.config = {
             theme: {
@@ -352,4 +324,17 @@
                     </div>
                     <button type="submit" class="w-full bg-promer-green hover:bg-promer-greenDark text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 transition-all flex items-center justify-center gap-3 text-lg">
                         <i class="fa-solid fa-check-circle text-xl"></i>
-                        <span>Randevuyu Onayla ve WhatsApp'a İlet</span
+                        <span>Randevuyu Onayla ve WhatsApp'a İlet</span>
+                    </button>
+                </form>
+                <div id="confirmation-card" class="hidden mt-8 p-6 sm:p-8 bg-emerald-50 border-2 border-emerald-500 rounded-3xl space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-emerald-950">Promer Randevu Fişiniz Hazır!</h3>
+                            <p class="text-xs text-emerald-800 font-medium">Talebiniz 0850 466 00 22 numaralı hattımıza iletilmek üzere formatlandı.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner
