@@ -337,4 +337,345 @@
                             <p class="text-xs text-emerald-800 font-medium">Talebiniz 0850 466 00 22 numaralı hattımıza iletilmek üzere formatlandı.</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner
+                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner" id="sms-summary-text"></div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a id="whatsapp-btn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-md">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <span>WhatsApp İle Tek Tıkla Gönder (0850 466 00 22)</span>
+                        </a>
+                        <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold px-6 py-4 rounded-xl text-sm shadow-sm">
+                            <i class="fa-solid fa-print mr-1"></i> Yazdır
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hakkimizda" class="py-16 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div class="w-10 h-10 bg-promer-blue text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-certificate"></i></div>
+                    <h3 class="font-extrabold text-slate-900 text-base">Sağlık Bakanlığı Ruhsatlı</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama, T.C. Sağlık Bakanlığı Biyosidal Ürün Uygulama İzin Belgesi ile tam yetkili profesyonel haşere kontrol firmasıdır.</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div class="w-10 h-10 bg-promer-green text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-leaf"></i></div>
+                    <h3 class="font-extrabold text-slate-900 text-base">Çevre & İnsan Sağlığı Dostu</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Kullandığımız ilaçlar WHO (Dünya Sağlık Örgütü) standartlarında olup, evcil hayvanlar ve insan sağlığı gözetilerek uygulanır.</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div class="w-10 h-10 bg-promer-accent text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3 class="font-extrabold text-slate-900 text-base">%100 Memnuniyet & Garanti</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama güvencesiyle yapılan uygulamalarda ihtiyaç halinde 2. seans indirim garantisi ve teknik destek sağlanır.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <div class="flex items-center justify-center gap-2">
+                <span class="text-lg font-black text-white">PROMER</span>
+                <span class="text-lg font-extrabold text-promer-green">İLAÇLAMA</span>
+            </div>
+            <p class="text-slate-400">T.C. Sağlık Bakanlığı Biyosidal İzinli Profesyonel İlaçlama Hizmetleri — Call Center: 0850 466 00 22</p>
+            <p>&copy; 2026 Promer İlaçlama San. ve Tic. Ltd. Şti. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script>
+        const ILCELER = [
+            "Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy",
+            "Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece",
+            "Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa",
+            "Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Sancaktepe",
+            "Sarıyer","Sultanbeyli","Sultangazi","Şişli","Ümraniye","Üsküdar","Zeytinburnu"
+        ];
+
+        const PROMER_WA_NO = "908504660022";
+
+        const PEST_DETAILS = {
+            "Susam Böceği İlaçlama": { desc: "Nemli ve rutubetli alanlara özel kokusuz sıvı mikro kapsül rezidüel uygulama.", time: "1-2 Saat havalandırma yeterlidir. Mekanı terk etmenize gerek kalmaz.", isWarning: false },
+            "Hamam Böceği İlaçlama": { desc: "Alman, Doğu ve Amerikan hamam böceklerine özel jel yem ve entegre kokusuz sıvı çözümü.", time: "Evden çıkış gerektirmez. Günlük yaşama ara vermeden hemen devam edebilirsiniz.", isWarning: false },
+            "Uyuz Böceği İlaçlama": { desc: "Kişisel eşyalar, yatak ve kumaş dokulara nüfuz eden Promer derinlemesine ilaçlama protokolü.", time: "İlaç tamamen kuruyana kadar 6-8 saat boyunca alanda insan ve evcil hayvan bulunmamalıdır.", isWarning: true },
+            "Tahta Kurusu İlaçlama": { desc: "İki aşamalı özel konsantre ve yumurta kırıcı uygulama. Her seans aynı ücrete tabidir.", time: "Uygulama sonrası ilaç kuruyana kadar 6-8 saat boyunca alan kapalı tutulmalıdır.", isWarning: true },
+            "Kene İlaçlama": { desc: "Bahçe, peyzaj ve bina çevrelerine yönelik koruyucu bariyer ilaçlaması.", time: "İlaç kuruyana kadar 6-8 saat boyunca uygulama alanına girilmemelidir.", isWarning: true },
+            "Tahta Kurdu İlaçlama": { desc: "Ahşap eşyalara ve strüktürlere enjeksiyon & yüzey emprenye yöntemi.", time: "2-3 Saat havalandırma yapılması yeterlidir.", isWarning: false },
+            "Gümüşcün Gümüş Böceği İlaçlama": { desc: "Banyo, lavabo ve tesisat boşluklarına jel ve kokusuz sıvı uygulaması.", time: "1 Saat havalandırma yeterlidir.", isWarning: false },
+            "Çıyan & Kırkayak İlaçlama": { desc: "Bodrum ve zemin kat giriş hatlarına koruyucu bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
+            "Güve İlaçlama": { desc: "Gardırop, halı ve kumaş depolama alanlarına yönelik özel buharlı ilaçlama.", time: "Havalandırma sonrası kıyafetler güvenle kullanılabilir.", isWarning: false },
+            "Karınca İlaçlama": { desc: "Kraliçeyi ve tüm koloniyi yok eden özel organik jel yem tekniği.", time: "Mekandan çıkış gerektirmez.", isWarning: false },
+            "Kuş Biti İlaçlama": { desc: "Çatı arası, tavan ve pencere önlerine yoğunlaştırılmış likit bariyer.", time: "İlaç kuruyana kadar 6-8 saat boyunca alanda durulmamalıdır.", isWarning: true },
+            "Kalorifer Böceği İlaçlama": { desc: "Mutfak motor aksamları ve ısı kaynaklarına özel jel.", time: "Evden çıkış gerektirmez.", isWarning: false },
+            "Örümcek İlaçlama": { desc: "Tavan araları ve dış cephe köşelerine ağ engelleyici sıvı.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
+            "Yılan İlaçlama": { desc: "Bahçe ve bina çevresi için doğal içerikli kovucu bariyer.", time: "Uygulama sonrası 3-4 saat sahaya girilmez.", isWarning: false },
+            "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma.", time: "İşlem süresince 1 saat alan boş tutulur.", isWarning: false },
+            "Karafatma İlaçlama": { desc: "Logar hatları, bodrum ve zemin kat odaklı kalıcı sıvı ilaçlama.", time: "2-3 Saat havalandırma yeterlidir.", isWarning: false },
+            "Sinek & Kara Sinek İlaçlama": { desc: "Uçkun mücadelesine yönelik Sağlık Bakanlığı onaylı püskürtme.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
+            "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
+            "Fare & Kemirgen İlaçlama": { desc: "Kilitli güvenlik istasyonları (rodentisit) bina ve daire çevrelerine yerleştirilir.", time: "Kapalı kalma süresi yoktur, günlük yaşama engel olmaz.", isWarning: false },
+            "Salyangoz İlaçlama": { desc: "Peyzaj ve bahçelere özel granül bariyer.", time: "Uygulama sonrası 2 saat çim alanlara basılmamalıdır.", isWarning: false },
+            "Akrep İlaçlama": { desc: "Dış cephe ve kapı altı geçiş noktalarına güçlü koruyucu bariyer.", time: "3-4 Saat havalandırma yeterlidir.", isWarning: false },
+            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç tamamen kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
+            "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
+            "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
+        };
+
+        let state = {
+            placeType: 'ev',
+            pestType: 'Hamam Böceği İlaçlama',
+            m2: 85
+        };
+
+        const PLACE_LABELS = {
+            ev: 'Ev / Daire',
+            isyeri: 'İş Yeri / Ofis',
+            restoran: 'Restoran / Gıda Tesisi',
+            apartman: 'Bina / Site Ortak Alanı',
+            fabrika: 'Fabrika / Depo / Ticari Tesis'
+        };
+
+        const TARIFF_STEPS = [
+            { range: '0 - 100 m²', maxM2: 100, price: 2500 },
+            { range: '101 - 130 m²', maxM2: 130, price: 2750 },
+            { range: '131 - 160 m²', maxM2: 160, price: 3000 },
+            { range: '161 - 190 m²', maxM2: 190, price: 3250 },
+            { range: '191 - 220 m²', maxM2: 220, price: 3500 },
+            { range: '221 - 250 m²', maxM2: 250, price: 3750 }
+        ];
+
+        function setPlaceType(type, btnElement) {
+            state.placeType = type;
+            document.querySelectorAll('.place-btn').forEach(b => {
+                b.classList.remove('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
+                b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
+            });
+            btnElement.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
+            btnElement.classList.add('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
+            recalculatePrice();
+        }
+
+        function syncFromSlider(val) {
+            state.m2 = parseInt(val) || 10;
+            document.getElementById('m2-number-input').value = state.m2;
+            recalculatePrice();
+        }
+
+        function syncFromInput(val) {
+            let num = parseInt(val) || 10;
+            if (num > 2000) num = 2000;
+            state.m2 = num;
+            document.getElementById('m2-slider').value = Math.min(num, 500);
+            recalculatePrice();
+        }
+
+        function recalculatePrice() {
+            const pestSelect = document.getElementById('pest-select');
+            state.pestType = pestSelect.value;
+
+            const details = PEST_DETAILS[state.pestType] || { desc: "Promer standart ilaçlama protokolü uygulanır.", time: "1 Saat havalandırma yeterlidir.", isWarning: false };
+            document.getElementById('pest-info-text').innerText = details.desc;
+            document.getElementById('pest-time-text').innerText = details.time;
+
+            const timeContainer = document.getElementById('pest-time-container');
+            if (details.isWarning) {
+                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl";
+                timeContainer.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600"></i><span id="pest-time-text">${details.time}</span>`;
+            } else {
+                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-emerald-950 bg-emerald-50/90 p-2.5 rounded-xl";
+                timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
+            }
+
+            let basePrice = 2500;
+            let extraCost = 0;
+
+            if (state.m2 > 100) {
+                const extraM2 = state.m2 - 100;
+                const steps = Math.ceil(extraM2 / 30);
+                extraCost = steps * 250;
+            }
+
+            const subtotal = basePrice + extraCost;
+            const tax = Math.round(subtotal * 0.20);
+            const grandTotal = subtotal + tax;
+
+            document.getElementById('extra-m2-cost').innerText = '+' + extraCost.toLocaleString('tr-TR') + ' TL';
+            document.getElementById('subtotal-display').innerText = subtotal.toLocaleString('tr-TR') + ' TL';
+            document.getElementById('tax-display').innerText = tax.toLocaleString('tr-TR') + ' TL';
+            document.getElementById('grand-total-display').innerText = grandTotal.toLocaleString('tr-TR') + ' TL';
+
+            const secondSessionBox = document.getElementById('second-session-info');
+            if (state.pestType === 'Tahta Kurusu İlaçlama') {
+                secondSessionBox.innerHTML = '<strong>Promer Tahtakurusu Protokolü:</strong> Yumurta kırma evresi gereği 2. seans bağımsız standart seans ücretinden uygulanır.';
+            } else {
+                const secondPrice = Math.round((subtotal * 0.5) * 1.20);
+                secondSessionBox.innerHTML = `<strong>2. Seans Promer İndirimi:</strong> İhtiyaç duyulması halinde yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak <strong>${secondPrice.toLocaleString('tr-TR')} TL</strong> (KDV Dahil) fiyattan uygulanır.`;
+            }
+
+            document.getElementById('booking-summary-price').innerText = grandTotal.toLocaleString('tr-TR') + ' TL (KDV Dahil)';
+            document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
+
+            renderTariffCards();
+        }
+
+        function renderTariffCards() {
+            const container = document.getElementById('tariff-cards-container');
+            container.innerHTML = '';
+
+            TARIFF_STEPS.forEach(step => {
+                const isActive = (state.m2 <= step.maxM2 && (step.maxM2 === 100 || state.m2 > (step.maxM2 - 30)));
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border text-center transition-all ${
+                    isActive 
+                    ? 'bg-promer-blue text-white border-promer-blue shadow-lg scale-105 font-bold' 
+                    : 'bg-slate-50 border-slate-200 text-slate-700'
+                }`;
+
+                card.innerHTML = `
+                    <span class="block text-xs uppercase tracking-wider ${isActive ? 'text-blue-100' : 'text-slate-400'} font-semibold">${step.range}</span>
+                    <span class="block text-lg font-black my-1">${step.price.toLocaleString('tr-TR')} TL</span>
+                    <span class="text-[10px] ${isActive ? 'text-white' : 'text-slate-500'} font-normal">+ KDV Hariç</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ⭐ FIREBASE ENTEGRE: Kapalı saatleri Firebase'den oku
+        async function renderTimeSlots() {
+            const sel = document.getElementById('cust-saat');
+            const dateInput = document.getElementById('cust-date').value;
+            
+            const allSlots = [
+                '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
+                '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
+                '18:00 – 19:30'
+            ];
+            
+            // Önce tüm saatleri göster (Firebase yüklenmemişse de çalışsın)
+            let blockedSlots = {};
+            
+            try {
+                // Firebase'den kapalı saatleri oku
+                if (window.firebaseDB && window.firebaseGetDocs) {
+                    const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
+                    const snapshot = await window.firebaseGetDocs(blockedRef);
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.date === dateInput && data.blocked) {
+                            blockedSlots[data.slot] = true;
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('Firebase hatası (önemsiz):', error);
+            }
+            
+            // Kapalı saatleri filtrele
+            const availableSlots = allSlots.filter(slot => !blockedSlots[slot]);
+            
+            if (availableSlots.length === 0) {
+                sel.innerHTML = '<option value="">Bu tarihte müsait saat yok</option>';
+                return;
+            }
+            
+            sel.innerHTML = '<option value="">Saat Seçin</option>' + 
+                availableSlots.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+
+        function transferCalcToBooking() {
+            document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const ilce = document.getElementById('cust-ilce').value;
+            const address = document.getElementById('cust-address').value || "Belirtilmedi";
+            const date = document.getElementById('cust-date').value;
+            const saat = document.getElementById('cust-saat').value;
+            const grandTotal = document.getElementById('grand-total-display').innerText;
+
+            const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
+----------------------------------
+• Ad Soyad   : ${name}
+• Telefon    : ${phone}
+• İlçe       : ${ilce}
+• Adres      : ${address}
+• Tarih / Saat: ${date} - ${saat}
+• Mekan      : ${PLACE_LABELS[state.placeType]} (${state.m2} m²)
+• Haşere Türü: ${state.pestType}
+----------------------------------
+• Toplam Tutar: ${grandTotal} (KDV Dahil)`;
+
+            document.getElementById('sms-summary-text').innerText = summaryText;
+
+            const waMsg = encodeURIComponent(summaryText);
+            document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
+
+            document.getElementById('confirmation-card').classList.remove('hidden');
+            document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = function() {
+            const ilceSelect = document.getElementById('cust-ilce');
+            ilceSelect.innerHTML = '<option value="">İlçe Seçin</option>' + ILCELER.map(i => `<option value="${i}">${i}</option>`).join('');
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const yyyy = tomorrow.getFullYear();
+            const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const dd = String(tomorrow.getDate()).padStart(2, '0');
+            
+            const dateInput = document.getElementById('cust-date');
+            dateInput.min = `${yyyy}-${mm}-${dd}`;
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+            document.getElementById('menu-btn').onclick = () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            };
+
+            recalculatePrice();
+            
+            // Firebase hazır olduğunda da çalıştır
+            window.addEventListener('firebaseReady', () => {
+                renderTimeSlots();
+            });
+            
+            // Sayfa yüklendiğinde hemen çalıştır (Firebase'i bekleme)
+            renderTimeSlots();
+        };
+    </script>
+
+    <!-- FIREBASE SDK - Sayfa yüklendikten sonra yükle -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+            authDomain: "promer-randevu.firebaseapp.com",
+            projectId: "promer-randevu",
+            storageBucket: "promer-randevu.firebasestorage.app",
+            messagingSenderId: "406588092985",
+            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+        };
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            
+            window.firebaseDB = db;
+            window.firebaseGetDocs = getDocs;
+            window.firebaseCollection = collection;
+            
+            // Firebase hazır, saat listesini güncelle
+            window.dispatchEvent(new Event('firebaseReady'));
+        } catch (error) {
+            console.log('Firebase başlatma hatası:', error);
+        }
+    </script>
+</body>
+</html>
