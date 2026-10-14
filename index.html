@@ -229,6 +229,8 @@
                             <option value="Tespih Böceği İlaçlama">Tespih Böceği İlaçlama</option>
                             <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
                         </select>
+                        
+                        <!-- NORMAL BİLGİ KUTUSU -->
                         <div id="pest-info-box" class="mt-3 p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-2 text-slate-800">
                             <div class="flex items-start gap-2.5">
                                 <i class="fa-solid fa-circle-info text-promer-blue text-sm mt-0.5"></i>
@@ -237,6 +239,98 @@
                             <div id="pest-time-container" class="flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl">
                                 <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
                                 <span id="pest-time-text">İlaç Kuruyana Kadar (6-8 Saat) Kimse Olmamalıdır.</span>
+                            </div>
+                        </div>
+
+                        <!-- ⭐ PİRE İÇİN ÖZEL DETAY KUTUSU -->
+                        <div id="flea-detail-box" class="mt-3 hidden">
+                            <div class="p-5 bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 rounded-2xl space-y-4 text-xs text-slate-800">
+                                
+                                <div class="flex items-center gap-2 border-b border-red-200 pb-3">
+                                    <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-bug text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-black text-red-950 text-sm">PİRE İLAÇLAMA - DETAYLI BİLGİ</h4>
+                                        <p class="text-[10px] text-red-700">Sağlık Bakanlığı onaylı profesyonel uygulama</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-spray-can"></i> Uygulama
+                                    </div>
+                                    <p class="text-slate-700 leading-relaxed pl-5">
+                                        Evdeki <strong>yataklar, koltuklar ve tüm zemin</strong> kuru yer kalmayacak şekilde ilaçlanır. Kullanılan ilaç <strong>kokusuz ve lekesizdir</strong>, solunum olarak herhangi bir rahatsızlık vermez.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-clock"></i> Dışarda Kalma Süresi
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2 pl-5">
+                                        <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
+                                            <i class="fa-solid fa-user text-blue-600 text-lg"></i>
+                                            <div class="font-black text-slate-900 text-sm">4-6 saat</div>
+                                            <div class="text-[9px] text-slate-500">İnsanlar</div>
+                                        </div>
+                                        <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
+                                            <i class="fa-solid fa-cat text-amber-600 text-lg"></i>
+                                            <div class="font-black text-slate-900 text-sm">4-6 saat</div>
+                                            <div class="text-[9px] text-slate-500">Kedi</div>
+                                        </div>
+                                        <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
+                                            <i class="fa-solid fa-dog text-orange-600 text-lg"></i>
+                                            <div class="font-black text-slate-900 text-sm">12 saat</div>
+                                            <div class="text-[9px] text-slate-500">Köpek</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-broom"></i> Elektrikli Süpürge
+                                    </div>
+                                    <p class="text-slate-700 leading-relaxed pl-5">
+                                        Pire yumurtalarının ilaçla temasını hızlandırmak için ilaçlamadan sonra <strong>sabah ve akşam olmak üzere günde 2 kez</strong> elektrikli süpürge ile süpürülmelidir.
+                                    </p>
+                                </div>
+
+                                <div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg">
+                                    <div class="flex items-center gap-1.5 mb-1 text-red-800 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-ban"></i> Temizlik Yapılmamalı
+                                    </div>
+                                    <p class="text-red-900 leading-relaxed pl-5 text-[11px]">
+                                        <strong>En az 3 gün boyunca sıvı temizlik yapılmamalıdır</strong> (yer silme, halı yıkama vb.).
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-calendar-check"></i> Sonuç Süresi
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 pl-5">
+                                        <div class="bg-white p-2.5 rounded-lg border border-red-200">
+                                            <div class="text-[10px] text-slate-500 mb-0.5">Hafif Yoğunluk</div>
+                                            <div class="font-black text-slate-900">1 - 2 hafta</div>
+                                        </div>
+                                        <div class="bg-white p-2.5 rounded-lg border border-red-200">
+                                            <div class="text-[10px] text-slate-500 mb-0.5">Yoğun Durum</div>
+                                            <div class="font-black text-slate-900">2 - 3 hafta</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl">
+                                    <div class="flex items-center gap-1.5 mb-1 text-emerald-900 font-black text-[11px] uppercase">
+                                        <i class="fa-solid fa-shield-halved"></i> 2. Seans Garantisi
+                                    </div>
+                                    <p class="text-emerald-900 leading-relaxed text-[11px]">
+                                        <strong>21. günden sonra</strong> pire sorununuz devam ediyorsa <strong>2. uygulama %50 indirimli</strong> olarak yapılır.
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -442,7 +536,7 @@
             "Fare & Kemirgen İlaçlama": { desc: "Kilitli güvenlik istasyonları (rodentisit) bina ve daire çevrelerine yerleştirilir.", time: "Kapalı kalma süresi yoktur, günlük yaşama engel olmaz.", isWarning: false },
             "Salyangoz İlaçlama": { desc: "Peyzaj ve bahçelere özel granül bariyer.", time: "Uygulama sonrası 2 saat çim alanlara basılmamalıdır.", isWarning: false },
             "Akrep İlaçlama": { desc: "Dış cephe ve kapı altı geçiş noktalarına güçlü koruyucu bariyer.", time: "3-4 Saat havalandırma yeterlidir.", isWarning: false },
-            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
+            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. Detaylı bilgi aşağıdadır.", time: "İlaç kuruyana kadar 4-6 saat alanda durulmamalıdır.", isWarning: true },
             "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
         };
@@ -518,6 +612,17 @@
                 timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
             }
 
+            // ⭐ PİRE İÇİN ÖZEL DETAY KUTUSU
+            const fleaBox = document.getElementById('flea-detail-box');
+            const normalInfoBox = document.getElementById('pest-info-box');
+            if (state.pestType === 'Pire İlaçlama') {
+                fleaBox.classList.remove('hidden');
+                normalInfoBox.classList.add('hidden');
+            } else {
+                fleaBox.classList.add('hidden');
+                normalInfoBox.classList.remove('hidden');
+            }
+
             // ⭐ ÖZEL FİYATLI HAŞERE KONTROLÜ
             if (SPECIAL_PRICING[state.pestType]) {
                 const special = SPECIAL_PRICING[state.pestType];
@@ -574,6 +679,8 @@
             const secondSessionBox = document.getElementById('second-session-info');
             if (state.pestType === 'Tahta Kurusu İlaçlama') {
                 secondSessionBox.innerHTML = '<strong>Promer Tahtakurusu Protokolü:</strong> Yumurta kırma evresi gereği 2. seans bağımsız standart seans ücretinden uygulanır.';
+            } else if (state.pestType === 'Pire İlaçlama') {
+                secondSessionBox.innerHTML = '<strong>Promer Pire Protokolü:</strong> 21. günden sonra pire sorunu devam ederse <strong>2. seans %50 İNDİRİMLİ</strong> olarak uygulanır.';
             } else {
                 const secondPrice = Math.round((subtotal * 0.5) * 1.20);
                 secondSessionBox.innerHTML = `<strong>2. Seans Promer İndirimi:</strong> İhtiyaç duyulması halinde yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak <strong>${secondPrice.toLocaleString('tr-TR')} TL</strong> (KDV Dahil) fiyattan uygulanır.`;
