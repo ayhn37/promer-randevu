@@ -49,6 +49,16 @@
             background: #1e40af; cursor: pointer;
             box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
         }
+        
+        /* ⭐ SEÇİLİ MEKAN BUTONU YEŞİL */
+        .place-btn.active {
+            border-color: #16a34a !important;
+            background-color: #dcfce7 !important;
+            color: #14532d !important;
+        }
+        .place-btn.active i {
+            color: #16a34a !important;
+        }
     </style>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-promer-blue selection:text-white">
@@ -469,11 +479,11 @@
         function setPlaceType(type, btnElement) {
             state.placeType = type;
             document.querySelectorAll('.place-btn').forEach(b => {
-                b.classList.remove('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
+                b.classList.remove('active', 'border-promer-green', 'bg-emerald-50', 'text-emerald-900', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
                 b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
             });
             btnElement.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
-            btnElement.classList.add('active', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
+            btnElement.classList.add('active', 'border-promer-green', 'bg-emerald-50', 'text-emerald-900');
             recalculatePrice();
         }
 
