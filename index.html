@@ -1,13 +1,23 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
+    
+    <!-- ⭐ PERFORMANS: Preconnect (1-2 saniye kazanç) -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -35,6 +45,8 @@
             background: #1e40af; cursor: pointer;
             box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
         }
+        /* Logo için */
+        .promer-logo { height: 56px; width: auto; }
     </style>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-promer-blue selection:text-white">
@@ -42,16 +54,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b border-slate-100 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-shield-virus text-2xl text-promer-accent"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-2xl font-black tracking-tight text-promer-navy">PROMER</span>
-                        <span class="text-2xl font-extrabold tracking-tight text-promer-green">İLAÇLAMA</span>
-                    </div>
-                    <span class="block text-[10px] font-bold tracking-wider text-slate-500 uppercase">T.C. Sağlık Bakanlığı Ruhsatlı Çözümler</span>
-                </div>
+                <img src="promer-logo.png" alt="Promer İlaçlama" class="promer-logo group-hover:scale-105 transition-transform">
             </a>
             <nav class="hidden lg:flex items-center gap-7 font-semibold text-sm text-slate-700">
                 <a href="#hesapla" class="hover:text-promer-blue transition-colors">Fiyat Hesapla</a>
@@ -485,7 +488,6 @@
                 timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
             }
 
-            // ⭐ 500 m² ÜZERİ: ÖZEL TEKLİF
             if (state.m2 > 500) {
                 document.getElementById('extra-m2-cost').innerText = '—';
                 document.getElementById('subtotal-display').innerText = '—';
@@ -501,7 +503,6 @@
                 return;
             }
 
-            // 500 m² VE ALTI: NORMAL HESAPLAMA
             let basePrice = 2500;
             let extraCost = 0;
 
