@@ -6,6 +6,10 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
     
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    
     <!-- PERFORMANS: Preconnect -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -226,7 +230,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div id="m2-section">
                         <div class="flex items-center justify-between mb-3">
                             <label class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
                                 <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span> Alan Büyüklüğü (m²)
@@ -421,7 +425,7 @@
             "Kalorifer Böceği İlaçlama": { desc: "Mutfak motor aksamları ve ısı kaynaklarına özel jel.", time: "Evden çıkış gerektirmez.", isWarning: false },
             "Örümcek İlaçlama": { desc: "Tavan araları ve dış cephe köşelerine ağ engelleyici sıvı.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Yılan İlaçlama": { desc: "Bahçe ve bina çevresi için doğal içerikli kovucu bariyer.", time: "Uygulama sonrası 3-4 saat sahaya girilmez.", isWarning: false },
-            "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma.", time: "İşlem süresince 1 saat alan boş tutulur.", isWarning: false },
+            "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma. Yuva konumuna göre fiyatlandırılır.", time: "İşlem süresince 1 saat alan boş tutulur. Özel teklif gereklidir.", isWarning: true },
             "Karafatma İlaçlama": { desc: "Logar hatları, bodrum ve zemin kat odaklı kalıcı sıvı ilaçlama.", time: "2-3 Saat havalandırma yeterlidir.", isWarning: false },
             "Sinek & Kara Sinek İlaçlama": { desc: "Uçkun mücadelesine yönelik Sağlık Bakanlığı onaylı püskürtme.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
             "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
@@ -431,6 +435,15 @@
             "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. 2. seans %50 indirimlidir.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
             "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
             "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
+        };
+
+        // ⭐ ÖZEL FİYATLI HAŞERELER
+        const SPECIAL_PRICING = {
+            "Arı & Yaban Arısı İlaçlama": {
+                price: 5000,
+                label: "ÖZEL TEKLİF",
+                message: "Arı ve yaban arısı ilaçlama hizmetimiz <strong>5.000 TL'den başlayan</strong> özel fiyatlarla sunulmaktadır. Kesin fiyat için lütfen <strong>0850 466 00 22</strong> numaralı hattımızı arayın."
+            }
         };
 
         let state = {
@@ -495,6 +508,26 @@
                 timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
             }
 
+            // ⭐ ÖZEL FİYATLI HAŞERE KONTROLÜ
+            if (SPECIAL_PRICING[state.pestType]) {
+                const special = SPECIAL_PRICING[state.pestType];
+                document.getElementById('m2-section').style.display = 'none';
+                document.getElementById('extra-m2-cost').innerText = '—';
+                document.getElementById('subtotal-display').innerText = '—';
+                document.getElementById('tax-display').innerText = '—';
+                document.getElementById('grand-total-display').innerHTML = `<span class="text-2xl">${special.label}</span><br><span class="text-lg">${special.price.toLocaleString('tr-TR')} TL'den başlayan</span>`;
+                document.getElementById('second-session-info').innerHTML = special.message;
+                document.getElementById('booking-summary-price').innerText = `${special.price.toLocaleString('tr-TR')} TL'den başlayan`;
+                document.getElementById('booking-summary-details').innerText = 
+                    `${PLACE_LABELS[state.placeType]} / ${state.pestType}`;
+                document.getElementById('tariff-badge').innerText = 'Özel Fiyat';
+                renderTariffCards();
+                return;
+            } else {
+                document.getElementById('m2-section').style.display = 'block';
+            }
+
+            // 500 m² ÜZERİ: ÖZEL TEKLİF
             if (state.m2 > 500) {
                 document.getElementById('extra-m2-cost').innerText = '—';
                 document.getElementById('subtotal-display').innerText = '—';
@@ -633,7 +666,7 @@
 • Mekan      : ${PLACE_LABELS[state.placeType]} (${state.m2} m²)
 • Haşere Türü: ${state.pestType}
 ----------------------------------
-• Toplam Tutar: ${grandTotal} (KDV Dahil)`;
+• Toplam Tutar: ${grandTotal}`;
 
             document.getElementById('sms-summary-text').innerText = summaryText;
 
