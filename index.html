@@ -79,7 +79,7 @@
                 <a href="#hesapla" class="hover:text-promer-blue transition-colors">Fiyat Hesapla</a>
                 <a href="#tarife-tablosu" class="hover:text-promer-blue transition-colors">Tarife Cetveli</a>
                 <a href="#randevu" class="hover:text-promer-blue transition-colors">Randevu Al</a>
-                <a href="#hakkimizda" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
+                <a href="https://www.promerilaclama.com.tr/hakkimizda" target="_blank" rel="noopener noreferrer" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
             </nav>
             <div class="hidden sm:flex items-center gap-3">
                 <a href="https://wa.me/908504660022" target="_blank" onclick="trackConversion('whatsapp')" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
@@ -98,7 +98,7 @@
             <a href="#hesapla" onclick="toggleMobileMenu()" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Fiyat Hesaplama</a>
             <a href="#tarife-tablosu" onclick="toggleMobileMenu()" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Tarife Cetveli</a>
             <a href="#randevu" onclick="toggleMobileMenu()" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Randevu Al</a>
-            <a href="#hakkimizda" onclick="toggleMobileMenu()" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Promer Hakkında</a>
+            <a href="https://www.promerilaclama.com.tr/hakkimizda" target="_blank" rel="noopener noreferrer" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Promer Hakkında</a>
             <a href="https://wa.me/908504660022" target="_blank" onclick="trackConversion('whatsapp')" class="flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-xl mt-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i>
                 <span>0850 466 00 22 WhatsApp</span>
@@ -453,7 +453,7 @@
         </div>
     </section>
 
-    <!-- RANDEVU FORMU -->
+    <!-- RANDEVU FORMU (TARİH VE SAAT ALANLARI EKLENMİŞ HALİ) -->
     <section id="randevu" class="py-20 bg-slate-900 text-white relative">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center space-y-3 mb-12">
@@ -472,7 +472,7 @@
                         <input type="tel" required placeholder="05XX XXX XX XX" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-sm focus:ring-2 focus:ring-promer-blue focus:outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-2">İstanbul İlçesi</label>
                         <select required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-sm focus:ring-2 focus:ring-promer-blue focus:outline-none">
@@ -491,8 +491,19 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Tercih Edilen Tarih</label>
-                        <input type="date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-sm focus:ring-2 focus:ring-promer-blue focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Randevu Tarihi</label>
+                        <input type="date" id="appointment-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-sm focus:ring-2 focus:ring-promer-blue focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Zaman Aralığı</label>
+                        <select required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-sm focus:ring-2 focus:ring-promer-blue focus:outline-none">
+                            <option value="">Saat Dilimi...</option>
+                            <option value="09:00 - 12:00">Sabah (09:00 - 12:00)</option>
+                            <option value="12:00 - 15:00">Öğle (12:00 - 15:00)</option>
+                            <option value="15:00 - 18:00">Öğleden Sonra (15:00 - 18:00)</option>
+                            <option value="18:00 - 21:00">Akşam (18:00 - 21:00)</option>
+                            <option value="Acil / En Kısa Sürede">Acil (İlk Ekip)</option>
+                        </select>
                     </div>
                 </div>
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-xl shadow-lg shadow-emerald-600/30 transition-all text-base flex items-center justify-center gap-2">
@@ -503,16 +514,23 @@
         </div>
     </section>
 
-    <!-- HAKKIMIZDA & YASAL FOOTER -->
+    <!-- HAKKIMIZDA BÖLÜMÜ -->
     <section id="hakkimizda" class="py-16 bg-white border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-2xl space-y-4">
             <h3 class="text-2xl font-bold text-slate-900">Promer İlaçlama Hakkında</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
                 25 yıllık saha tecrübemiz, sertifikalı uzman kadromuz ve T.C. Sağlık Bakanlığı onaylı biyosidal ruhsatımızla İstanbul genelinde ev, iş yeri ve ticari tesislere garantili ilaçlama hizmeti sunuyoruz.
             </p>
+            <div class="pt-2">
+                <a href="https://www.promerilaclama.com.tr/hakkimizda" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-promer-blue font-bold text-sm hover:underline">
+                    <span>Kurumsal Detayları ve İzin Belgelerimizi İnceleyin</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+            </div>
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs">
             <div class="text-center sm:text-left">
@@ -521,9 +539,7 @@
             </div>
             <div class="flex flex-wrap items-center justify-center gap-6 font-medium">
                 <a href="https://promerilaclama.com.tr" target="_blank" class="hover:text-white transition-colors">Ana Site</a>
-                <a href="#hakkimizda" class="hover:text-white transition-colors">Hakkımızda</a>
-                
-                <!-- Google Ads Uyumlu Resmi Yasal Bağlantı -->
+                <a href="https://www.promerilaclama.com.tr/hakkimizda" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Hakkımızda</a>
                 <a href="https://www.promerilaclama.com.tr/gizlilik-ve-kisisel-verilerin-korunmasi" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors underline">Gizlilik ve KVKK Politikası</a>
             </div>
         </div>
@@ -531,6 +547,16 @@
 
     <!-- JAVASCRIPT MOTORU -->
     <script>
+        // Sayfa yüklendiğinde tarih alanına bugünden önceki günlerin seçilmesini engelleyen min kuralı eklenir
+        document.addEventListener("DOMContentLoaded", function() {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('appointment-date');
+            if(dateInput) {
+                dateInput.min = today;
+                dateInput.value = today; // Varsayılan olarak bugünü seçili getirir
+            }
+        });
+
         let currentPlaceType = 'ev';
         let currentSqm = 100;
 
