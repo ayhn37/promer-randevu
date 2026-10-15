@@ -6,8 +6,11 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
     
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="favicon.svg">
+    <!-- ⭐ FAVICON -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -227,6 +230,7 @@
                             <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
                         </select>
                         
+                        <!-- NORMAL BİLGİ KUTUSU -->
                         <div id="pest-info-box" class="mt-3 p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-2 text-slate-800">
                             <div class="flex items-start gap-2.5">
                                 <i class="fa-solid fa-circle-info text-promer-blue text-sm mt-0.5"></i>
@@ -238,7 +242,7 @@
                             </div>
                         </div>
 
-                        <!-- PİRE -->
+                        <!-- ⭐ PİRE -->
                         <div id="flea-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleFleaDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-red-100/50 transition-all">
@@ -327,7 +331,7 @@
                             </div>
                         </div>
 
-                        <!-- FARE -->
+                        <!-- ⭐ FARE -->
                         <div id="rodent-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleRodentDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-amber-100/50 transition-all">
@@ -389,7 +393,7 @@
                             </div>
                         </div>
 
-                        <!-- AKREP -->
+                        <!-- ⭐ AKREP -->
                         <div id="scorpion-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-slate-100 to-gray-100 border-2 border-slate-500 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleScorpionDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-slate-200/50 transition-all">
@@ -456,7 +460,7 @@
                             </div>
                         </div>
 
-                        <!-- KUŞ BİTİ -->
+                        <!-- ⭐ KUŞ BİTİ -->
                         <div id="birdlice-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleBirdliceDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-orange-100/50 transition-all">
@@ -532,7 +536,7 @@
                             </div>
                         </div>
 
-                        <!-- TAHTA KURUSU -->
+                        <!-- ⭐ TAHTA KURUSU -->
                         <div id="bedbug-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleBedbugDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-purple-100/50 transition-all">
@@ -599,7 +603,7 @@
                             </div>
                         </div>
 
-                        <!-- HAMAM BÖCEĞİ / KARAFATMA / KALORİFER -->
+                        <!-- ⭐ HAMAM BÖCEĞİ / KARAFATMA / KALORİFER -->
                         <div id="cockroach-detail-box" class="mt-3 hidden">
                             <div class="bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-500 rounded-2xl text-xs text-slate-800 overflow-hidden">
                                 <button type="button" onclick="toggleCockroachDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-yellow-100/50 transition-all">
@@ -861,7 +865,6 @@
                 <span class="text-lg font-extrabold text-promer-green">İLAÇLAMA</span>
             </div>
             
-            <!-- ⭐ KVKK & GİZLİLİK LİNKLERİ (MODAL AÇAR) -->
             <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs">
                 <button onclick="openModal('kvkkModal')" class="text-slate-400 hover:text-white transition-colors font-semibold">
                     <i class="fa-solid fa-shield-halved mr-1 text-promer-green"></i> KVKK Aydınlatma Metni
@@ -877,7 +880,7 @@
         </div>
     </footer>
 
-    <!-- ⭐ KVKK MODAL -->
+    <!-- KVKK MODAL -->
     <div id="kvkkModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this) closeModal('kvkkModal')">
         <div class="max-w-3xl mx-auto my-8 bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div class="bg-promer-navy text-white p-5 flex items-center justify-between sticky top-0 z-10">
@@ -955,7 +958,7 @@
         </div>
     </div>
 
-    <!-- ⭐ GİZLİLİK MODAL -->
+    <!-- GİZLİLİK MODAL -->
     <div id="gizlilikModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this) closeModal('gizlilikModal')">
         <div class="max-w-3xl mx-auto my-8 bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div class="bg-promer-navy text-white p-5 flex items-center justify-between sticky top-0 z-10">
@@ -1050,7 +1053,6 @@
     </div>
 
     <script>
-        // ⭐ MODAL AÇMA / KAPAMA
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.remove('hidden');
@@ -1063,7 +1065,6 @@
             document.body.style.overflow = '';
         }
 
-        // ESC tuşu ile modal kapama
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal('kvkkModal');
