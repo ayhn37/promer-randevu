@@ -1,407 +1,1016 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Promer Yönetim Paneli</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: {
-                        promer: {
-                            navy: '#0f2b5c', blue: '#1e40af', lightBlue: '#3b82f6',
-                            accent: '#f97316', green: '#16a34a', greenDark: '#15803d'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promer Müşteri Takip Sistemi</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+  body { background: #f4f6f9; margin: 0; padding: 20px; }
+  h1 { text-align: center; color: #2c3e50; }
+
+  .container { max-width: 1350px; margin: auto; }
+
+  /* DASHBOARD */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .kart {
+    background: #fff; padding: 16px; border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 5px solid #3498db;
+    transition: .2s;
+  }
+  .kart:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  .kart .baslik { font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+  .kart .sayi { font-size: 30px; font-weight: bold; color: #2c3e50; margin-top: 6px; line-height: 1; }
+  .kart .alt { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+
+  .kart-toplam { border-left-color: #3498db; }
+  .kart-bugun { border-left-color: #27ae60; }
+  .kart-gecmis { border-left-color: #e74c3c; }
+  .kart-yaklasan { border-left-color: #f39c12; }
+  .kart-ciro-toplam { border-left-color: #d35400; background: linear-gradient(135deg,#fff 0%,#fef5e7 100%); }
+
+  .kart-ay-secim {
+    border-left-color: #16a085;
+    background: linear-gradient(135deg,#fff 0%,#e8f8f5 100%);
+    grid-column: span 2;
+  }
+  .kart-ay-secim .baslik { margin-bottom: 8px; }
+  .ay-secim-kutu {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .ay-secim-kutu select {
+    padding: 6px 10px; border: 2px solid #16a085;
+    border-radius: 6px; font-size: 14px; font-weight: bold;
+    background: #fff; color: #16a085; cursor: pointer;
+    min-width: 130px;
+  }
+  .ay-secim-kutu .sonuc {
+    display: flex; gap: 15px; margin-left: auto; flex-wrap: wrap;
+  }
+  .ay-secim-kutu .sonuc div {
+    text-align: right;
+    font-size: 12px; color: #7f8c8d;
+  }
+  .ay-secim-kutu .sonuc div strong {
+    display: block; font-size: 22px; color: #16a085;
+    font-weight: bold; margin-top: 2px;
+  }
+
+  form {
+    background: #fff; padding: 20px; border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;
+    transition: .3s;
+  }
+  form.duzenleme-modu {
+    border: 3px solid #f39c12;
+    box-shadow: 0 4px 16px rgba(243,156,18,0.3);
+  }
+
+  .duzenleme-bilgi {
+    display: none; background: #fff3cd;
+    border-left: 4px solid #f39c12;
+    padding: 10px 14px; border-radius: 6px;
+    margin-bottom: 15px; color: #7d5a00; font-size: 14px;
+  }
+  form.duzenleme-modu .duzenleme-bilgi { display: block; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #34495e; }
+  input, select, textarea {
+    width: 100%; padding: 8px; border: 1px solid #ccc;
+    border-radius: 6px; font-size: 14px; background: #fff;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  select:disabled { background: #f0f0f0; color: #999; cursor: not-allowed; }
+
+  .tip-kutusu {
+    display: flex; gap: 10px; margin-bottom: 15px;
+    background: #ecf0f1; padding: 10px; border-radius: 8px;
+    align-items: center;
+  }
+  .tip-kutusu strong { color: #2c3e50; margin-right: 10px; }
+  .tip-kutusu label {
+    display: flex; align-items: center; gap: 5px;
+    font-weight: normal; margin: 0; cursor: pointer;
+    background: #fff; padding: 8px 14px; border-radius: 6px;
+    border: 2px solid #ccc; transition: .2s;
+  }
+  .tip-kutusu input[type="radio"] { width: auto; margin: 0; }
+  .tip-kutusu label:has(input:checked) {
+    border-color: #27ae60; background: #d5f4e6;
+  }
+
+  button {
+    margin-top: 15px; padding: 10px 20px; border: none;
+    background: #27ae60; color: #fff; border-radius: 6px;
+    cursor: pointer; font-size: 15px;
+  }
+  button:hover { background: #219150; }
+
+  .btn-guncelle { background: #f39c12 !important; }
+  .btn-guncelle:hover { background: #e67e22 !important; }
+  .btn-iptal-duzenle { background: #e74c3c !important; display: none; }
+  form.duzenleme-modu .btn-iptal-duzenle { display: inline-block; }
+
+  .arac-cubugu {
+    display: flex; gap: 10px; margin-bottom: 15px;
+    flex-wrap: wrap; align-items: center;
+  }
+  .filtre-bar { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+  .filtre-bar button {
+    margin: 0; background: #bdc3c7; color: #2c3e50;
+    padding: 8px 14px; font-size: 13px;
+  }
+  .filtre-bar button:hover { background: #95a5a6; }
+  .filtre-bar button.aktif { background: #2c3e50; color: #fff; }
+
+  .excel-btn {
+    margin: 0; background: #1d6f42; color: #fff;
+    padding: 8px 16px; font-size: 13px; font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .arama {
+    margin-bottom: 15px; padding: 10px; width: 100%;
+    border: 1px solid #ccc; border-radius: 6px;
+  }
+
+  table {
+    width: 100%; border-collapse: collapse; background: #fff;
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: top; }
+  th { background: #2c3e50; color: #fff; }
+  tr:hover { background: #f9f9f9; }
+
+  .duzenlenen-satir { outline: 3px solid #f39c12 !important; outline-offset: -3px; }
+
+  .sil {
+    background: #e74c3c; padding: 5px 10px; font-size: 12px;
+    border-radius: 4px; color: #fff; border: none; cursor: pointer;
+  }
+  .duzenle {
+    background: #f39c12; padding: 5px 10px; font-size: 12px;
+    border-radius: 4px; color: #fff; border: none; cursor: pointer;
+    margin-right: 4px;
+  }
+  .whatsapp-btn {
+    background: #25D366; padding: 5px 10px; font-size: 12px;
+    border-radius: 4px; color: #fff; border: none; cursor: pointer;
+    font-weight: bold; margin-right: 4px;
+  }
+  .whatsapp-btn:disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
+
+  .yaklasan { background: #fff3cd !important; }
+  .gecmis { background: #f8d7da !important; }
+  .bugun-satir { background: #d4edda !important; border-left: 4px solid #27ae60 !important; }
+
+  .rozet {
+    display: inline-block; padding: 2px 8px; border-radius: 12px;
+    font-size: 11px; font-weight: bold;
+  }
+  .rozet-isletme { background: #3498db; color: #fff; }
+  .rozet-konut { background: #27ae60; color: #fff; }
+
+  .not-kutusu {
+    background: #fffbea; border-left: 3px solid #f39c12;
+    padding: 4px 8px; border-radius: 4px;
+    font-size: 11px; color: #7d5a00;
+    margin-top: 4px; max-width: 200px;
+    word-wrap: break-word;
+  }
+
+  .fiyat {
+    font-weight: bold; color: #16a085; font-size: 15px;
+    white-space: nowrap;
+  }
+  .fiyat-belirtilmedi {
+    color: #bdc3c7; font-style: italic; font-size: 12px;
+  }
+
+  .ozet-bar {
+    margin-top: 15px; background: #fff; padding: 15px 20px;
+    border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;
+  }
+  .ozet-bar div { font-size: 14px; color: #2c3e50; }
+  .ozet-bar span { font-weight: bold; color: #16a085; font-size: 18px; }
+
+  .modal-arkaplan {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 999;
+    justify-content: center; align-items: center;
+  }
+  .modal-arkaplan.aktif { display: flex; }
+  .modal {
+    background: #fff; padding: 20px; border-radius: 10px;
+    max-width: 520px; width: 92%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .modal h3 { margin-top: 0; color: #25D366; }
+  .modal textarea {
+    width: 100%; min-height: 180px; padding: 10px;
+    border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+  }
+  .modal-butonlar { display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end; }
+  .modal-butonlar button { margin: 0; }
+  .btn-iptal { background: #95a5a6; }
+  .btn-gonder { background: #25D366; }
+
+  .ust-bar {
+    background: #0f2b5c; color: #fff; padding: 12px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-radius: 10px; margin-bottom: 20px;
+  }
+  .ust-bar h1 { color: #fff; margin: 0; font-size: 20px; text-align: left; }
+  .ust-bar a {
+    background: rgba(255,255,255,0.1); color: #fff; padding: 8px 16px;
+    border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;
+  }
+  .ust-bar a:hover { background: rgba(255,255,255,0.2); }
+
+  .yukleniyor {
+    text-align: center; padding: 40px; color: #7f8c8d;
+  }
+</style>
 </head>
-<body class="font-sans bg-slate-950 text-white min-h-screen antialiased">
+<body>
+<div class="container">
 
-    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center">
-                    <i class="fa-solid fa-shield-virus text-promer-accent"></i>
-                </div>
-                <div>
-                    <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
-                    <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v4.0</span>
-                </div>
-            </div>
-            <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Siteye Dön
-            </a>
+  <!-- ÜST BAR -->
+  <div class="ust-bar">
+    <h1><i class="fa-solid fa-users"></i> Promer Müşteri Takip Sistemi</h1>
+    <a href="/yönetici/"><i class="fa-solid fa-arrow-left"></i> Admin Paneli</a>
+  </div>
+
+  <!-- YÜKLENİYOR -->
+  <div id="yukleniyor" class="yukleniyor">
+    <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
+    <p>Firebase'den veriler yükleniyor...</p>
+  </div>
+
+  <!-- İÇERİK -->
+  <div id="icerik" class="hidden">
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+      <div class="kart kart-toplam">
+        <div class="baslik">👥 Toplam Müşteri</div>
+        <div class="sayi" id="kartToplam">0</div>
+        <div class="alt" id="kartToplamAlt">-</div>
+      </div>
+      <div class="kart kart-bugun">
+        <div class="baslik">📅 Bugün</div>
+        <div class="sayi" id="kartBugun">0</div>
+        <div class="alt">Bugün işlem günü</div>
+      </div>
+      <div class="kart kart-yaklasan">
+        <div class="baslik">🔔 Yaklaşan</div>
+        <div class="sayi" id="kartYaklasan">0</div>
+        <div class="alt">3 gün içinde</div>
+      </div>
+      <div class="kart kart-gecmis">
+        <div class="baslik">⚠️ Gecikmiş</div>
+        <div class="sayi" id="kartGecmis">0</div>
+        <div class="alt">İşlem tarihi geçti</div>
+      </div>
+      <div class="kart kart-ciro-toplam">
+        <div class="baslik">💵 Toplam Ciro</div>
+        <div class="sayi" id="kartCiroToplam">₺0</div>
+        <div class="alt">Tüm zamanlar</div>
+      </div>
+      <div class="kart kart-ay-secim">
+        <div class="baslik">📅 Aylık Ciro</div>
+        <div class="ay-secim-kutu">
+          <select id="aySecim" onchange="aySecimGuncelle()">
+            <option value="">Ay Seçiniz</option>
+            <option value="0">Ocak</option>
+            <option value="1">Şubat</option>
+            <option value="2">Mart</option>
+            <option value="3">Nisan</option>
+            <option value="4">Mayıs</option>
+            <option value="5">Haziran</option>
+            <option value="6">Temmuz</option>
+            <option value="7">Ağustos</option>
+            <option value="8">Eylül</option>
+            <option value="9">Ekim</option>
+            <option value="10">Kasım</option>
+            <option value="11">Aralık</option>
+          </select>
+          <select id="yilSecim" onchange="aySecimGuncelle()"></select>
+          <div class="sonuc">
+            <div>İşlem Sayısı<strong id="aySecimAdet">0</strong></div>
+            <div>Ciro<strong id="aySecimCiro">₺0</strong></div>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-bold uppercase">Bugünkü Randevu</span>
-                    <i class="fa-solid fa-calendar-day text-promer-lightBlue"></i>
-                </div>
-                <div class="text-3xl font-black" id="stat-today">0</div>
-            </div>
-            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-bold uppercase">Toplam Randevu</span>
-                    <i class="fa-solid fa-list-check text-emerald-400"></i>
-                </div>
-                <div class="text-3xl font-black" id="stat-total">0</div>
-            </div>
-            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-bold uppercase">Dolu Saat</span>
-                    <i class="fa-solid fa-clock text-red-400"></i>
-                </div>
-                <div class="text-3xl font-black" id="stat-blocked">0</div>
-            </div>
-            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-bold uppercase">Aylık Ciro</span>
-                    <i class="fa-solid fa-turkish-lira-sign text-amber-400"></i>
-                </div>
-                <div class="text-3xl font-black" id="stat-revenue">0</div>
-            </div>
+    <!-- FORM -->
+    <form id="musteriForm">
+      <div class="duzenleme-bilgi">
+        ✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span> kaydını düzenliyorsunuz.
+      </div>
+
+      <div class="tip-kutusu">
+        <strong>Müşteri Tipi:</strong>
+        <label>
+          <input type="radio" name="tip" value="konut" checked onchange="tipDegistir()">
+          <span>🏠 Konut</span>
+        </label>
+        <label>
+          <input type="radio" name="tip" value="isletme" onchange="tipDegistir()">
+          <span>🏢 İşletme</span>
+        </label>
+      </div>
+
+      <div class="grid">
+        <div id="adAlani">
+          <label id="adLabel">Ad</label>
+          <input type="text" id="ad" required>
         </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="font-extrabold text-lg" id="calendar-title">Ekim 2026</h3>
-                    <p class="text-xs text-slate-500">Randevu ve doluluk durumunu görüntüleyin</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="prevBtn" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
-                        <i class="fa-solid fa-chevron-left text-xs"></i>
-                    </button>
-                    <button id="todayBtn" class="px-4 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold text-xs transition-all">
-                        Bugün
-                    </button>
-                    <button id="nextBtn" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-7 gap-2 mb-2">
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Pzt</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Sal</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Çar</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Per</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cum</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cmt</div>
-                <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Paz</div>
-            </div>
-
-            <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
-
-            <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
-                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Boş Gün</span></div>
-                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span>Kısmen Dolu</span></div>
-                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span>Tamamen Dolu</span></div>
-            </div>
+        <div id="soyadAlani">
+          <label id="soyadLabel">Soyad</label>
+          <input type="text" id="soyad">
         </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h3 class="font-extrabold text-base flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-check text-promer-lightBlue"></i>
-                        <span id="selected-day-title">Gün Seçin</span>
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-1" id="selected-day-subtitle">Yukarıdaki takvimden bir gün seçin</p>
-                </div>
-            </div>
-            <div id="selected-day-content">
-                <div class="text-center py-8 text-slate-500 text-xs">
-                    <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
-                    <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
-                </div>
-            </div>
+        <div>
+          <label>Telefon</label>
+          <input type="tel" id="telefon" placeholder="05XX XXX XX XX" required>
         </div>
-    </section>
+        <div>
+          <label>İlçe</label>
+          <select id="ilce" required onchange="mahalleleriDoldur()">
+            <option value="">İlçe Seçiniz</option>
+          </select>
+        </div>
+        <div>
+          <label>Mahalle</label>
+          <select id="mahalle" required disabled>
+            <option value="">Önce İlçe Seçiniz</option>
+          </select>
+        </div>
+        <div>
+          <label>Sokak / Cadde</label>
+          <input type="text" id="sokak" required>
+        </div>
+        <div>
+          <label>Bina No</label>
+          <input type="text" id="binaNo">
+        </div>
+        <div>
+          <label>Daire No</label>
+          <input type="text" id="daireNo">
+        </div>
+        <div>
+          <label>Haşere Türü</label>
+          <select id="hasere" required>
+            <option value="">Seçiniz</option>
+            <option>Hamam Böceği</option>
+            <option>Kalorifer Böceği</option>
+            <option>Karafatma</option>
+            <option>Karınca</option>
+            <option>Pire</option>
+            <option>Tahta Kurusu</option>
+            <option>Kuş Biti</option>
+            <option>Sinek</option>
+            <option>Sivrisinek</option>
+            <option>Fare</option>
+            <option>Sıçan</option>
+            <option>Akrep</option>
+            <option>Örümcek</option>
+            <option>Diğer</option>
+          </select>
+        </div>
+        <div>
+          <label>💰 Fiyat (₺)</label>
+          <input type="number" id="fiyat" placeholder="Örn: 500" min="0" step="1">
+        </div>
+        <div>
+          <label>İşlem Tarihi</label>
+          <input type="date" id="islemTarihi" required>
+        </div>
+      </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { 
-            getFirestore, collection, getDocs, addDoc, deleteDoc, doc 
-        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+      <div style="margin-top: 12px;">
+        <label>📝 Notlar (isteğe bağlı)</label>
+        <textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea>
+      </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
-            authDomain: "promer-randevu.firebaseapp.com",
-            projectId: "promer-randevu",
-            storageBucket: "promer-randevu.firebasestorage.app",
-            messagingSenderId: "406588092985",
-            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
-        };
+      <button type="submit" id="kaydetBtn">➕ Kaydet</button>
+      <button type="button" class="btn-iptal-duzenle" onclick="duzenlemeyiIptalEt()">❌ Düzenlemeyi İptal Et</button>
+      <button type="button" onclick="formTemizle()" style="background:#7f8c8d;">🧹 Temizle</button>
+    </form>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <div class="arac-cubugu">
+      <div class="filtre-bar">
+        <button type="button" class="aktif" data-filtre="hepsi" onclick="filtreSec(this)">📋 Hepsi</button>
+        <button type="button" data-filtre="konut" onclick="filtreSec(this)">🏠 Konutlar</button>
+        <button type="button" data-filtre="isletme" onclick="filtreSec(this)">🏢 İşletmeler</button>
+        <button type="button" data-filtre="bugun" onclick="filtreSec(this)">📅 Bugün</button>
+        <button type="button" data-filtre="yaklasan" onclick="filtreSec(this)">🔔 Yaklaşan</button>
+        <button type="button" data-filtre="gecmis" onclick="filtreSec(this)">⚠️ Gecikmiş</button>
+      </div>
+      <button type="button" class="excel-btn" onclick="excelAktar()">📥 Excel'e Aktar</button>
+    </div>
 
-        const ALL_SLOTS = [
-            '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
-            '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
-            '18:00 – 19:30'
-        ];
+    <input type="text" class="arama" id="aramaKutusu" placeholder="🔍 Ara (ad, işletme, telefon, ilçe, mahalle, haşere, not...)">
 
-        const AY_ADLARI = [
-            'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
-        ];
+    <table>
+      <thead>
+        <tr>
+          <th>Tip</th>
+          <th>Ad / İşletme</th>
+          <th>Telefon</th>
+          <th>Adres</th>
+          <th>Haşere</th>
+          <th>💰 Fiyat</th>
+          <th>İşlem Tarihi</th>
+          <th>Sonraki İşlem</th>
+          <th>Not</th>
+          <th>İşlem</th>
+        </tr>
+      </thead>
+      <tbody id="tabloBody"></tbody>
+    </table>
 
-        let currentDate = new Date();
-        let selectedDate = null;
-        let blockedSlotsCache = {};
+    <div class="ozet-bar">
+      <div>📋 <b>Görünen kayıt:</b> <span id="ozetAdet">0</span></div>
+      <div>💰 <b>Görünen toplam ciro:</b> <span id="ozetCiro">₺0</span></div>
+    </div>
+  </div>
+</div>
 
-        function formatDateKey(d) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
+<!-- WhatsApp Modalı -->
+<div class="modal-arkaplan" id="whatsappModal">
+  <div class="modal">
+    <h3>📱 WhatsApp Hatırlatma Mesajı</h3>
+    <p style="font-size:13px; color:#7f8c8d; margin-top:-10px;">
+      Mesajı düzenleyebilirsin. Gönder'e bastığında WhatsApp açılır.
+    </p>
+    <textarea id="mesajIcerik"></textarea>
+    <div class="modal-butonlar">
+      <button type="button" class="btn-iptal" onclick="modalKapat()">❌ İptal</button>
+      <button type="button" class="btn-gonder" onclick="whatsappGonder()">✅ WhatsApp'ta Aç</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ⭐ MAHALLELER */
+  const MAHALLELER = {
+    "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"],
+    "Arnavutköy": ["Anadolu","Arnavutköy Merkez","Bolluca","Haraççı","Hadımköy","Taşoluk"],
+    "Ataşehir": ["Atatürk","Barbaros","Esatpaşa","Fetih","İçerenköy","Kayışdağı","Küçükbakkalköy","Mevlana","Mimar Sinan","Mustafa Kemal","Örnek","Yeni Çamlıca","Yenisahra"],
+    "Avcılar": ["Ambarlı","Cihangir","Denizköşkler","Firuzköy","Gümüşpala","Merkez","Mustafa Kemal Paşa","Tahtakale","Üniversite","Yeşilkent"],
+    "Bağcılar": ["Bağlar","Barbaros","Çınar","Demirkapı","Evren","Fatih","Fevzi Çakmak","Göztepe","Güneşli","Hürriyet","İnönü","Kâzım Karabekir","Kemalpaşa","Kirazlı","Mahmutbey","Merkez","Sancaktepe","Yavuz Selim","Yenigün","Yenimahalle","Yıldıztepe","100. Yıl"],
+    "Bahçelievler": ["Bahçelievler Merkez","Cumhuriyet","Çobançeşme","Fevzi Çakmak","Hürriyet","Kocasinan","Siyavuşpaşa","Soğanlı","Şirinevler","Yenibosna","Zafer"],
+    "Bakırköy": ["Ataköy 1. Kısım","Ataköy 2-5-6. Kısım","Ataköy 3-4-11. Kısım","Ataköy 7-8-9-10. Kısım","Basınköy","Cevizlik","Kartaltepe","Osmaniye","Sakızağacı","Şenlikköy","Yenimahalle","Yeşilköy","Yeşilyurt","Zeytinlik","Zuhuratbaba"],
+    "Başakşehir": ["Altınşehir","Bahçeşehir 1. Kısım","Bahçeşehir 2. Kısım","Başak","Başakşehir","Güvercintepe","İkitelli OSB","Kayabaşı","Şahintepe","Şamlar","Ziya Gökalp"],
+    "Bayrampaşa": ["Altıntepsi","Cevatpaşa","İsmetpaşa","Kartaltepe","Kocatepe","Muratpaşa","Orta","Terazidere","Vatan","Yenidoğan","Yıldırım"],
+    "Beşiktaş": ["Abbasağa","Akat","Arnavutköy","Balmumcu","Cihannüma","Dikilitaş","Etiler","Gayrettepe","Konaklar","Kültür","Kuruçeşme","Levazım","Levent","Mecidiye","Muradiye","Nisbetiye","Ortaköy","Sinanpaşa","Türkali","Ulus","Vişnezade","Yıldız"],
+    "Beykoz": ["Acarlar","Anadolu Hisarı","Anadolufeneri","Baklacı","Cumhuriyet","Çamlıbahçe","Çengeldere","Çubuklu","Göllü","Göksu","Gümüşsuyu","İncirköy","Kanlıca","Kavacık","Merkez","Ortaçeşme","Paşabahçe","Rüzgarlıbahçe","Soğuksu","Tokatköy","Yalıköy","Yenimahalle"],
+    "Beylikdüzü": ["Adnan Kahveci","Barış","Büyükşehir","Cumhuriyet","Dereağzı","Gürpınar","Kavaklı","Marmara","Sahil","Yakuplu"],
+    "Beyoğlu": ["Arap Cami","Asmalı Mescit","Bedrettin","Bereketzade","Bostan","Bülbül","Camiikebir","Cihangir","Çatma Mescit","Çukur","Emekyemez","Evliya Çelebi","Fetihtepe","Firuzağa","Gümüşsuyu","Hacıahmet","Hacımimi","Halıcıoğlu","Hüseyinağa","İstiklal","Kadımehmet Efendi","Kaptanpaşa","Karaköy","Kasımpaşa","Katip Mustafa Çelebi","Keçeci Piri","Kemankeş Karamustafa Paşa","Kılıçali Paşa","Kocatepe","Kulaksız","Kuloğlu","Küçük Piyale","Müeyyedzade","Örnektepe","Piri Paşa","Piyalepaşa","Şahkulu","Şehit Muhtar","Sütlüce","Taksim","Tomtom","Yahya Kahya","Yenişehir"],
+    "Büyükçekmece": ["19 Mayıs","Alkent 2000","Atatürk","Bahçelievler","Celaliye","Cumhuriyet","Çakmaklı","Dizdariye","Ekinoba","Fatih","Güzelce","Hürriyet","Kamiloba","Karaağaç","Kumburgaz","Mimaroba","Mimarsinan","Muratçeşme","Pınartepe","Sinanoba","Türkoba","Ulus","Yenimahalle"],
+    "Çatalca": ["Binkılıç","Çakıl","Çanakça","Dağyenice","Elbasan","Ferhatpaşa","Gökçeali","Hallaçlı","Hisarbeyli","İnceğiz","İzzettin","Kaleiçi","Karacaköy","Kestanelik","Muratbey","Ormanlı","Ovayenice","Subaşı","Yalıköy"],
+    "Çekmeköy": ["Aydınlar","Cumhuriyet","Çamlık","Çatalmeşe","Ekşioğlu","Güngören","Hamidiye","Kirazlıdere","Mehmet Akif","Mimar Sinan","Nişantepe","Ömerli","Soğukpınar","Sultançiftliği","Taşdelen","Alemdağ"],
+    "Esenler": ["Birlik","Çiftehavuzlar","Davutpaşa","Fatih","Fevzi Çakmak","Havaalanı","Kâzım Karabekir","Kemer","Menderes","Mimar Sinan","Namık Kemal","Nene Hatun","Oruçreis","Tuna","Turgutreis","Yavuz Selim"],
+    "Esenyurt": ["Akçaburgaz","Ardıçlı","Aşık Veysel","Atatürk","Bağlarçeşme","Balıkyolu","Barbaros Hayrettin Paşa","Battalgazi","Cumhuriyet","Çınar","Esenkent","Fatih","Gökevler","Güzelyurt","Hürriyet","İncirtepe","İnönü","İstiklal","Koza","Mehmet Akif Ersoy","Mehterçeşme","Mevlana","Namık Kemal","Necip Fazıl Kısakürek","Orhan Gazi","Osmangazi","Pınar","Piri Reis","Saadetdere","Selahaddin Eyyubi","Sultaniye","Şehitler","Talatpaşa","Turgut Özal","Üçevler","Yenikent","Yeşilkent","Zafer"],
+    "Eyüpsultan": ["Akşemsettin","Alibeyköy","Çırçır","Defterdar","Düğmeciler","Emniyettepe","Esentepe","Göktürk","Güzeltepe","İslambey","Karadolap","Kemerburgaz","Mimar Sinan","Nişanca","Rami Cuma","Rami Yeni","Sakarya","Silahtarağa","Topçular","Yeşilpınar"],
+    "Fatih": ["Aksaray","Akşemsettin","Atikali","Ayvansaray","Balat","Beyazıt","Cerrahpaşa","Cibali","Demirtaş","Derviş Ali","Emirgan","Haseki Sultan","Hırkai Şerif","Hobyar","Hoca Gıyasettin","İskenderpaşa","Karagümrük","Katip Kasım","Kemalpaşa","Koca Mustafapaşa","Küçükayasofya","Mevlanakapı","Mimar Hayrettin","Mimar Kemalettin","Molla Fenari","Molla Gürani","Molla Hüsrev","Muhsine Hatun","Nişanca","Rüstempaşa","Saraç İshak","Seyyid Ömer","Silivrikapı","Sultan Ahmet","Süleymaniye","Sümbül Efendi","Şehremini","Tahtakale","Taya Hatun","Topkapı","Yavuz Sinan","Yavuz Sultan Selim","Yedikule","Zeyrek"],
+    "Gaziosmanpaşa": ["Bağlarbaşı","Barbaros Hayrettin Paşa","Fevzi Çakmak","Hürriyet","Karadeniz","Karayolları","Karlıtepe","Kâzım Karabekir","Merkez","Mevlana","Pazariçi","Sarıgöl","Şemsipaşa","Yeni Mahalle","Yenidoğan","Yıldıztabya"],
+    "Güngören": ["Abdurrahman Nafiz Gürman","Akıncılar","Gençosman","Güneştepe","Güven","Haznedar","Mareşal Çakmak","Mehmet Nesih Özmen","Merkez","Sanayi","Tozkoparan"],
+    "Kadıköy": ["19 Mayıs","Acıbadem","Bostancı","Caddebostan","Caferağa","Dumlupınar","Eğitim","Erenköy","Fenerbahçe","Feneryolu","Fikirtepe","Göztepe","Hasanpaşa","Koşuyolu","Kozyatağı","Merdivenköy","Osmanağa","Rasimpaşa","Sahrayıcedit","Suadiye","Zühtüpaşa"],
+    "Kağıthane": ["Çağlayan","Çeliktepe","Emniyet Evleri","Gültepe","Gürsel","Hamidiye","Harmantepe","Hürriyet","Mehmet Akif Ersoy","Merkez","Nurtepe","Orta","Sanayi","Seyrantepe","Şirintepe","Talatpaşa","Telsizler","Yahya Kemal","Yeşilce"],
+    "Kartal": ["Atalar","Cevizli","Cumhuriyet","Çavuşoğlu","Esentepe","Gümüşpınar","Hürriyet","Karlıktepe","Kordonboyu","Orhantepe","Orta","Petrol İş","Soğanlık Yeni","Topselvi","Uğur Mumcu","Yakacık Çarşı","Yakacık Yeni","Yalı","Yukarı"],
+    "Küçükçekmece": ["Atakent","Atatürk","Beşyol","Cennet","Cumhuriyet","Fatih","Fevzi Çakmak","Gültepe","Halkalı Merkez","İnönü","İstasyon","Kanarya","Kartaltepe","Kemalpaşa","Mehmet Akif","Söğütlü Çeşme","Sultan Murat","Tevfikbey","Yarımburgaz","Yeni Mahalle","Yeşilova"],
+    "Maltepe": ["Altayçeşme","Altıntepe","Aydınevler","Bağlarbaşı","Başıbüyük","Büyükbakkalköy","Cevizli","Çınar","Esenkent","Feyzullah","Fındıklı","Girne","Gülensu","Gülsuyu","İdealtepe","Küçükyalı","Yalı","Zümrütevler"],
+    "Pendik": ["Ahmet Yesevi","Bahçelievler","Batı","Çamçeşme","Çınardere","Doğu","Dumlupınar","Ertuğrul Gazi","Esenler","Esenyalı","Fatih","Fevzi Çakmak","Güllübağlar","Güzelyalı","Harmandere","Kavakpınar","Kaynarca","Kurtköy","Orhangazi","Orta","Ramazanoğlu","Sanayi","Sapanbağları","Sülüntepe","Şeyhli","Velibaba","Yayalar","Yeni","Yenişehir","Yeşilbağlar"],
+    "Sancaktepe": ["Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","Hilal","İnönü","Kemal Türkler","Meclis","Merve","Mevlana","Osmangazi","Paşaköy","Safa","Sarıgazi","Veysel Karani","Yenidoğan","Yunus Emre"],
+    "Sarıyer": ["Ayazağa","Bahçeköy","Baltalimanı","Büyükdere","Cumhuriyet","Çayırbaşı","Darüşşafaka","Emirgan","Ferahevler","Fatih Sultan Mehmet","Gümüşdere","Huzur","İstinye","Kâzım Karabekir","Kireçburnu","Kocataş","Maden","Maslak","PTT Evleri","Pınar","Poligon","Reşitpaşa","Rumeli Hisarı","Rumeli Kavağı","Sarıyer Merkez","Tarabya","Uskumruköy","Yeniköy","Zekeriyaköy"],
+    "Silivri": ["Alibey","Alipaşa","Büyükçavuşlu","Cumhuriyet","Çanta Balaban","Çanta Sancaktepe","Değirmenköy","Fatih","Gümüşyaka","Kadıköy","Kavaklı","Mimarsinan","Ortaköy","Piri Mehmet Paşa","Semizkumlar","Selimpaşa","Sinanoba","Yeni","Yolçatı"],
+    "Sultanbeyli": ["Abdurrahmangazi","Adil","Ahmet Yesevi","Akşemsettin","Battalgazi","Fatih","Hamidiye","Hasanpaşa","Mecidiye","Mehmet Akif","Mimar Sinan","Necip Fazıl","Orhangazi","Turgut Reis","Yavuz Selim"],
+    "Sultangazi": ["50. Yıl","75. Yıl","Cebeci","Cumhuriyet","Esentepe","Eski Habipler","Gazi","Habibler","İsmetpaşa","Malkoçoğlu","Sultançiftliği","Uğur Mumcu","Yayla","Yunus Emre","Zübeyde Hanım"],
+    "Şile": ["Ağva","Balibey","Çavuş","Hacıkasım","Kumbaba","Meşrutiyet","Yeniköy"],
+    "Şişli": ["19 Mayıs","Bozkurt","Cumhuriyet","Duatepe","Ergenekon","Esentepe","Eskişehir","Feriköy","Fulya","Gülbahar","Halaskargazi","Halide Edip Adıvar","Harbiye","İnönü","İzzetpaşa","Kaptanpaşa","Kuştepe","Mahmut Şevket Paşa","Mecidiyeköy","Merkez","Meşrutiyet","Nişantaşı","Okmeydanı","Paşa","Pangaltı","Teşvikiye","Yayla"],
+    "Tuzla": ["Anadolu","Aydınlı","Aydıntepe","Cami","Evliya Çelebi","Fatih","İçmeler","İstasyon","Mescit","Mimar Sinan","Orhanlı","Orta","Postane","Şifa","Tepeören","Yayla"],
+    "Ümraniye": ["Adem Yavuz","Altınşehir","Armağanevler","Aşağı Dudullu","Atakent","Atatürk","Cemil Meriç","Çakmak","Çamlık","Dumlupınar","Elmalıkent","Esenevler","Fatih Sultan Mehmet","Hekimbaşı","Huzur","Ihlamurkuyu","İnkılap","İstiklal","Kâzım Karabekir","Madenler","Mehmet Akif","Namık Kemal","Necip Fazıl","Parseller","Saray","Site","Şerifali","Tantavi","Tatlısu","Tepeüstü","Yamanevler","Yukarı Dudullu"],
+    "Üsküdar": ["Acıbadem","Ahmediye","Altunizade","Aziz Mahmut Hüdayi","Bahçelievler","Barbaros","Beylerbeyi","Bulgurlu","Burhaniye","Cumhuriyet","Çengelköy","Ferah","Güzeltepe","İcadiye","Kandilli","Kirazlıtepe","Kısıklı","Küçük Çamlıca","Küçüksu","Kuzguncuk","Mehmet Akif Ersoy","Mimar Sinan","Murat Reis","Salacak","Selami Ali","Selimiye","Sultantepe","Ünalan","Valide-i Atik","Yavuztürk","Zeynep Kamil"],
+    "Zeytinburnu": ["Beştelsiz","Çırpıcı","Gökalp","Kazlıçeşme","Maltepe","Merkezefendi","Nuripaşa","Seyitnizam","Sümer","Telsiz","Veliefendi","Yenidoğan","Yeşiltepe"]
+  };
+
+  // Firebase
+  let firebaseDB = null;
+  let firebaseAddDoc = null;
+  let firebaseDeleteDoc = null;
+  let firebaseUpdateDoc = null;
+  let firebaseDoc = null;
+  let firebaseCollection = null;
+  let firebaseGetDocs = null;
+
+  let musteriler = [];
+  let aktifFiltre = 'hepsi';
+  let aktifTelefon = '';
+  let duzenlenenId = null;
+
+  // Akıllı sonraki tarih hesaplama
+  function sonrakiTarihiHesapla(hasere, islemTarihi) {
+    const gunSayisi = {
+      'Tahta Kurusu': 15,
+      'Sinek': 15,
+      'Sivrisinek': 15,
+      'Pire': 21,
+      'Kuş Biti': 21,
+      'Akrep': 21,
+      'Fare': 21,
+      'Hamam Böceği': 28,
+      'Kalorifer Böceği': 28,
+      'Karafatma': 28,
+      'Karınca': 28,
+      'Sıçan': 28,
+      'Örümcek': 28,
+      'Diğer': 28
+    };
+    const gun = gunSayisi[hasere] || 28;
+    const tarih = new Date(islemTarihi);
+    tarih.setDate(tarih.getDate() + gun);
+    return tarih.toISOString().split('T')[0];
+  }
+
+  function paraFormat(sayi) {
+    if (!sayi && sayi !== 0) return '-';
+    return '₺' + Number(sayi).toLocaleString('tr-TR');
+  }
+
+  function ilceMenusunuDoldur() {
+    const ilceSelect = document.getElementById('ilce');
+    Object.keys(MAHALLELER).forEach(ilce => {
+      const opt = document.createElement('option');
+      opt.value = ilce; opt.textContent = ilce;
+      ilceSelect.appendChild(opt);
+    });
+  }
+
+  function yilMenusunuDoldur() {
+    const yilSelect = document.getElementById('yilSecim');
+    const simdikiYil = new Date().getFullYear();
+    yilSelect.innerHTML = '';
+    for (let y = simdikiYil + 1; y >= simdikiYil - 5; y--) {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      if (y === simdikiYil) opt.selected = true;
+      yilSelect.appendChild(opt);
+    }
+  }
+
+  function aySecimBaslat() {
+    const bugun = new Date();
+    document.getElementById('aySecim').value = bugun.getMonth();
+    document.getElementById('yilSecim').value = bugun.getFullYear();
+  }
+
+  function mahalleleriDoldur(secilenMahalle = '') {
+    const ilceSelect = document.getElementById('ilce');
+    const mahalleSelect = document.getElementById('mahalle');
+    const secilenIlce = ilceSelect.value;
+    mahalleSelect.innerHTML = '';
+
+    if (!secilenIlce) {
+      mahalleSelect.disabled = true;
+      mahalleSelect.innerHTML = '<option value="">Önce İlçe Seçiniz</option>';
+      return;
+    }
+
+    mahalleSelect.disabled = false;
+    const bosOpt = document.createElement('option');
+    bosOpt.value = ''; bosOpt.textContent = 'Mahalle Seçiniz';
+    mahalleSelect.appendChild(bosOpt);
+
+    (MAHALLELER[secilenIlce] || []).forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m; opt.textContent = m;
+      mahalleSelect.appendChild(opt);
+    });
+
+    if (secilenMahalle) mahalleSelect.value = secilenMahalle;
+  }
+
+  function tipDegistir() {
+    const tip = document.querySelector('input[name="tip"]:checked').value;
+    const adLabel = document.getElementById('adLabel');
+    const soyadAlani = document.getElementById('soyadAlani');
+    const soyadInput = document.getElementById('soyad');
+
+    if (tip === 'isletme') {
+      adLabel.textContent = 'İşletme Adı';
+      document.getElementById('ad').placeholder = 'Örn: ABC Market';
+      soyadAlani.style.display = 'none';
+      soyadInput.required = false;
+      soyadInput.value = '';
+    } else {
+      adLabel.textContent = 'Ad';
+      document.getElementById('ad').placeholder = '';
+      soyadAlani.style.display = 'block';
+      soyadInput.required = true;
+    }
+  }
+
+  function filtreSec(btn) {
+    document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
+    btn.classList.add('aktif');
+    aktifFiltre = btn.dataset.filtre;
+    listele(document.getElementById('aramaKutusu').value);
+  }
+
+  async function formGonder(e) {
+    e.preventDefault();
+    const tip = document.querySelector('input[name="tip"]:checked').value;
+    const islemTarihi = document.getElementById('islemTarihi').value;
+    const hasere = document.getElementById('hasere').value;
+
+    const veri = {
+      tip: tip,
+      ad: document.getElementById('ad').value.trim(),
+      soyad: tip === 'konut' ? document.getElementById('soyad').value.trim() : '',
+      telefon: document.getElementById('telefon').value.trim(),
+      ilce: document.getElementById('ilce').value,
+      mahalle: document.getElementById('mahalle').value,
+      sokak: document.getElementById('sokak').value.trim(),
+      binaNo: document.getElementById('binaNo').value.trim(),
+      daireNo: document.getElementById('daireNo').value.trim(),
+      hasere: hasere,
+      fiyat: document.getElementById('fiyat').value ? Number(document.getElementById('fiyat').value) : 0,
+      islemTarihi: islemTarihi,
+      sonrakiTarih: sonrakiTarihiHesapla(hasere, islemTarihi),
+      notlar: document.getElementById('notlar').value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      if (duzenlenenId) {
+        await firebaseUpdateDoc(firebaseDoc(firebaseDB, 'musteriler', duzenlenenId), veri);
+        alert('✅ Kayıt güncellendi!');
+        duzenlemeyiIptalEt();
+      } else {
+        veri.createdAt = new Date().toISOString();
+        const docRef = await firebaseAddDoc(firebaseCollection(firebaseDB, 'musteriler'), veri);
+        musteriler.push({ id: docRef.id, ...veri });
+        alert('✅ Kayıt eklendi!');
+        form.reset();
+        document.querySelector('input[name="tip"][value="konut"]').checked = true;
+        tipDegistir();
+        mahalleleriDoldur();
+      }
+      await musterileriYukle();
+    } catch (error) {
+      console.error('Kayıt hatası:', error);
+      alert('❌ Hata: ' + error.message);
+    }
+  }
+
+  function formTemizle() {
+    if (duzenlenenId) duzenlemeyiIptalEt();
+    document.getElementById('musteriForm').reset();
+    document.querySelector('input[name="tip"][value="konut"]').checked = true;
+    tipDegistir();
+    mahalleleriDoldur();
+  }
+
+  function duzenle(id) {
+    const m = musteriler.find(x => x.id === id);
+    if (!m) return;
+
+    duzenlenenId = id;
+    document.querySelector(`input[name="tip"][value="${m.tip}"]`).checked = true;
+    tipDegistir();
+
+    document.getElementById('ad').value = m.ad;
+    document.getElementById('soyad').value = m.soyad || '';
+    document.getElementById('telefon').value = m.telefon;
+    document.getElementById('ilce').value = m.ilce;
+    mahalleleriDoldur(m.mahalle);
+    document.getElementById('sokak').value = m.sokak;
+    document.getElementById('binaNo').value = m.binaNo || '';
+    document.getElementById('daireNo').value = m.daireNo || '';
+    document.getElementById('hasere').value = m.hasere;
+    document.getElementById('fiyat').value = m.fiyat || '';
+    document.getElementById('islemTarihi').value = m.islemTarihi;
+    document.getElementById('notlar').value = m.notlar || '';
+
+    const form = document.getElementById('musteriForm');
+    form.classList.add('duzenleme-modu');
+    const kaydetBtn = document.getElementById('kaydetBtn');
+    kaydetBtn.textContent = '💾 Güncelle';
+    kaydetBtn.classList.add('btn-guncelle');
+
+    const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+    document.getElementById('duzenlenenIsim').textContent = isim;
+
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    listele(document.getElementById('aramaKutusu').value);
+  }
+
+  function duzenlemeyiIptalEt() {
+    duzenlenenId = null;
+    const form = document.getElementById('musteriForm');
+    form.classList.remove('duzenleme-modu');
+    const kaydetBtn = document.getElementById('kaydetBtn');
+    kaydetBtn.textContent = '➕ Kaydet';
+    kaydetBtn.classList.remove('btn-guncelle');
+    form.reset();
+    document.querySelector('input[name="tip"][value="konut"]').checked = true;
+    tipDegistir();
+    mahalleleriDoldur();
+    listele(document.getElementById('aramaKutusu').value);
+  }
+
+  async function sil(id) {
+    if (confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
+      try {
+        await firebaseDeleteDoc(firebaseDoc(firebaseDB, 'musteriler', id));
+        if (duzenlenenId === id) duzenlemeyiIptalEt();
+        await musterileriYukle();
+      } catch (error) {
+        alert('❌ Silme hatası: ' + error.message);
+      }
+    }
+  }
+
+  function tarihFormat(t) {
+    if (!t) return '-';
+    const [y, m, g] = t.split('-');
+    return `${g}.${m}.${y}`;
+  }
+
+  function telefonWhatsappFormat(tel) {
+    let s = (tel || '').replace(/\D/g, '');
+    if (!s) return '';
+    if (s.startsWith('0')) s = s.substring(1);
+    if (!s.startsWith('90')) s = '90' + s;
+    return s;
+  }
+
+  function gunHesapla(tarih) {
+    if (!tarih) return null;
+    const bugun = new Date(); bugun.setHours(0,0,0,0);
+    const hedef = new Date(tarih); hedef.setHours(0,0,0,0);
+    return Math.ceil((hedef - bugun) / (1000*60*60*24));
+  }
+
+  function dashboardGuncelle() {
+    let toplam = musteriler.length;
+    let bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0;
+    let konutSayi = 0, isletmeSayi = 0;
+    let ciroToplam = 0;
+
+    musteriler.forEach(m => {
+      if (m.tip === 'konut') konutSayi++; else isletmeSayi++;
+      const fark = gunHesapla(m.sonrakiTarih);
+      if (fark !== null) {
+        if (fark === 0) bugunSayi++;
+        else if (fark > 0 && fark <= 3) yaklasanSayi++;
+        else if (fark < 0) gecmisSayi++;
+      }
+      ciroToplam += Number(m.fiyat) || 0;
+    });
+
+    document.getElementById('kartToplam').textContent = toplam;
+    document.getElementById('kartToplamAlt').textContent = `🏠 ${konutSayi}  •  🏢 ${isletmeSayi}`;
+    document.getElementById('kartBugun').textContent = bugunSayi;
+    document.getElementById('kartYaklasan').textContent = yaklasanSayi;
+    document.getElementById('kartGecmis').textContent = gecmisSayi;
+    document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
+  }
+
+  function aySecimGuncelle() {
+    const ay = document.getElementById('aySecim').value;
+    const yil = document.getElementById('yilSecim').value;
+    if (ay === '') {
+      document.getElementById('aySecimAdet').textContent = '0';
+      document.getElementById('aySecimCiro').textContent = '₺0';
+      return;
+    }
+    const ayNum = Number(ay);
+    const yilNum = Number(yil);
+    let adet = 0, ciro = 0;
+    musteriler.forEach(m => {
+      if (!m.islemTarihi) return;
+      const [y, a, g] = m.islemTarihi.split('-').map(Number);
+      if (y === yilNum && (a - 1) === ayNum) {
+        adet++;
+        ciro += Number(m.fiyat) || 0;
+      }
+    });
+    document.getElementById('aySecimAdet').textContent = adet;
+    document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
+  }
+
+  function excelAktar() {
+    if (musteriler.length === 0) {
+      alert('Aktarılacak kayıt yok!');
+      return;
+    }
+    const basliklar = ['Tip','Ad/İşletme','Soyad','Telefon','İlçe','Mahalle','Sokak','Bina No','Daire No','Haşere','Fiyat','İşlem Tarihi','Sonraki Tarih','Notlar'];
+    const satirlar = musteriler.map(m => [
+      m.tip === 'isletme' ? 'İşletme' : 'Konut',
+      m.ad, m.soyad || '', m.telefon, m.ilce, m.mahalle, m.sokak,
+      m.binaNo || '', m.daireNo || '', m.hasere,
+      m.fiyat ? Number(m.fiyat).toLocaleString('tr-TR') : '',
+      tarihFormat(m.islemTarihi), m.sonrakiTarih ? tarihFormat(m.sonrakiTarih) : '',
+      m.notlar || ''
+    ]);
+    const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+    const csv = [basliklar.map(escape).join(';'), ...satirlar.map(s => s.map(escape).join(';'))].join('\r\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const tarih = new Date().toISOString().split('T')[0];
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `musteriler_${tarih}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    alert(`✅ ${musteriler.length} kayıt Excel'e aktarıldı!`);
+  }
+
+  function whatsappAc(id) {
+    const m = musteriler.find(x => x.id === id);
+    if (!m) return;
+    if (!m.sonrakiTarih) {
+      alert('Bu müşterinin sonraki işlem tarihi belirtilmemiş.');
+      return;
+    }
+    const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+    const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
+    const gunFarki = gunHesapla(m.sonrakiTarih);
+    let zamanMetni = '';
+    if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`;
+    else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`;
+    else zamanMetni = `${gunFarki} gün sonra yapılacak`;
+    const fiyatSatiri = m.fiyat ? `\n💰 Hizmet ücreti: ${paraFormat(m.fiyat)}` : '';
+    const mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Son işlem tarihi: ${tarihFormat(m.islemTarihi)}\n🔔 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}${fiyatSatiri}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
+    aktifTelefon = telefonWhatsappFormat(m.telefon);
+    document.getElementById('mesajIcerik').value = mesaj;
+    document.getElementById('whatsappModal').classList.add('aktif');
+  }
+
+  function modalKapat() {
+    document.getElementById('whatsappModal').classList.remove('aktif');
+  }
+
+  function whatsappGonder() {
+    const mesaj = document.getElementById('mesajIcerik').value;
+    const url = `https://wa.me/${aktifTelefon}?text=${encodeURIComponent(mesaj)}`;
+    window.open(url, '_blank');
+    modalKapat();
+  }
+
+  function listele(filter = '') {
+    const tabloBody = document.getElementById('tabloBody');
+    tabloBody.innerHTML = '';
+    const f = filter.toLowerCase();
+    let gorunenAdet = 0, gorunenCiro = 0;
+
+    musteriler
+      .filter(m => {
+        if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
+        if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
+        const fark = gunHesapla(m.sonrakiTarih);
+        if (aktifFiltre === 'bugun' && fark !== 0) return false;
+        if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
+        if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
+        const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
+        return metin.includes(f);
+      })
+      .forEach(m => {
+        gorunenAdet++;
+        gorunenCiro += Number(m.fiyat) || 0;
+        const farkGun = gunHesapla(m.sonrakiTarih);
+        let satirClass = '', uyari = '';
+        if (farkGun !== null) {
+          if (farkGun < 0) { satirClass = 'gecmis'; uyari = ` (${Math.abs(farkGun)} gün gecikti!)`; }
+          else if (farkGun === 0) { satirClass = 'bugun-satir'; uyari = ' (BUGÜN!)'; }
+          else if (farkGun <= 3) { satirClass = 'yaklasan'; uyari = ` (${farkGun} gün kaldı)`; }
         }
+        if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
+        const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
+        const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+        const sonrakiGosterim = m.sonrakiTarih ? `${tarihFormat(m.sonrakiTarih)}${uyari}` : '<em style="color:#95a5a6;">Belirtilmedi</em>';
+        const waDisabled = m.sonrakiTarih ? '' : 'disabled';
+        const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
+        const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
+        const tr = document.createElement('tr');
+        tr.className = satirClass;
+        tr.innerHTML = `
+          <td>${rozet}</td>
+          <td><strong>${isim}</strong></td>
+          <td>${m.telefon}</td>
+          <td>${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
+          <td>${m.hasere}</td>
+          <td>${fiyatGosterim}</td>
+          <td>${tarihFormat(m.islemTarihi)}</td>
+          <td>${sonrakiGosterim}</td>
+          <td>${notGosterim}</td>
+          <td>
+            <button class="duzenle" onclick="duzenle('${m.id}')" title="Düzenle">✏️</button>
+            <button class="whatsapp-btn" onclick="whatsappAc('${m.id}')" ${waDisabled} title="WhatsApp">📱</button>
+            <button class="sil" onclick="sil('${m.id}')">Sil</button>
+          </td>
+        `;
+        tabloBody.appendChild(tr);
+      });
 
-        function todayKey() {
-            return formatDateKey(new Date());
-        }
+    document.getElementById('ozetAdet').textContent = gorunenAdet;
+    document.getElementById('ozetCiro').textContent = paraFormat(gorunenCiro);
+  }
 
-        async function loadBlockedSlots() {
-            try {
-                console.log('🔄 Yükleniyor...');
-                const snapshot = await getDocs(collection(db, 'blocked_slots'));
-                
-                blockedSlotsCache = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.blocked) {
-                        blockedSlotsCache[`${data.date}|${data.slot}`] = docSnap.id;
-                    }
-                });
-                
-                console.log('✅ Yüklendi:', Object.keys(blockedSlotsCache).length, 'kapalı saat');
-                renderCalendar();
-                renderSelectedDay();
-                updateStats();
-            } catch (error) {
-                console.error('❌ Okuma hatası:', error);
-            }
-        }
+  async function musterileriYukle() {
+    if (!firebaseDB) return;
+    try {
+      const snapshot = await firebaseGetDocs(firebaseCollection(firebaseDB, 'musteriler'));
+      musteriler = [];
+      snapshot.forEach(doc => {
+        musteriler.push({ id: doc.id, ...doc.data() });
+      });
+      musteriler.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      listele(document.getElementById('aramaKutusu').value);
+      dashboardGuncelle();
+      aySecimGuncelle();
+    } catch (error) {
+      console.error('Yükleme hatası:', error);
+      alert('Firebase yükleme hatası: ' + error.message);
+    }
+  }
 
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            document.getElementById('calendar-title').textContent = `${AY_ADLARI[month]} ${year}`;
+  // Firebase Başlatma (Module)
+  window.addEventListener('firebaseReady', async () => {
+    document.getElementById('yukleniyor').classList.add('hidden');
+    document.getElementById('icerik').classList.remove('hidden');
+    
+    ilceMenusunuDoldur();
+    yilMenusunuDoldur();
+    aySecimBaslat();
+    tipDegistir();
+    mahalleleriDoldur();
+    
+    document.getElementById('musteriForm').addEventListener('submit', formGonder);
+    document.getElementById('aramaKutusu').addEventListener('input', e => listele(e.target.value));
+    document.getElementById('whatsappModal').addEventListener('click', function(e) {
+      if (e.target === this) modalKapat();
+    });
+    
+    // Bugünün tarihi
+    const bugun = new Date().toISOString().split('T')[0];
+    document.getElementById('islemTarihi').value = bugun;
+    
+    await musterileriYukle();
+  });
+</script>
 
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const daysInMonth = lastDay.getDate();
-
-            let startDay = firstDay.getDay() - 1;
-            if (startDay < 0) startDay = 6;
-
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
-
-            for (let i = 0; i < startDay; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'aspect-square rounded-lg';
-                grid.appendChild(empty);
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateObj = new Date(year, month, day);
-                const dateKey = formatDateKey(dateObj);
-                const isToday = dateKey === todayKey();
-                const isSelected = dateKey === selectedDate;
-                const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
-
-                let blockedCount = 0;
-                ALL_SLOTS.forEach(slot => {
-                    if (blockedSlotsCache[`${dateKey}|${slot}`]) blockedCount++;
-                });
-
-                let statusColor = 'bg-emerald-500';
-                if (blockedCount >= 7) statusColor = 'bg-red-500';
-                else if (blockedCount > 0) statusColor = 'bg-amber-500';
-
-                const cell = document.createElement('button');
-                cell.type = 'button';
-                cell.onclick = () => selectDay(dateKey);
-                cell.className = `aspect-square rounded-lg relative transition-all p-1.5 text-left flex flex-col justify-between ${
-                    isSelected ? 'bg-promer-blue ring-2 ring-promer-lightBlue shadow-lg'
-                    : isToday ? 'bg-slate-800 ring-2 ring-amber-500/60 hover:bg-slate-700'
-                    : 'bg-slate-950 hover:bg-slate-800 border border-slate-800'
-                }`;
-
-                cell.innerHTML = `
-                    <div class="flex items-start justify-between">
-                        <span class="text-sm font-black ${isWeekend ? 'text-amber-400' : 'text-white'}">${day}</span>
-                        <span class="w-2 h-2 rounded-full ${statusColor}"></span>
-                    </div>
-                    ${blockedCount > 0 
-                        ? `<div class="text-[9px] text-amber-400 font-bold"><i class="fa-solid fa-lock"></i> ${blockedCount}</div>`
-                        : `<div class="text-[9px] text-emerald-500/60"><i class="fa-solid fa-check"></i></div>`
-                    }
-                `;
-                grid.appendChild(cell);
-            }
-        }
-
-        function selectDay(dateKey) {
-            selectedDate = dateKey;
-            renderCalendar();
-            renderSelectedDay();
-        }
-
-        function renderSelectedDay() {
-            const content = document.getElementById('selected-day-content');
-            const title = document.getElementById('selected-day-title');
-            const subtitle = document.getElementById('selected-day-subtitle');
-
-            if (!selectedDate) {
-                title.textContent = 'Gün Seçin';
-                subtitle.textContent = 'Yukarıdaki takvimden bir gün seçin';
-                content.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs"><i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i><p>Gün seçin.</p></div>`;
-                return;
-            }
-
-            const [y, m, d] = selectedDate.split('-');
-            const dateObj = new Date(y, m - 1, d);
-            title.textContent = dateObj.toLocaleDateString('tr-TR', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-
-            let blockedCount = 0;
-            ALL_SLOTS.forEach(slot => {
-                if (blockedSlotsCache[`${selectedDate}|${slot}`]) blockedCount++;
-            });
-
-            subtitle.textContent = `${blockedCount} kapalı · ${ALL_SLOTS.length} saat dilimi`;
-
-            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
-
-            ALL_SLOTS.forEach(slot => {
-                const isBlocked = !!blockedSlotsCache[`${selectedDate}|${slot}`];
-                html += `
-                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <i class="fa-regular fa-clock text-slate-500 text-xs"></i>
-                            <span class="font-bold text-xs">${slot}</span>
-                            ${isBlocked 
-                                ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>' 
-                                : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}
-                        </div>
-                        <button data-date="${selectedDate}" data-slot="${slot}" data-blocked="${isBlocked}" class="toggle-btn text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${
-                            isBlocked 
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30' 
-                            : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'
-                        }">
-                            ${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}
-                        </button>
-                    </div>
-                `;
-            });
-
-            html += '</div>';
-            content.innerHTML = html;
-
-            // Buton event listener'ları ekle
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const dateKey = btn.dataset.date;
-                    const slot = btn.dataset.slot;
-                    const isBlocked = btn.dataset.blocked === 'true';
-                    await toggleSlot(dateKey, slot, isBlocked);
-                });
-            });
-        }
-
-        async function toggleSlot(dateKey, slot, isCurrentlyBlocked) {
-            const key = `${dateKey}|${slot}`;
-            console.log('🔒 Toggle:', key, 'Şu an kapalı mı:', isCurrentlyBlocked);
-
-            try {
-                if (isCurrentlyBlocked) {
-                    const docId = blockedSlotsCache[key];
-                    console.log('🗑️ Siliniyor:', docId);
-                    await deleteDoc(doc(db, 'blocked_slots', docId));
-                    delete blockedSlotsCache[key];
-                    console.log('✅ Silindi');
-                } else {
-                    console.log('➕ Ekleniyor...');
-                    const newDoc = await addDoc(collection(db, 'blocked_slots'), {
-                        date: dateKey,
-                        slot: slot,
-                        blocked: true,
-                        createdAt: new Date().toISOString()
-                    });
-                    blockedSlotsCache[key] = newDoc.id;
-                    console.log('✅ Eklendi:', newDoc.id);
-                }
-
-                renderCalendar();
-                renderSelectedDay();
-                updateStats();
-            } catch (error) {
-                console.error('❌ Yazma hatası:', error);
-                alert('Hata: ' + error.message);
-            }
-        }
-
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        });
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
-        document.getElementById('todayBtn').addEventListener('click', () => {
-            currentDate = new Date();
-            selectedDate = todayKey();
-            renderCalendar();
-            renderSelectedDay();
-        });
-
-        function updateStats() {
-            const today = todayKey();
-            let todayCount = 0;
-            let totalBlocked = 0;
-            
-            Object.keys(blockedSlotsCache).forEach(key => {
-                const [date] = key.split('|');
-                if (date === today) todayCount++;
-                totalBlocked++;
-            });
-
-            document.getElementById('stat-today').textContent = todayCount;
-            document.getElementById('stat-total').textContent = '0';
-            document.getElementById('stat-blocked').textContent = totalBlocked;
-            document.getElementById('stat-revenue').textContent = '0 ₺';
-        }
-
-        selectedDate = todayKey();
-        currentDate = new Date();
-        renderCalendar();
-        renderSelectedDay();
-        loadBlockedSlots();
-        
-        console.log('🚀 Admin paneli hazır (v4.0)');
-    </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { 
+    getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc 
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+    authDomain: "promer-randevu.firebaseapp.com",
+    projectId: "promer-randevu",
+    storageBucket: "promer-randevu.firebasestorage.app",
+    messagingSenderId: "406588092985",
+    appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+  };
+  
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.firebaseDB = db;
+    window.firebaseGetDocs = getDocs;
+    window.firebaseCollection = collection;
+    window.firebaseAddDoc = addDoc;
+    window.firebaseDeleteDoc = deleteDoc;
+    window.firebaseDoc = doc;
+    window.firebaseUpdateDoc = updateDoc;
+    
+    window.dispatchEvent(new Event('firebaseReady'));
+  } catch (error) {
+    console.error('Firebase başlatma hatası:', error);
+  }
+</script>
 </body>
 </html>
