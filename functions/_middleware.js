@@ -1,14 +1,26 @@
+// Promer Admin Panel — Middleware
+// Basic Auth devre dışı. Kimlik doğrulama Firebase Auth ile yapılıyor.
+// İleride tekrar Basic Auth açmak istersen, aşağıdaki bloğu aktif edebilirsin.
+
+export async function onRequest(context) {
+  // Şu an hiçbir şey yapmıyor, sadece isteği geçiriyor.
+  // Firebase Auth zaten /admin/* sayfasını koruyor.
+  return context.next();
+}
+
+/* ============================================================
+   İLERİDE BASIC AUTH'U TEKRAR AÇMAK İSTERSEN
+   Yukarıdaki onRequest fonksiyonunu sil, aşağıdakini kullan:
+
 export async function onRequest(context) {
   const url = new URL(context.request.url);
 
-  // Sadece /admin ile başlayan sayfaları koru
   if (!url.pathname.startsWith('/admin')) {
     return context.next();
   }
 
   const auth = context.request.headers.get('Authorization');
 
-  // Şifre girilmemişse tarayıcıya şifre penceresi göster
   if (!auth) {
     return new Response('Authentication required', {
       status: 401,
@@ -23,13 +35,11 @@ export async function onRequest(context) {
     return new Response('Invalid authentication', { status: 401 });
   }
 
-  // Kimlik bilgilerini çöz
   const decoded = atob(encoded);
   const [username, password] = decoded.split(':');
 
-  // ⚠️⚠️⚠️ BURAYA KENDİ KULLANICI ADI VE ŞİFRENİZİ YAZIN ⚠️⚠️⚠️
-  const VALID_USERNAME = 'yonetici';
-  const VALID_PASSWORD = 'Mert751953..';
+  const VALID_USERNAME = context.env.ADMIN_USER;
+  const VALID_PASSWORD = context.env.ADMIN_PASS;
 
   if (username !== VALID_USERNAME || password !== VALID_PASSWORD) {
     return new Response('Invalid credentials', {
@@ -42,3 +52,4 @@ export async function onRequest(context) {
 
   return context.next();
 }
+============================================================ */
