@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
-                    <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.0</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.1</span>
                 </div>
             </div>
             <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
@@ -123,6 +123,10 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                     <span>Tamamen Dolu</span>
                 </div>
+                <div class="ml-auto flex items-center gap-1.5" id="fb-status">
+                    <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                    <span>Firebase bağlanıyor...</span>
+                </div>
             </div>
         </div>
     </section>
@@ -149,11 +153,8 @@
         </div>
     </section>
 
+    <!-- ================= ANA SCRIPT (Firebase module'ü bekler) ================= -->
     <script>
-        // =====================================================
-        // Promer Yönetim Paneli v3.0 — Firebase Entegre
-        // =====================================================
-
         const ALL_SLOTS = [
             '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
             '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
@@ -167,10 +168,7 @@
 
         let currentDate = new Date();
         let selectedDate = null;
-        let blockedSlotsCache = {}; // Firebase'den gelen kapalı saatler
-
-        // Firebase referansları (global)
-        let db, firebaseAddDoc, firebaseSetDoc, firebaseDeleteDoc, firebaseDoc, firebaseCollection, firebaseGetDocs, firebaseQuery, firebaseWhere;
+        let blockedSlotsCache = {};   // "YYYY-MM-DD|slot" -> firebase doc id
 
         // ---------- YARDIMCILAR ----------
         function formatDateKey(d) {
@@ -184,28 +182,41 @@
             return formatDateKey(new Date());
         }
 
+        function setFbStatus(ok, text) {
+            const el = document.getElementById('fb-status');
+            if (!el) return;
+            el.innerHTML = `
+                <span class="w-2 h-2 rounded-full ${ok ? 'bg-emerald-500' : 'bg-red-500'}"></span>
+                <span>${text}</span>
+            `;
+        }
+
         // ---------- FIREBASE'DEN VERİ OKU ----------
         async function loadBlockedSlots() {
-            if (!db || !firebaseGetDocs || !firebaseCollection) return;
-            
+            if (!window.firebaseDB) {
+                console.warn('Firebase henüz hazır değil');
+                return;
+            }
             try {
-                const blockedRef = firebaseCollection(db, 'blocked_slots');
-                const snapshot = await firebaseGetDocs(blockedRef);
-                
+                const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
+                const snapshot = await window.firebaseGetDocs(blockedRef);
+
                 blockedSlotsCache = {};
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
                     if (data.blocked) {
                         const key = `${data.date}|${data.slot}`;
-                        blockedSlotsCache[key] = doc.id; // Firebase doc ID'sini sakla
+                        blockedSlotsCache[key] = docSnap.id;
                     }
                 });
-                
+
+                setFbStatus(true, 'Firebase bağlı');
                 renderCalendar();
                 renderSelectedDay();
                 updateStats();
             } catch (error) {
                 console.error('Firebase okuma hatası:', error);
+                setFbStatus(false, 'Firebase hatası');
             }
         }
 
@@ -239,7 +250,6 @@
                 const isSelected = dateKey === selectedDate;
                 const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
 
-                // Bu günün kapalı saatlerini say
                 let blockedCount = 0;
                 ALL_SLOTS.forEach(slot => {
                     if (blockedSlotsCache[`${dateKey}|${slot}`]) blockedCount++;
@@ -312,7 +322,6 @@
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
 
-            // Bu günün kapalı saatlerini say
             let blockedCount = 0;
             ALL_SLOTS.forEach(slot => {
                 if (blockedSlotsCache[`${selectedDate}|${slot}`]) blockedCount++;
@@ -331,11 +340,13 @@
                         <div class="flex items-center gap-2 min-w-0">
                             <i class="fa-regular fa-clock text-slate-500 text-xs"></i>
                             <span class="font-bold text-xs">${slot}</span>
-                            ${isBlocked ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>' : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}
+                            ${isBlocked
+                                ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>'
+                                : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}
                         </div>
                         <button onclick="toggleSlot('${selectedDate}', '${slot}')" class="text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${
-                            isBlocked 
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30' 
+                            isBlocked
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
                             : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'
                         }">
                             ${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}
@@ -350,22 +361,32 @@
 
         // ---------- SAAT BLOKLAMA (FIREBASE) ----------
         async function toggleSlot(dateKey, slot) {
+            if (!window.firebaseDB) {
+                alert('Firebase bağlantısı hazır değil. Lütfen sayfayı yenileyin.');
+                return;
+            }
+
             const key = `${dateKey}|${slot}`;
             const existingDocId = blockedSlotsCache[key];
 
             try {
                 if (existingDocId) {
                     // Aç - Firebase'den sil
-                    await firebaseDeleteDoc(firebaseDoc(db, 'blocked_slots', existingDocId));
+                    await window.firebaseDeleteDoc(
+                        window.firebaseDoc(window.firebaseDB, 'blocked_slots', existingDocId)
+                    );
                     delete blockedSlotsCache[key];
                 } else {
                     // Kapat - Firebase'e ekle
-                    const newDocRef = await firebaseAddDoc(firebaseCollection(db, 'blocked_slots'), {
-                        date: dateKey,
-                        slot: slot,
-                        blocked: true,
-                        createdAt: new Date().toISOString()
-                    });
+                    const newDocRef = await window.firebaseAddDoc(
+                        window.firebaseCollection(window.firebaseDB, 'blocked_slots'),
+                        {
+                            date: dateKey,
+                            slot: slot,
+                            blocked: true,
+                            createdAt: new Date().toISOString()
+                        }
+                    );
                     blockedSlotsCache[key] = newDocRef.id;
                 }
 
@@ -397,10 +418,10 @@
         // ---------- İSTATİSTİK ----------
         function updateStats() {
             const today = todayKey();
-            
+
             let todayCount = 0;
             let totalBlocked = 0;
-            
+
             Object.keys(blockedSlotsCache).forEach(key => {
                 const [date] = key.split('|');
                 if (date === today) todayCount++;
@@ -408,37 +429,46 @@
             });
 
             document.getElementById('stat-today').textContent = todayCount;
-            document.getElementById('stat-total').textContent = '0'; // Firebase'den randevu sayısı gelecek
+            document.getElementById('stat-total').textContent = '0';
             document.getElementById('stat-blocked').textContent = totalBlocked;
             document.getElementById('stat-revenue').textContent = '0 ₺';
         }
 
-        // ---------- FIREBASE BAŞLAT ----------
-        window.addEventListener('firebaseReady', () => {
-            loadBlockedSlots();
-        });
-
-        // Firebase modülünden gelecek event'i bekle
+        // ---------- BAŞLANGIÇ ----------
         window.addEventListener('load', () => {
             selectedDate = todayKey();
             currentDate = new Date();
             renderCalendar();
             renderSelectedDay();
-            
-            // Firebase hazırsa hemen yükle
-            if (window.firebaseDB) {
+
+            // Firebase hazır olduğunda yükle
+            window.addEventListener('firebaseReady', () => {
+                setFbStatus(true, 'Firebase bağlı');
                 loadBlockedSlots();
-            }
+            });
+
+            // Emniyet: belki event kaçtıysa 100ms aralıklarla kontrol et
+            let tries = 0;
+            const t = setInterval(() => {
+                if (window.firebaseDB) {
+                    clearInterval(t);
+                    loadBlockedSlots();
+                }
+                if (++tries > 30) {
+                    clearInterval(t);
+                    if (!window.firebaseDB) setFbStatus(false, 'Firebase yüklenemedi');
+                }
+            }, 100);
         });
     </script>
 
-    <!-- FIREBASE SDK -->
+    <!-- ================= FIREBASE SDK (module) ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { 
-            getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc, query, where 
+        import {
+            getFirestore, collection, getDocs, addDoc, deleteDoc, doc
         } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        
+
         const firebaseConfig = {
             apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
             authDomain: "promer-randevu.firebaseapp.com",
@@ -447,38 +477,25 @@
             messagingSenderId: "406588092985",
             appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
         };
-        
+
         try {
             const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            
-            // Global referanslar
-            window.firebaseDB = db;
+            const firestore = getFirestore(app);
+
+            // Global'e aç (normal script bunları kullanıyor)
+            window.firebaseDB = firestore;
             window.firebaseAddDoc = addDoc;
-            window.firebaseSetDoc = setDoc;
             window.firebaseDeleteDoc = deleteDoc;
             window.firebaseDoc = doc;
             window.firebaseCollection = collection;
             window.firebaseGetDocs = getDocs;
-            window.firebaseQuery = query;
-            window.firebaseWhere = where;
-            
-            // Global değişkenlere ata
-            db = window.firebaseDB;
-            firebaseAddDoc = window.firebaseAddDoc;
-            firebaseSetDoc = window.firebaseSetDoc;
-            firebaseDeleteDoc = window.firebaseDeleteDoc;
-            firebaseDoc = window.firebaseDoc;
-            firebaseCollection = window.firebaseCollection;
-            firebaseGetDocs = window.firebaseGetDocs;
-            firebaseQuery = window.firebaseQuery;
-            firebaseWhere = window.firebaseWhere;
-            
-            // Firebase hazır event'i
+
+            console.log('Firebase hazır:', firestore);
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
             console.error('Firebase başlatma hatası:', error);
         }
     </script>
+
 </body>
 </html>
