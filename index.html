@@ -1408,8 +1408,19 @@
             document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // ÇİFT TIKLAMA KORUMALI RANDEVU FONKSİYONU
         async function submitBooking(e) {
             e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            if (submitBtn && submitBtn.disabled) return; // Zaten tıklandıysa çık
+            
+            // Butonu devre dışı bırak
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>İşleniyor...</span>';
+            }
+
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const ilce = document.getElementById('cust-ilce').value;
@@ -1418,7 +1429,6 @@
             const saat = document.getElementById('cust-saat').value;
             const grandTotal = document.getElementById('grand-total-display').innerText;
 
-            // ⭐ 1. FIREBASE'E KAYDET
             if (window.firebaseAddDoc && window.firebaseDB) {
                 try {
                     await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'bookings'), {
@@ -1432,10 +1442,15 @@
                     console.log("✅ Randevu buluta kaydedildi.");
                 } catch (error) {
                     console.error("❌ Bulut kayıt hatası:", error);
+                    alert('Kayıt sırasında bir hata oluştu: ' + error.message);
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fa-solid fa-check-circle text-xl"></i><span>Randevuyu Onayla ve WhatsApp\'a İlet</span>';
+                    }
+                    return; // Hata varsa devam etme
                 }
             }
 
-            // ⭐ 2. WHATSAPP MESAJINI HAZIRLA
             const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
 ----------------------------------
 • Ad Soyad   : ${name}
@@ -1453,7 +1468,8 @@
             const waMsg = encodeURIComponent(summaryText);
             document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
 
-            // ⭐ 3. ONAY EKRANINI GÖSTER
+            // Formu gizle ve onay ekranını göster
+            document.getElementById('booking-form').style.display = 'none';
             document.getElementById('confirmation-card').classList.remove('hidden');
             document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
         }
@@ -1501,7 +1517,7 @@
             window.firebaseDB = db;
             window.firebaseGetDocs = getDocs;
             window.firebaseCollection = collection;
-            window.firebaseAddDoc = addDoc; // ⭐ Firebase'e veri ekleme fonksiyonu eklendi
+            window.firebaseAddDoc = addDoc;
             
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
