@@ -765,7 +765,113 @@
     html += `</tbody></table>
       <div class="toplam">Toplam: ${isler.length} iş • ${paraFormat(toplamCiro)}</div>
       <script>setTimeout(function(){window.print();}, 300);<\/script>
+      <!-- 🔥 FIREBASE AUTH KONTROLÜ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+    authDomain: "promer-randevu.firebaseapp.com",
+    projectId: "promer-randevu",
+    storageBucket: "promer-randevu.firebasestorage.app",
+    messagingSenderId: "406588092985",
+    appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Sayfa açılınca içeriği gizle (giriş yapılmamışsa görünmesin)
+    const icerikler = document.body.children;
+    for (let i = 0; i < icerikler.length; i++) {
+      const el = icerikler[i];
+      if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+        el.style.visibility = 'hidden';
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      const gate = document.getElementById('auth-gate');
+      const icerikler = document.body.children;
+
+      if (user) {
+        // Giriş yapıldı → içeriği göster
+        if (gate) gate.style.display = 'none';
+        for (let i = 0; i < icerikler.length; i++) {
+          const el = icerikler[i];
+          if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+            el.style.visibility = 'visible';
+          }
+        }
+      } else {
+        // Giriş yapılmadı → login ekranını göster, içeriği gizle
+        if (gate) gate.style.display = 'flex';
+        for (let i = 0; i < icerikler.length; i++) {
+          const el = icerikler[i];
+          if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+            el.style.visibility = 'hidden';
+          }
+        }
+      }
+    });
+
+    window.adminLogin = async () => {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      const err = document.getElementById('login-error');
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        if (err) err.style.display = 'none';
+      } catch (e) {
+        let msg = 'Giriş başarısız';
+        if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
+        else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
+        else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
+        else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
+        else msg = '❌ Hata: ' + e.code;
+        if (err) {
+          err.textContent = msg;
+          err.style.display = 'block';
+        }
+      }
+    };
+
+    window.adminLogout = () => signOut(auth);
+
+    console.log('✅ Firebase Auth hazır');
+  } catch (error) {
+    console.error('Firebase başlatma hatası:', error);
+    alert('Firebase bağlantısı kurulamadı!');
+  }
+</script>
     </body></html>`;
+   <!-- 🔥 FIREBASE AUTH GİRİŞ EKRANI -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#020617;display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:32px;width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#0f2b5c,#1e40af);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+        <span style="font-size:24px;">🛡️</span>
+      </div>
+      <h2 style="color:#fff;font-size:18px;margin:0 0 4px 0;font-weight:800;">Yönetici Girişi</h2>
+      <p style="color:#64748b;font-size:12px;margin:0;">Promer Müşteri Takip Sistemi</p>
+    </div>
+    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
+           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
+    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
+           onkeypress="if(event.key==='Enter')adminLogin()"
+           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
+    <button onclick="adminLogin()"
+            style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">
+      Giriş Yap
+    </button>
+    <p id="login-error" style="color:#f87171;font-size:12px;text-align:center;margin:12px 0 0 0;display:none;"></p>
+    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;">
+      <a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a>
+    </p>
+  </div>
+</div>
     const w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
