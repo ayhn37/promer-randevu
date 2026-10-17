@@ -1,1512 +1,995 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
-    
-    <!-- ⭐ FAVICON -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://www.gstatic.com">
-    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: {
-                        promer: {
-                            navy: '#0f2b5c', navyDark: '#0a1d3f', blue: '#1e40af',
-                            lightBlue: '#3b82f6', accent: '#f97316', green: '#16a34a',
-                            greenDark: '#15803d', lightGreen: '#dcfce7'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%;
-            background: #1e40af; cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
-        }
-        input[type=range]::-moz-range-thumb {
-            height: 26px; width: 26px; border-radius: 50%;
-            background: #1e40af; cursor: pointer;
-            box-shadow: 0 0 12px rgba(30, 64, 175, 0.4); border: 3px solid #ffffff;
-        }
-        
-        .place-btn.active {
-            border-color: #16a34a !important;
-            background-color: #dcfce7 !important;
-            color: #14532d !important;
-        }
-        .place-btn.active i {
-            color: #16a34a !important;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Müşteri Takip Sistemi</title>
+<style>
+  * { box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #f4f6f9; margin: 0; padding: 20px; }
+  h1 { text-align: center; color: #2c3e50; }
+  .container { max-width: 1400px; margin: auto; }
+
+  /* DASHBOARD */
+  .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kart { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #3498db; transition: .2s; }
+  .kart:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  .kart .baslik { font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+  .kart .sayi { font-size: 30px; font-weight: bold; color: #2c3e50; margin-top: 6px; line-height: 1; }
+  .kart .alt { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+  .kart-toplam { border-left-color: #3498db; }
+  .kart-bugun { border-left-color: #27ae60; }
+  .kart-yapildi { border-left-color: #1a5276; background: linear-gradient(135deg,#d6eaf8 0%,#85c1e9 100%); }
+  .kart-gecmis { border-left-color: #e74c3c; }
+  .kart-yaklasan { border-left-color: #f39c12; }
+  .kart-ciro-toplam { border-left-color: #d35400; background: linear-gradient(135deg,#fff 0%,#fef5e7 100%); }
+  .kart-ay-secim { border-left-color: #16a085; background: linear-gradient(135deg,#fff 0%,#e8f8f5 100%); grid-column: span 2; }
+  .ay-secim-kutu { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ay-secim-kutu select { padding: 6px 10px; border: 2px solid #16a085; border-radius: 6px; font-size: 14px; font-weight: bold; background: #fff; color: #16a085; cursor: pointer; }
+  .ay-secim-kutu .sonuc { display: flex; gap: 15px; margin-left: auto; flex-wrap: wrap; }
+  .ay-secim-kutu .sonuc div { text-align: right; font-size: 12px; color: #7f8c8d; }
+  .ay-secim-kutu .sonuc div strong { display: block; font-size: 22px; color: #16a085; font-weight: bold; margin-top: 2px; }
+
+  /* BUGÜN PANELİ */
+  .bugun-panel { background: linear-gradient(135deg, #27ae60 0%, #16a085 100%); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(39,174,96,0.3); }
+  .bugun-panel h2 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .bugun-panel h2 .tarih { font-size: 14px; font-weight: normal; opacity: 0.9; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
+  .hafta-bar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
+  .hafta-bar button { margin: 0; flex: 1; min-width: 100px; background: rgba(255,255,255,0.15); color: #fff; padding: 10px 8px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); font-size: 12px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .hafta-bar button:hover { background: rgba(255,255,255,0.25); }
+  .hafta-bar button.aktif { background: #fff; color: #27ae60; border-color: #fff; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .hafta-bar button .gun-isim { font-weight: bold; font-size: 13px; }
+  .hafta-bar button .gun-tarih { font-size: 10px; opacity: 0.85; }
+  .hafta-bar button.aktif .gun-tarih { opacity: 0.7; }
+  .hafta-bar button .gun-adet { background: rgba(0,0,0,0.2); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 2px; }
+  .hafta-bar button.aktif .gun-adet { background: #27ae60; color: #fff; }
+  .hafta-bar button.bos .gun-adet { background: rgba(0,0,0,0.1); color: rgba(255,255,255,0.5); }
+  .hafta-bar button.bugun-gun { border-color: #f39c12; background: rgba(243,156,18,0.3); }
+  .hafta-bar button.bugun-gun.aktif { background: #f39c12; color: #fff; }
+  .hafta-bar button.bugun-gun.aktif .gun-adet { background: rgba(0,0,0,0.3); }
+
+  .bugun-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+  .bugun-item { background: rgba(255,255,255,0.15); padding: 12px 14px; border-radius: 8px; backdrop-filter: blur(10px); border-left: 4px solid #fff; cursor: pointer; transition: .2s; position: relative; }
+  .bugun-item:hover { background: rgba(255,255,255,0.25); transform: translateX(4px); }
+  .bugun-item.yapildi { background: rgba(21,67,96,0.75); border-left-color: #85c1e9; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3); }
+  .bugun-item .tik-kutu { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; cursor: pointer; accent-color: #fff; transform: scale(1.3); }
+  .bugun-item .saat { font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; padding-right: 30px; }
+  .bugun-item .saat .badge { background: #fff; color: #27ae60; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+  .bugun-item .isim { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+  .bugun-item .bilgi { font-size: 12px; opacity: 0.9; line-height: 1.4; }
+  .bugun-bos { text-align: center; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 15px; }
+  .bugun-butonlar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .bugun-butonlar button { margin: 0; background: rgba(255,255,255,0.25); color: #fff; padding: 8px 16px; font-size: 13px; border: 2px solid rgba(255,255,255,0.4); font-weight: bold; }
+  .bugun-butonlar button:hover { background: rgba(255,255,255,0.4); }
+
+  /* FORM (MODAL İÇİNDE) */
+  .duzenleme-bilgi { display: none; background: #fff3cd; border-left: 4px solid #f39c12; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; color: #7d5a00; font-size: 14px; }
+  form.duzenleme-modu .duzenleme-bilgi { display: block; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #34495e; }
+  input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; font-family: Arial, sans-serif; }
+  textarea { resize: vertical; min-height: 60px; }
+  select:disabled { background: #f0f0f0; color: #999; cursor: not-allowed; }
+
+  .tip-kutusu { display: flex; gap: 10px; margin-bottom: 15px; background: #ecf0f1; padding: 10px; border-radius: 8px; align-items: center; }
+  .tip-kutusu strong { color: #2c3e50; margin-right: 10px; }
+  .tip-kutusu label { display: flex; align-items: center; gap: 5px; font-weight: normal; margin: 0; cursor: pointer; background: #fff; padding: 8px 14px; border-radius: 6px; border: 2px solid #ccc; transition: .2s; }
+  .tip-kutusu input[type="radio"] { width: auto; margin: 0; }
+  .tip-kutusu label:has(input:checked) { border-color: #27ae60; background: #d5f4e6; }
+
+  button { margin-top: 0; padding: 10px 20px; border: none; background: #27ae60; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; }
+  button:hover { background: #219150; }
+  .btn-guncelle { background: #f39c12 !important; }
+  .btn-guncelle:hover { background: #e67e22 !important; }
+
+  /* ARAÇ ÇUBUĞU & BUTONLAR */
+  .ust-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+  .ekle-btn { background: #3498db; font-size: 16px; padding: 12px 24px; box-shadow: 0 4px 10px rgba(52,152,219,0.3); }
+  .ekle-btn:hover { background: #2980b9; }
+  .cikis-btn { background: #e74c3c; padding: 8px 16px; font-size: 13px; }
+  .cikis-btn:hover { background: #c0392b; }
+
+  .arac-cubugu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+  .filtre-bar { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+  .filtre-bar button { margin: 0; background: #bdc3c7; color: #2c3e50; padding: 8px 14px; font-size: 13px; font-weight: normal; }
+  .filtre-bar button:hover { background: #95a5a6; }
+  .filtre-bar button.aktif { background: #2c3e50; color: #fff; }
+  .filtre-bar button.aktif:hover { background: #1a252f; }
+  .filtre-bar button[data-filtre="yapildi"].aktif { background: #1a5276; }
+  .filtre-bar button[data-filtre="yapilmadi"].aktif { background: #e67e22; }
+
+  .excel-btn { margin: 0; background: #1d6f42; color: #fff; padding: 8px 16px; font-size: 13px; font-weight: bold; }
+  .excel-btn:hover { background: #145a32; }
+  .ice-aktar-btn { margin: 0; background: #8e44ad; color: #fff; padding: 8px 16px; font-size: 13px; font-weight: bold; }
+  .ice-aktar-btn:hover { background: #6c3483; }
+
+  .tarih-filtre { display: flex; gap: 10px; align-items: center; background: #fff; padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); flex-wrap: wrap; }
+  .tarih-filtre label { margin: 0; font-size: 13px; }
+  .tarih-filtre input[type="date"] { width: auto; padding: 6px 10px; border: 2px solid #3498db; border-radius: 6px; font-weight: bold; color: #2c3e50; }
+  .tarih-filtre button { margin: 0; padding: 6px 14px; font-size: 13px; background: #3498db; }
+  .tarih-filtre button:hover { background: #2980b9; }
+  .tarih-filtre .temizle-btn { background: #e74c3c; }
+  .tarih-filtre .temizle-btn:hover { background: #c0392b; }
+
+  .arama { margin-bottom: 15px; padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 6px; }
+
+  /* TABLO */
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: top; }
+  th { background: #2c3e50; color: #fff; }
+  tr:hover { background: #f9f9f9; }
+  .duzenlenen-satir { outline: 3px solid #f39c12 !important; outline-offset: -3px; }
+
+  .tik-kutu { width: 22px; height: 22px; cursor: pointer; accent-color: #1a5276; transform: scale(1.2); }
+  .tik-hucre { text-align: center !important; padding: 10px 6px !important; }
+
+  .yapildi-satir { background: #85c1e9 !important; border-left: 6px solid #1a5276 !important; font-weight: 600 !important; }
+  .yapildi-satir:hover { background: #5dade2 !important; }
+  .yapildi-satir td { color: #154360 !important; }
+  .yapildi-satir td strong { color: #154360 !important; }
+
+  .sil { background: #e74c3c; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; font-weight: normal; }
+  .sil:hover { background: #c0392b; }
+  .duzenle { background: #f39c12; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; margin-right: 4px; font-weight: normal; }
+  .duzenle:hover { background: #e67e22; }
+  .whatsapp-btn { background: #25D366; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-right: 4px; }
+  .whatsapp-btn:hover { background: #1ebe5b; }
+  .whatsapp-btn:disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
+
+  .yaklasan { background: #fff3cd !important; }
+  .gecmis { background: #f8d7da !important; }
+  .bugun-satir { background: linear-gradient(90deg, #d4edda 0%, #c3e6cb 100%) !important; border-left: 5px solid #27ae60 !important; font-weight: 500; }
+  .bugun-satir:hover { background: linear-gradient(90deg, #c3e6cb 0%, #b1dfbb 100%) !important; }
+  .yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
+
+  .rozet { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+  .rozet-isletme { background: #3498db; color: #fff; }
+  .rozet-konut { background: #27ae60; color: #fff; }
+  .rozet-web { background: #9b59b6; color: #fff; margin-left: 4px; }
+
+  .not-kutusu { background: #fffbea; border-left: 3px solid #f39c12; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: #7d5a00; margin-top: 4px; max-width: 200px; word-wrap: break-word; }
+  .fiyat { font-weight: bold; color: #16a085; font-size: 15px; white-space: nowrap; }
+  .fiyat-belirtilmedi { color: #bdc3c7; font-style: italic; font-size: 12px; }
+
+  .ozet-bar { margin-top: 15px; background: #fff; padding: 15px 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+  .ozet-bar div { font-size: 14px; color: #2c3e50; }
+  .ozet-bar span { font-weight: bold; color: #16a085; font-size: 18px; }
+  .ozet-bar .yapildi-span { color: #1a5276; }
+  .ozet-bar .yapilmadi-span { color: #e67e22; }
+
+  /* MODAL GENEL */
+  .modal-arkaplan { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
+  .modal-arkaplan.aktif { display: flex; }
+  .modal { background: #fff; padding: 20px; border-radius: 10px; max-width: 520px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; margin: auto; }
+  .modal h3 { margin-top: 0; color: #25D366; }
+  .modal textarea { width: 100%; min-height: 180px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; resize: vertical; }
+  .modal textarea.buyuk { min-height: 250px; font-family: monospace; font-size: 12px; }
+  .modal-butonlar { display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end; flex-wrap: wrap; }
+  .modal-butonlar button { margin: 0; }
+  .btn-iptal { background: #95a5a6; }
+  .btn-iptal:hover { background: #7f8c8d; }
+  .btn-gonder { background: #25D366; }
+  .btn-gonder:hover { background: #1ebe5b; }
+  .btn-mor { background: #8e44ad; }
+  .btn-mor:hover { background: #6c3483; }
+
+  /* YÜKLEME EKRANI */
+  #loading-screen { position: fixed; inset: 0; background: #f4f6f9; z-index: 9998; display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 18px; color: #2c3e50; font-weight: bold; }
+  .spinner { width: 40px; height: 40px; border: 4px solid #ccc; border-top-color: #27ae60; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .dashboard, .ust-bar, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
+    .bugun-panel { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 2px solid #000; padding: 15px !important; }
+    .bugun-item { background: #f9f9f9 !important; color: #000 !important; border: 1px solid #ccc !important; backdrop-filter: none !important; }
+    .bugun-item .saat .badge { background: #000 !important; color: #fff !important; }
+    .bugun-panel h2 { color: #000 !important; }
+  }
+</style>
 </head>
-<body class="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-promer-blue selection:text-white">
+<body>
 
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b border-slate-100 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-shield-virus text-2xl text-promer-accent"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-2xl font-black tracking-tight text-promer-navy">PROMER</span>
-                        <span class="text-2xl font-extrabold tracking-tight text-promer-green">İLAÇLAMA</span>
-                    </div>
-                    <span class="block text-[10px] font-bold tracking-wider text-slate-500 uppercase">T.C. Sağlık Bakanlığı Ruhsatlı Çözümler</span>
-                </div>
-            </a>
-            <nav class="hidden lg:flex items-center gap-7 font-semibold text-sm text-slate-700">
-                <a href="#hesapla" class="hover:text-promer-blue transition-colors">Fiyat Hesapla</a>
-                <a href="#tarife-tablosu" class="hover:text-promer-blue transition-colors">Tarife Cetveli</a>
-                <a href="#randevu" class="hover:text-promer-blue transition-colors">Randevu Al</a>
-                <a href="#hakkimizda" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
-            </nav>
-            <div class="hidden sm:flex items-center gap-3">
-                <a href="https://wa.me/908504660022" target="_blank" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
-                    <i class="fa-brands fa-whatsapp text-xl text-emerald-600"></i>
-                    <div class="text-left leading-tight">
-                        <span class="block text-[10px] text-emerald-600 font-bold uppercase">7/24 Destek Hattı</span>
-                        <span>0850 466 00 22</span>
-                    </div>
-                </a>
-            </div>
-            <button id="menu-btn" class="lg:hidden text-slate-800 p-2 focus:outline-none">
-                <i class="fa-solid fa-bars text-2xl"></i>
-            </button>
-        </div>
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-xl">
-            <a href="#hesapla" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Fiyat Hesaplama</a>
-            <a href="#tarife-tablosu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Tarife Cetveli</a>
-            <a href="#randevu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Randevu Al</a>
-            <a href="#hakkimizda" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Promer Hakkında</a>
-            <a href="https://wa.me/908504660022" target="_blank" class="flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-xl mt-2">
-                <i class="fa-brands fa-whatsapp text-lg"></i>
-                <span>0850 466 00 22 WhatsApp</span>
-            </a>
-        </div>
-    </header>
-
-    <section class="relative pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-slate-900 via-promer-navy to-slate-900 text-white overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-xs font-bold tracking-wide text-emerald-300">
-                        <i class="fa-solid fa-certificate text-promer-accent text-sm"></i>
-                        <span>T.C. Sağlık Bakanlığı Ruhsatlı</span>
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-                        Promer Güvencesiyle <br class="hidden sm:inline"/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-emerald-300 to-emerald-400">Şeffaf Fiyatlı İlaçlama</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                        Sürpriz maliyet yok! Alan metrekarenizi girin, Sağlık Bakanlığı onaylı biyosidal ilaçlama tarifesinden net faturanızı anında hesaplayıp randevunuzu oluşturun.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                        <a href="#hesapla" class="bg-promer-accent hover:bg-orange-600 text-white font-extrabold px-8 py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-center flex items-center justify-center gap-3 text-base">
-                            <i class="fa-solid fa-calculator text-lg"></i>
-                            <span>Canlı Fiyat Hesapla</span>
-                        </a>
-                        <a href="#randevu" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-8 py-4 rounded-2xl transition-all text-center flex items-center justify-center gap-3 backdrop-blur-md">
-                            <i class="fa-solid fa-calendar-check text-emerald-400 text-lg"></i>
-                            <span>Hızlı Randevu Al</span>
-                        </a>
-                    </div>
-                    <div class="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 text-center lg:text-left">
-                        <div><div class="text-xl sm:text-2xl font-black text-white">20+ Yıl</div><div class="text-xs text-slate-400 font-medium">Sektörel Tecrübe</div></div>
-                        <div><div class="text-xl sm:text-2xl font-black text-emerald-400">%100</div><div class="text-xs text-slate-400 font-medium">Müşteri Memnuniyeti</div></div>
-                        <div><div class="text-xl sm:text-2xl font-black text-blue-300">Garanti</div><div class="text-xs text-slate-400 font-medium">İkinci Seans İndirimi</div></div>
-                    </div>
-                </div>
-                <div class="lg:col-span-5">
-                    <div class="bg-white/95 text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 space-y-6 backdrop-blur-md">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                            <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
-                                <i class="fa-solid fa-shield-halved text-promer-green"></i> 2026 Promer Taban Tarifesi
-                            </h3>
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full">Resmi Onaylı</span>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                                <span class="text-slate-700 font-semibold">0 - 100 m² Standart Alan</span>
-                                <span class="font-extrabold text-promer-navy text-base">2.500 TL <span class="text-xs text-slate-500 font-normal">+ KDV</span></span>
-                            </div>
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                                <span class="text-slate-700 font-semibold">100 m² Üzeri Ek Kademe</span>
-                                <span class="font-extrabold text-promer-blue">+250 TL <span class="text-xs text-slate-500 font-normal">/ her 30m²</span></span>
-                            </div>
-                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
-                                <span class="text-emerald-950 font-bold">2. Seans Destek Uygulaması</span>
-                                <span class="font-extrabold text-emerald-700">%50 İndirimli</span>
-                            </div>
-                        </div>
-                        <a href="#tarife-tablosu" class="block text-center text-xs text-promer-blue font-bold hover:underline">Tüm Metrekare Kademe Tablosunu İncele &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="hesapla" class="py-20 bg-slate-100/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-                <span class="text-promer-blue font-extrabold text-xs uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">Anlık Canlı Hesaplayıcı</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Promer İlaçlama Ücret Hesaplama</h2>
-                <p class="text-slate-600">Mekan türü, haşere çeşidi ve alan büyüklüğünü girerek net faturanızı anında görün.</p>
-            </div>
-            <div class="max-w-5xl mx-auto bg-white border border-slate-200/80 rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-                <div class="lg:col-span-7 p-6 sm:p-10 space-y-8">
-                    <div>
-                        <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">1</span> Mekan Türünü Seçiniz
-                        </label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                            <button type="button" onclick="setPlaceType('ev', this)" class="place-btn active border-2 border-promer-blue bg-blue-50/60 text-slate-900 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all">
-                                <i class="fa-solid fa-house text-promer-blue text-lg"></i><span>Ev / Daire</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('isyeri', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-building text-slate-500 text-lg"></i><span>İş Yeri / Ofis</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('restoran', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-utensils text-slate-500 text-lg"></i><span>Restoran / Gıda</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('apartman', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300">
-                                <i class="fa-solid fa-city text-slate-500 text-lg"></i><span>Bina / Site Ortak</span>
-                            </button>
-                            <button type="button" onclick="setPlaceType('fabrika', this)" class="place-btn border-2 border-slate-200 bg-white text-slate-600 p-3 rounded-2xl font-bold text-xs flex flex-col items-center gap-2 transition-all hover:border-slate-300 col-span-2 sm:col-span-2">
-                                <i class="fa-solid fa-industry text-slate-500 text-lg"></i><span>Fabrika / Depo / Ticari Tesis</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                            <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">2</span> Haşere & Zararlı Türü
-                        </label>
-                        <select id="pest-select" onchange="recalculatePrice()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-bold rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-promer-blue focus:outline-none transition-all">
-                            <option value="Susam Böceği İlaçlama">Susam Böceği İlaçlama</option>
-                            <option value="Hamam Böceği İlaçlama" selected>Hamam Böceği İlaçlama</option>
-                            <option value="Uyuz Böceği İlaçlama">Uyuz Böceği İlaçlama</option>
-                            <option value="Tahta Kurusu İlaçlama">Tahta Kurusu İlaçlama</option>
-                            <option value="Kene İlaçlama">Kene İlaçlama</option>
-                            <option value="Tahta Kurdu İlaçlama">Tahta Kurdu İlaçlama</option>
-                            <option value="Gümüşcün Gümüş Böceği İlaçlama">Gümüşcün Gümüş Böceği İlaçlama</option>
-                            <option value="Çıyan & Kırkayak İlaçlama">Çıyan & Kırkayak İlaçlama</option>
-                            <option value="Güve İlaçlama">Güve İlaçlama</option>
-                            <option value="Karınca İlaçlama">Karınca İlaçlama</option>
-                            <option value="Kuş Biti İlaçlama">Kuş Biti İlaçlama</option>
-                            <option value="Kalorifer Böceği İlaçlama">Kalorifer Böceği İlaçlama</option>
-                            <option value="Örümcek İlaçlama">Örümcek İlaçlama</option>
-                            <option value="Yılan İlaçlama">Yılan İlaçlama</option>
-                            <option value="Arı & Yaban Arısı İlaçlama">Arı & Yaban Arısı İlaçlama</option>
-                            <option value="Karafatma İlaçlama">Karafatma İlaçlama</option>
-                            <option value="Sinek & Kara Sinek İlaçlama">Sinek & Kara Sinek İlaçlama</option>
-                            <option value="Bit İlaçlama">Bit İlaçlama</option>
-                            <option value="Fare & Kemirgen İlaçlama">Fare & Kemirgen (Rodentisit) İlaçlama</option>
-                            <option value="Salyangoz İlaçlama">Salyangoz İlaçlama</option>
-                            <option value="Akrep İlaçlama">Akrep İlaçlama</option>
-                            <option value="Pire İlaçlama">Pire İlaçlama</option>
-                            <option value="Tespih Böceği İlaçlama">Tespih Böceği İlaçlama</option>
-                            <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
-                        </select>
-                        
-                        <!-- NORMAL BİLGİ KUTUSU -->
-                        <div id="pest-info-box" class="mt-3 p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-2 text-slate-800">
-                            <div class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-info text-promer-blue text-sm mt-0.5"></i>
-                                <div id="pest-info-text">Seçilen haşere türüne özel Sağlık Bakanlığı onaylı uygulama dökümü.</div>
-                            </div>
-                            <div id="pest-time-container" class="flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-                                <span id="pest-time-text">İlaç Kuruyana Kadar (6-8 Saat) Kimse Olmamalıdır.</span>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ PİRE -->
-                        <div id="flea-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleFleaDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-red-100/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-bug text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-red-950 text-sm">PİRE İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-red-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="flea-toggle-icon" class="fa-solid fa-chevron-down text-red-700 transition-transform"></i>
-                                </button>
-                                <div id="flea-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can"></i> Uygulama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Evdeki <strong>yataklar, koltuklar ve tüm zemin</strong> kuru yer kalmayacak şekilde ilaçlanır. Kullanılan ilaç <strong>kokusuz ve lekesizdir</strong>, solunum olarak herhangi bir rahatsızlık vermez.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-clock"></i> Dışarda Kalma Süresi
-                                        </div>
-                                        <div class="grid grid-cols-3 gap-2 pl-5">
-                                            <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
-                                                <i class="fa-solid fa-user text-blue-600 text-lg"></i>
-                                                <div class="font-black text-slate-900 text-sm">4-6 saat</div>
-                                                <div class="text-[9px] text-slate-500">İnsanlar</div>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
-                                                <i class="fa-solid fa-cat text-amber-600 text-lg"></i>
-                                                <div class="font-black text-slate-900 text-sm">4-6 saat</div>
-                                                <div class="text-[9px] text-slate-500">Kedi</div>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-red-200 text-center">
-                                                <i class="fa-solid fa-dog text-orange-600 text-lg"></i>
-                                                <div class="font-black text-slate-900 text-sm">12 saat</div>
-                                                <div class="text-[9px] text-slate-500">Köpek</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-broom"></i> Elektrikli Süpürge
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Pire yumurtalarının ilaçla temasını hızlandırmak için ilaçlamadan sonra <strong>sabah ve akşam olmak üzere günde 2 kez</strong> elektrikli süpürge ile süpürülmelidir.
-                                        </p>
-                                    </div>
-                                    <div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-ban"></i> Temizlik Yapılmamalı
-                                        </div>
-                                        <p class="text-red-900 leading-relaxed pl-5 text-[11px]">
-                                            <strong>En az 3 gün boyunca sıvı temizlik yapılmamalıdır</strong> (yer silme, halı yıkama vb.).
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-calendar-check"></i> Sonuç Süresi
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pl-5">
-                                            <div class="bg-white p-2.5 rounded-lg border border-red-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Hafif Yoğunluk</div>
-                                                <div class="font-black text-slate-900">1 - 2 hafta</div>
-                                            </div>
-                                            <div class="bg-white p-2.5 rounded-lg border border-red-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Yoğun Durum</div>
-                                                <div class="font-black text-slate-900">2 - 3 hafta</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-emerald-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-shield-halved"></i> 2. Seans Garantisi
-                                        </div>
-                                        <p class="text-emerald-900 leading-relaxed text-[11px]">
-                                            <strong>21. günden sonra</strong> pire sorununuz devam ediyorsa <strong>2. uygulama %50 indirimli</strong> olarak yapılır.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ FARE -->
-                        <div id="rodent-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleRodentDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-amber-100/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-rat text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-amber-950 text-sm">FARE / KEMİRGEN İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-amber-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="rodent-toggle-icon" class="fa-solid fa-chevron-down text-amber-700 transition-transform"></i>
-                                </button>
-                                <div id="rodent-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-amber-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-toolbox"></i> Uygulama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Farelerin giriş yapabilecekleri ve pislik bıraktıkları noktalara <strong>profesyonel kemirgen istasyonları</strong> yerleştirilir. İstasyonlarda <strong>BASF marka</strong> pasta ve blok formunda rodentisit yemler kullanılır.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-amber-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-wheat-awn"></i> Yem Sistemi
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            İstasyon içindeki yem ile temas eden kemirgen, susuzluk hissi ile su arayışına girer. Büyük olasılıkla (<strong>%95</strong>) fark edemediğiniz giriş noktasından dışarı çıkarak kendi yaşam alanına döner.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-amber-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-clock"></i> Sonuç Süresi
-                                        </div>
-                                        <div class="bg-white p-3 rounded-lg border border-amber-200 ml-5">
-                                            <p class="text-slate-700 leading-relaxed">
-                                                Kemirgen, büyüklüğüne göre <strong>6-12 saat</strong> içerisinde kendi toplu yaşam alanında etkisiz hale gelir. <strong>Ev içinde olumsuz durum yaşanma olasılığı düşüktür.</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="bg-emerald-100 border-l-4 border-emerald-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-emerald-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-check-circle"></i> Kapalı Kalma Süresi Yok
-                                        </div>
-                                        <p class="text-emerald-900 leading-relaxed pl-5 text-[11px]">
-                                            Uygulama sonrası <strong>günlük yaşama engel olmaz</strong>. Mekanı terk etmenize gerek yoktur.
-                                        </p>
-                                    </div>
-                                    <div class="bg-blue-100 border-2 border-blue-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-blue-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-shield-halved"></i> Promer Garantisi
-                                        </div>
-                                        <p class="text-blue-900 leading-relaxed text-[11px]">
-                                            Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde <strong>2. seans desteği</strong> sağlanır.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ AKREP -->
-                        <div id="scorpion-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-slate-100 to-gray-100 border-2 border-slate-500 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleScorpionDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-slate-200/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-bug text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-slate-950 text-sm">AKREP İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-slate-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="scorpion-toggle-icon" class="fa-solid fa-chevron-down text-slate-700 transition-transform"></i>
-                                </button>
-                                <div id="scorpion-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-slate-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can"></i> Uygulama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Akrep ilaçlama <strong>sıvı olarak</strong> yapılmaktadır. İşlem evinizin <strong>tüm alt köşe noktalarında</strong>, <strong>süpürgeliklerde</strong>, <strong>tesisatlarda</strong> ve <strong>lavabo giderlerinde</strong> yapılmaktadır.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-slate-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-map-marked-alt"></i> Uygulama Noktaları
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pl-5">
-                                            <div class="bg-white p-2 rounded-lg border border-slate-300 flex items-center gap-2">
-                                                <i class="fa-solid fa-border-all text-slate-600"></i>
-                                                <span class="text-[11px] font-bold">Süpürgelikler</span>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-slate-300 flex items-center gap-2">
-                                                <i class="fa-solid fa-angle-down text-slate-600"></i>
-                                                <span class="text-[11px] font-bold">Alt Köşeler</span>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-slate-300 flex items-center gap-2">
-                                                <i class="fa-solid fa-faucet text-slate-600"></i>
-                                                <span class="text-[11px] font-bold">Lavabo Giderleri</span>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-slate-300 flex items-center gap-2">
-                                                <i class="fa-solid fa-wrench text-slate-600"></i>
-                                                <span class="text-[11px] font-bold">Tesisatlar</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-amber-100 border-l-4 border-amber-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-amber-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-clock"></i> Kapalı Kalma Süresi
-                                        </div>
-                                        <p class="text-amber-900 leading-relaxed pl-5 text-[11px]">
-                                            İşlemden sonra evinizin ilaç kuruyana kadar <strong>3-4 saat kapalı kalması gereklidir</strong>.
-                                        </p>
-                                    </div>
-                                    <div class="bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-emerald-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-shield-halved"></i> Promer Garantisi
-                                        </div>
-                                        <p class="text-emerald-900 leading-relaxed text-[11px]">
-                                            Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde <strong>2. seans desteği</strong> sağlanır.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ KUŞ BİTİ -->
-                        <div id="birdlice-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleBirdliceDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-orange-100/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-feather text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-orange-950 text-sm">KUŞ BİTİ İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-orange-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="birdlice-toggle-icon" class="fa-solid fa-chevron-down text-orange-700 transition-transform"></i>
-                                </button>
-                                <div id="birdlice-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-orange-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can"></i> Uygulama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Evdeki <strong>yataklar, koltuklar ve tüm zemin</strong> kuru yer kalmayacak şekilde ilaçlanır. Kullanılan ilaç <strong>kokusuz ve lekesizdir</strong>, solunum olarak herhangi bir rahatsızlık vermez.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-orange-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-clock"></i> Dışarda Kalma Süresi
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pl-5">
-                                            <div class="bg-white p-2 rounded-lg border border-orange-200 text-center">
-                                                <i class="fa-solid fa-user text-blue-600 text-lg"></i>
-                                                <div class="font-black text-slate-900 text-sm">4-7 saat</div>
-                                                <div class="text-[9px] text-slate-500">İnsanlar</div>
-                                            </div>
-                                            <div class="bg-white p-2 rounded-lg border border-orange-200 text-center">
-                                                <i class="fa-solid fa-paw text-amber-600 text-lg"></i>
-                                                <div class="font-black text-slate-900 text-sm">4-7 saat</div>
-                                                <div class="text-[9px] text-slate-500">Kedi & Köpek</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-ban"></i> Temizlik Yapılmamalı
-                                        </div>
-                                        <p class="text-red-900 leading-relaxed pl-5 text-[11px]">
-                                            <strong>En az 3 gün boyunca sıvı temizlik yapılmamalıdır</strong> (yer silme, halı yıkama vb.).
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-orange-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-calendar-check"></i> Sonuç Süresi
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pl-5">
-                                            <div class="bg-white p-2.5 rounded-lg border border-orange-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Hafif Yoğunluk</div>
-                                                <div class="font-black text-slate-900">1 - 2 hafta</div>
-                                            </div>
-                                            <div class="bg-white p-2.5 rounded-lg border border-orange-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Yoğun Durum</div>
-                                                <div class="font-black text-slate-900">2 - 3 hafta</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-emerald-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-shield-halved"></i> 2. Seans Garantisi
-                                        </div>
-                                        <p class="text-emerald-900 leading-relaxed text-[11px]">
-                                            <strong>21. günden sonra</strong> kuş biti sorununuz devam ediyorsa <strong>2. uygulama %50 indirimli</strong> olarak yapılır.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ TAHTA KURUSU -->
-                        <div id="bedbug-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-400 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleBedbugDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-purple-100/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-bug text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-purple-950 text-sm">TAHTA KURUSU İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-purple-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="bedbug-toggle-icon" class="fa-solid fa-chevron-down text-purple-700 transition-transform"></i>
-                                </button>
-                                <div id="bedbug-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div class="bg-purple-100 border-l-4 border-purple-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-purple-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-info-circle"></i> Tahta Kurusu Hakkında
-                                        </div>
-                                        <p class="text-purple-900 leading-relaxed text-[11px]">
-                                            Tahta kurusu, <strong>inatçı haşere grubunda</strong> yer alan, çok iyi gizlenen ve mücadelesi en zor olan haşeredir. Yeni başladığında genelde görülmezler. En belirgin işareti; <strong>gece uyurken sizi ısırması</strong> ve sabah vücudunuzdaki ısırık izleriyle uyanmanızdır.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-purple-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-layer-group"></i> Seans Bilgileri
-                                        </div>
-                                        <div class="space-y-2 pl-5">
-                                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
-                                                <div class="font-black text-purple-900 text-[11px] mb-0.5">Yeni Başlayan Şikayetler</div>
-                                                <div class="text-slate-700 text-[11px]">1-2 seansta çözüme ulaşılır.</div>
-                                            </div>
-                                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
-                                                <div class="font-black text-purple-900 text-[11px] mb-0.5">Kronik (Eski) Sorunlar</div>
-                                                <div class="text-slate-700 text-[11px]">3-4 seans veya daha fazla uygulama gerekebilir.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-purple-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can"></i> Uygulama Alanı
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            <strong>Yataklar, bazalar, baza başlıkları, koltuklar, tüm zemin, duvarların belli bölümleri</strong> ve muhtemel tüm yuvalanma noktaları detaylı şekilde ilaçlanır.
-                                        </p>
-                                    </div>
-                                    <div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg">
-                                        <div class="flex items-center gap-1.5 mb-1 text-red-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-clock"></i> Kapalı Kalma Süresi
-                                        </div>
-                                        <p class="text-red-900 leading-relaxed pl-5 text-[11px]">
-                                            İlaçlama uygulamasından sonra, ilacın tam olarak kuruyabilmesi ve uygulamanın etkili olması için <strong>evin 7-8 saat boyunca kapalı kalması gerekmektedir</strong>.
-                                        </p>
-                                    </div>
-                                    <div class="bg-amber-100 border-2 border-amber-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-amber-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-exclamation-triangle"></i> Önemli Not
-                                        </div>
-                                        <p class="text-amber-900 leading-relaxed text-[11px]">
-                                            Tahta kurusu mücadelesi <strong>süreklilik ve titizlik</strong> gerektiren bir süreçtir. Bu nedenle <strong>yapılan her seans ayrı olarak ücretlendirilmektedir</strong>.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ⭐ HAMAM BÖCEĞİ / KARAFATMA / KALORİFER -->
-                        <div id="cockroach-detail-box" class="mt-3 hidden">
-                            <div class="bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-500 rounded-2xl text-xs text-slate-800 overflow-hidden">
-                                <button type="button" onclick="toggleCockroachDetails()" class="w-full flex items-center justify-between gap-2 p-4 hover:bg-yellow-100/50 transition-all">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-yellow-600 rounded-lg flex items-center justify-center">
-                                            <i class="fa-solid fa-bug text-white"></i>
-                                        </div>
-                                        <div class="text-left">
-                                            <h4 class="font-black text-yellow-950 text-sm">HAMAM BÖCEĞİ İLAÇLAMA - DETAYLI BİLGİ</h4>
-                                            <p class="text-[10px] text-yellow-700">Detayları görmek için tıklayın</p>
-                                        </div>
-                                    </div>
-                                    <i id="cockroach-toggle-icon" class="fa-solid fa-chevron-down text-yellow-700 transition-transform"></i>
-                                </button>
-                                <div id="cockroach-details-content" class="hidden px-5 pb-5 space-y-4">
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-yellow-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can"></i> Çift Yöntem Uygulama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            Hamam böceği ilaçlama <strong>sıvı ve jel olarak iki uygulama aynı anda</strong> yapılmaktadır.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-yellow-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-droplet"></i> Jel İlaçlama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5 mb-2">
-                                            Jel ilaçlama <strong>mutfak dolabı, banyo dolabı menteşe boşluklarında</strong> ve <strong>beyaz eşyaların motor bölümlerinde</strong> hamam böceklerinin yuvalanabilecekleri ve geçiş yapabilecekleri noktalarda yapılır.
-                                        </p>
-                                        <div class="bg-white p-3 rounded-lg border border-yellow-200 ml-5">
-                                            <p class="text-slate-700 text-[11px] leading-relaxed">
-                                                Jel ilacı yedikten sonra hamam böceği <strong>hemen ölmez</strong>, toplu yaşadıkları yerde ve yuvada ölüm gerçekleşir. Hamam böcekleri birbirlerinin dışkılarıyla ve ölüleriyle beslendikleri için jel ilaç <strong>zincirleme bir ölüm</strong> meydana getirir. Özellikle <strong>Alman hamam böceği</strong> ilaçlama işleminde mutlaka yapılması gereklidir.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-yellow-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-spray-can-sparkles"></i> Sıvı İlaçlama
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5 mb-2">
-                                            Sıvı ilaçlama evinizin <strong>giriş kapısının sağ başından başlayıp sol başından çıkacak şekilde</strong> özellikle <strong>alt köşe noktalarda</strong>, tüm <strong>süpürgeliklerde</strong> ve <strong>kapı pervazı</strong> gibi böceklerin yuvalanabilecekleri yerlerde yapılır.
-                                        </p>
-                                        <div class="bg-white p-3 rounded-lg border border-yellow-200 ml-5">
-                                            <p class="text-slate-700 text-[11px] leading-relaxed">
-                                                Sıvı ilaç hamam böceklerini <strong>temas halinde öldürür</strong>. Yani ilaçlanan yerden geçen hamam böcekleri ilaca temas eder ve ölümü gerçekleşir.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-yellow-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-chart-line"></i> Süreç Nasıl İlerler?
-                                        </div>
-                                        <p class="text-slate-700 leading-relaxed pl-5">
-                                            İlaçlamadan sonra hamam böcekleri <strong>günden güne azalarak biter</strong>, tamamı imha olur. Hamam böceğinin yoğun olduğu mekanlarda yumurtadan çıkanlar olacaktır. Bunlar da alandaki daha önce jel ilacı yemiş hamam böceklerinin dışkılarını yer ve ilaçla temas ederek imha olurlar.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-1.5 mb-1.5 text-yellow-800 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-calendar-check"></i> Sonuç Süresi
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pl-5">
-                                            <div class="bg-white p-2.5 rounded-lg border border-yellow-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Hafif Yoğunluk</div>
-                                                <div class="font-black text-slate-900">1 - 2 hafta</div>
-                                            </div>
-                                            <div class="bg-white p-2.5 rounded-lg border border-yellow-200">
-                                                <div class="text-[10px] text-slate-500 mb-0.5">Yoğun Durum</div>
-                                                <div class="font-black text-slate-900">3 - 4 hafta</div>
-                                            </div>
-                                        </div>
-                                        <p class="text-slate-600 text-[10px] pl-5 mt-1.5 italic">
-                                            * Bu süre zarfında yoğun olarak hamam böceği görmezsiniz.
-                                        </p>
-                                    </div>
-                                    <div class="bg-emerald-100 border-2 border-emerald-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-emerald-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-shield-halved"></i> 2. Seans Garantisi
-                                        </div>
-                                        <p class="text-emerald-900 leading-relaxed text-[11px]">
-                                            <strong>28. günden (4. hafta) sonra</strong> hamam böceği sorununuz devam ediyorsa <strong>2. uygulama %50 indirimli</strong> olarak yapılır.
-                                        </p>
-                                    </div>
-                                    <div class="bg-blue-100 border-2 border-blue-400 p-3 rounded-xl">
-                                        <div class="flex items-center gap-1.5 mb-1 text-blue-900 font-black text-[11px] uppercase">
-                                            <i class="fa-solid fa-house-circle-check"></i> Kapalı Kalma Süresi
-                                        </div>
-                                        <p class="text-blue-900 leading-relaxed text-[11px]">
-                                            <strong>Alanın kapalı kalması gerekmez.</strong> Uygulama sonrası hemen günlük yaşama dönebilirsiniz.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="m2-section">
-                        <div class="flex items-center justify-between mb-3">
-                            <label class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 bg-promer-blue text-white rounded-full flex items-center justify-center text-xs">3</span> Alan Büyüklüğü (m²)
-                            </label>
-                            <div class="flex items-center gap-2">
-                                <input type="number" id="m2-number-input" min="10" max="50000" value="85" oninput="syncFromInput(this.value)" class="w-28 bg-blue-50/80 border-2 border-promer-blue rounded-xl px-3 py-1.5 font-extrabold text-slate-900 text-right focus:outline-none">
-                                <span class="font-bold text-slate-600 text-sm">m²</span>
-                            </div>
-                        </div>
-                        <input type="range" id="m2-slider" min="10" max="500" value="85" step="5" oninput="syncFromSlider(this.value)" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-promer-blue">
-                        <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-semibold">
-                            <span>10 m²</span><span>100 m² (Taban Limit)</span><span>250 m²</span><span>500+ m²</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:col-span-5 bg-promer-navy text-white p-6 sm:p-10 flex flex-col justify-between">
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between border-b border-white/10 pb-4">
-                            <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Resmi Hesap Özeti</span>
-                            <span id="tariff-badge" class="bg-blue-500/20 text-blue-200 border border-blue-400/30 text-[11px] font-bold px-3 py-1 rounded-full">0 - 100 m² Tarifesi</span>
-                        </div>
-                        <div class="space-y-2.5 text-sm text-slate-300">
-                            <div class="flex justify-between"><span>1. Seans Ücreti (0-100 m²):</span><span class="font-extrabold text-white">2.500 TL</span></div>
-                            <div class="flex justify-between"><span>Ek Alan Kademe Tutarı:</span><span id="extra-m2-cost" class="font-extrabold text-emerald-400">+0 TL</span></div>
-                            <div class="border-t border-white/10 my-3 pt-3 flex justify-between"><span>KDV Hariç Ara Toplam:</span><span id="subtotal-display" class="font-extrabold text-white">2.500 TL</span></div>
-                            <div class="flex justify-between"><span>KDV Tutar (%20):</span><span id="tax-display" class="font-extrabold text-white">500 TL</span></div>
-                        </div>
-                        <div class="bg-white/10 rounded-2xl p-5 border border-white/15 space-y-2 backdrop-blur-md">
-                            <span class="block text-xs text-slate-300 font-bold uppercase tracking-wider">TOPLAM NET TUTAR (KDV DAHİL)</span>
-                            <div class="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight" id="grand-total-display">3.000 TL</div>
-                            <div id="second-session-info" class="text-xs text-blue-200 bg-blue-950/70 p-3 rounded-xl border border-blue-800/80 mt-3 leading-relaxed"></div>
-                        </div>
-                    </div>
-                    <div class="pt-8">
-                        <button onclick="transferCalcToBooking()" class="w-full bg-promer-accent hover:bg-orange-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-orange-500/20 transition-all flex items-center justify-center gap-2 text-base">
-                            <span>Bu Fiyatla Randevu Adımına Geç</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="tarife-tablosu" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
-                <span class="text-promer-blue font-extrabold text-xs uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Kademeli İlaçlama Cetveli</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Promer Metrekare Dilim Tarifesi</h2>
-                <p class="text-slate-500 text-sm">Aşağıdaki tablodan kendi alanınızın hangi resmi fiyat bandına girdiğini doğrudan görebilirsiniz.</p>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="tariff-cards-container"></div>
-        </div>
-    </section>
-
-    <section id="randevu" class="py-20 bg-slate-100/80">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-promer-green font-extrabold text-xs uppercase tracking-widest bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Anında Rezervasyon</span>
-                <h2 class="text-3xl font-black text-slate-900 mt-2">Promer Online Randevu Oluşturma</h2>
-                <p class="text-slate-600 text-sm">Bilgilerinizi ve uygun olduğunuz saat dilimini seçip doğrudan WhatsApp hattımıza randevunuzu iletin.</p>
-            </div>
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-10">
-                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Ad Soyad *</label>
-                            <input type="text" id="cust-name" required placeholder="Örn: Ahmet Yılmaz" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Telefon Numarası *</label>
-                            <input type="tel" id="cust-phone" required placeholder="05XX XXX XX XX" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">İstanbul İlçesi Seçiniz *</label>
-                            <select id="cust-ilce" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                                <option value="">İlçe Seçin</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Adres / Detay (İsteğe Bağlı)</label>
-                            <input type="text" id="cust-address" placeholder="Mahalle, sokak, bina no" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Randevu Tarihi *</label>
-                            <input type="date" id="cust-date" required onchange="renderTimeSlots()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Saat Dilimi Seçin *</label>
-                            <select id="cust-saat" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-promer-blue focus:outline-none">
-                                <option value="">Saat Seçin</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-blue-50/80 rounded-2xl border border-blue-200/80 flex flex-col sm:flex-row justify-between items-center gap-3">
-                        <div class="text-sm">
-                            <span class="text-slate-600 font-semibold">Seçilen Hizmet Tutarı:</span>
-                            <span id="booking-summary-price" class="font-black text-promer-navy ml-2 text-base">3.000 TL (KDV Dahil)</span>
-                        </div>
-                        <span id="booking-summary-details" class="text-xs bg-white px-3.5 py-2 rounded-xl border border-blue-200 font-extrabold text-slate-800 shadow-sm">Ev / 85m² / Hamam Böceği</span>
-                    </div>
-                    <button type="submit" class="w-full bg-promer-green hover:bg-promer-greenDark text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 transition-all flex items-center justify-center gap-3 text-lg">
-                        <i class="fa-solid fa-check-circle text-xl"></i>
-                        <span>Randevuyu Onayla ve WhatsApp'a İlet</span>
-                    </button>
-                </form>
-                <div id="confirmation-card" class="hidden mt-8 p-6 sm:p-8 bg-emerald-50 border-2 border-emerald-500 rounded-3xl space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-emerald-950">Promer Randevu Fişiniz Hazır!</h3>
-                            <p class="text-xs text-emerald-800 font-medium">Talebiniz 0850 466 00 22 numaralı hattımıza iletilmek üzere formatlandı.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-xs space-y-2 font-mono text-slate-800 shadow-inner" id="sms-summary-text"></div>
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <a id="whatsapp-btn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-md">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            <span>WhatsApp İle Tek Tıkla Gönder (0850 466 00 22)</span>
-                        </a>
-                        <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold px-6 py-4 rounded-xl text-sm shadow-sm">
-                            <i class="fa-solid fa-print mr-1"></i> Yazdır
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="hakkimizda" class="py-16 bg-white border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-blue text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-certificate"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">Sağlık Bakanlığı Ruhsatlı</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama, T.C. Sağlık Bakanlığı Biyosidal Ürün Uygulama İzin Belgesi ile tam yetkili profesyonel haşere kontrol firmasıdır.</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-green text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-leaf"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">Çevre & İnsan Sağlığı Dostu</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Kullandığımız ilaçlar WHO (Dünya Sağlık Örgütü) standartlarında olup, evcil hayvanlar ve insan sağlığı gözetilerek uygulanır.</p>
-                </div>
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                    <div class="w-10 h-10 bg-promer-accent text-white rounded-xl flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-user-shield"></i></div>
-                    <h3 class="font-extrabold text-slate-900 text-base">%100 Memnuniyet & Garanti</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Promer İlaçlama güvencesiyle yapılan uygulamalarda ihtiyaç halinde 2. seans indirim garantisi ve teknik destek sağlanır.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-            <div class="flex items-center justify-center gap-2">
-                <span class="text-lg font-black text-white">PROMER</span>
-                <span class="text-lg font-extrabold text-promer-green">İLAÇLAMA</span>
-            </div>
-            
-            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs">
-                <button onclick="openModal('kvkkModal')" class="text-slate-400 hover:text-white transition-colors font-semibold">
-                    <i class="fa-solid fa-shield-halved mr-1 text-promer-green"></i> KVKK Aydınlatma Metni
-                </button>
-                <span class="text-slate-700 hidden sm:inline">|</span>
-                <button onclick="openModal('gizlilikModal')" class="text-slate-400 hover:text-white transition-colors font-semibold">
-                    <i class="fa-solid fa-lock mr-1 text-promer-green"></i> Gizlilik Politikası
-                </button>
-            </div>
-            
-            <p class="text-slate-400">T.C. Sağlık Bakanlığı Biyosidal İzinli Profesyonel İlaçlama Hizmetleri — Call Center: 0850 466 00 22</p>
-            <p>&copy; 2026 Promer İlaçlama San. ve Tic. Ltd. Şti. Tüm Hakları Saklıdır.</p>
-        </div>
-    </footer>
-
-    <!-- KVKK MODAL -->
-    <div id="kvkkModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this) closeModal('kvkkModal')">
-        <div class="max-w-3xl mx-auto my-8 bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div class="bg-promer-navy text-white p-5 flex items-center justify-between sticky top-0 z-10">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-shield-halved text-2xl text-promer-green"></i>
-                    <div>
-                        <h2 class="font-black text-lg">KVKK Aydınlatma Metni</h2>
-                        <p class="text-[10px] text-slate-300">6698 Sayılı Kanun Kapsamında</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('kvkkModal')" class="text-white hover:text-promer-accent text-2xl">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-            <div class="p-6 sm:p-8 space-y-5 text-sm leading-relaxed text-slate-700 max-h-[70vh] overflow-y-auto">
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">1. Veri Sorumlusu</h3>
-                    <p>Bu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, veri sorumlusu sıfatıyla <strong>Promer İlaçlama San. ve Tic. Ltd. Şti.</strong> tarafından hazırlanmıştır.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">2. İşlenen Kişisel Veriler</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Kimlik bilgileri (Ad, Soyad)</li>
-                        <li>İletişim bilgileri (Telefon, Adres, İlçe)</li>
-                        <li>Randevu bilgileri (Tarih, Saat, Hizmet Türü)</li>
-                        <li>Müşteri işlem bilgileri (Talep, Fatura)</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">3. Kişisel Verilerin İşlenme Amaçları</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Randevu talebinizin oluşturulması ve yönetilmesi</li>
-                        <li>İlaçlama hizmetinin ifa edilmesi</li>
-                        <li>Müşteri ilişkilerinin yürütülmesi</li>
-                        <li>Faturalandırma ve muhasebe işlemleri</li>
-                        <li>Yasal yükümlülüklerin yerine getirilmesi</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">4. Kişisel Verilerin Aktarılması</h3>
-                    <p>Kişisel verileriniz; yasal yükümlülükler kapsamında yetkili kamu kurum ve kuruluşlarına, hizmet ifası için gerekli olması halinde iş ortaklarımıza ve tedarikçilerimize KVKK'nın 8. ve 9. maddeleri kapsamında aktarılabilmektedir.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">5. Kişisel Veri Toplamanın Yöntemi ve Hukuki Sebebi</h3>
-                    <p>Kişisel verileriniz; web sitemiz, randevu formumuz, WhatsApp iletişim hattımız ve telefon aracılığıyla toplanmaktadır. Hukuki sebepler; sözleşmenin kurulması ve ifası, hukuki yükümlülüklerin yerine getirilmesi ve meşru menfaatlerimizdir.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">6. KVKK Kapsamındaki Haklarınız</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
-                        <li>İşlenmişse buna ilişkin bilgi talep etme</li>
-                        <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme</li>
-                        <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme</li>
-                        <li>Silinmesini veya yok edilmesini isteme</li>
-                        <li>İşlemenin sınırlandırılmasını isteme</li>
-                        <li>Otomatik sistemlerce analiz sonucu aleyhinize çıkan sonuçlara itiraz etme</li>
-                        <li>Kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">7. İletişim</h3>
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1">
-                        <p><strong>Şirket:</strong> Promer İlaçlama San. ve Tic. Ltd. Şti.</p>
-                        <p><strong>Telefon:</strong> 0850 466 00 22</p>
-                        <p><strong>E-posta:</strong> info@promerilaclama.com.tr</p>
-                    </div>
-                </section>
-                <p class="text-xs text-slate-500 pt-4 border-t border-slate-200 italic">Son güncelleme: 15 Ekim 2026</p>
-            </div>
-            <div class="bg-slate-50 p-4 border-t border-slate-200 text-center">
-                <button onclick="closeModal('kvkkModal')" class="bg-promer-navy hover:bg-promer-blue text-white font-bold px-6 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-check mr-1"></i> Okudum, Anladım
-                </button>
-            </div>
-        </div>
+<!-- GİRİŞ KAPISI -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#020617;display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:32px;width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#0f2b5c,#1e40af);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+        <span style="font-size:24px;">🛡️</span>
+      </div>
+      <h2 style="color:#fff;font-size:18px;margin:0 0 4px 0;font-weight:800;">Yönetici Girişi</h2>
+      <p style="color:#64748b;font-size:12px;margin:0;">Promer Müşteri Takip Sistemi</p>
     </div>
+    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username" style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
+    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password" onkeypress="if(event.key==='Enter')window.adminLogin()" style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
+    <button onclick="window.adminLogin()" style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Giriş Yap</button>
+    <p id="login-error" style="color:#f87171;font-size:12px;text-align:center;margin:12px 0 0 0;display:none;"></p>
+    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;"><a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a></p>
+  </div>
+</div>
 
-    <!-- GİZLİLİK MODAL -->
-    <div id="gizlilikModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this) closeModal('gizlilikModal')">
-        <div class="max-w-3xl mx-auto my-8 bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div class="bg-promer-navy text-white p-5 flex items-center justify-between sticky top-0 z-10">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-lock text-2xl text-promer-green"></i>
-                    <div>
-                        <h2 class="font-black text-lg">Gizlilik Politikası</h2>
-                        <p class="text-[10px] text-slate-300">Promer İlaçlama web sitesi gizlilik politikası</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('gizlilikModal')" class="text-white hover:text-promer-accent text-2xl">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-            <div class="p-6 sm:p-8 space-y-5 text-sm leading-relaxed text-slate-700 max-h-[70vh] overflow-y-auto">
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">1. Genel Bilgi</h3>
-                    <p>Promer İlaçlama San. ve Tic. Ltd. Şti. olarak, web sitemizi ziyaret eden kullanıcılarımızın gizliliğine ve kişisel verilerinin korunmasına önem veriyoruz. Bu politika, web sitemiz üzerinden toplanan bilgilerin nasıl kullanıldığını açıklar.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">2. Toplanan Bilgiler</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Randevu formu bilgileri (Ad, Soyad, Telefon, İlçe, Adres)</li>
-                        <li>Hizmet tercihleri (Mekan türü, haşere türü, alan büyüklüğü)</li>
-                        <li>Teknik bilgiler (IP adresi, tarayıcı bilgisi, ziyaret süresi)</li>
-                        <li>Çerez verileri</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">3. Bilgilerin Kullanımı</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Randevu talebinizin işlenmesi ve size geri dönüş yapılması</li>
-                        <li>Hizmet kalitesinin artırılması</li>
-                        <li>Web sitesi deneyiminin iyileştirilmesi</li>
-                        <li>Yasal yükümlülüklerin yerine getirilmesi</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">4. Bilgilerin Paylaşımı</h3>
-                    <p>Kişisel bilgileriniz; açık rızanız olmadan üçüncü şahıslarla paylaşılmaz, satılmaz veya kiralanmaz. Yalnızca yasal zorunluluklar ve hizmet ifası için gerekli olan durumlarda paylaşılabilir.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">5. Çerezler (Cookies)</h3>
-                    <p>Web sitemiz, kullanıcı deneyimini iyileştirmek için çerezler kullanmaktadır. Tarayıcı ayarlarınızdan çerezleri devre dışı bırakabilirsiniz.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">6. Veri Güvenliği</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>SSL sertifikası ile şifrelenmiş iletim</li>
-                        <li>Google Firebase altyapısında güvenli saklama</li>
-                        <li>Yetkisiz erişime karşı koruma</li>
-                        <li>Yalnızca yetkili personel erişimi</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">7. Üçüncü Taraf Hizmetler</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li><strong>Google Firebase:</strong> Randevu verilerinin saklanması</li>
-                        <li><strong>WhatsApp:</strong> İletişim ve randevu onayı</li>
-                        <li><strong>Cloudflare:</strong> Barındırma ve güvenlik</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">8. Kullanıcı Hakları</h3>
-                    <ul class="list-disc list-inside space-y-1 pl-2">
-                        <li>Kişisel verilerine erişme</li>
-                        <li>Yanlış bilgilerin düzeltilmesini talep etme</li>
-                        <li>Bilgilerinin silinmesini isteme</li>
-                        <li>İşleme itiraz etme</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">9. Politika Değişiklikleri</h3>
-                    <p>Bu gizlilik politikası önceden bildirim yapılmaksızın güncellenebilir. Güncel politika her zaman bu sayfada yayınlanır.</p>
-                </section>
-                <section>
-                    <h3 class="font-black text-promer-navy text-base mb-2">10. İletişim</h3>
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1">
-                        <p><strong>Şirket:</strong> Promer İlaçlama San. ve Tic. Ltd. Şti.</p>
-                        <p><strong>Telefon:</strong> 0850 466 00 22</p>
-                        <p><strong>E-posta:</strong> info@promerilaclama.com.tr</p>
-                    </div>
-                </section>
-                <p class="text-xs text-slate-500 pt-4 border-t border-slate-200 italic">Son güncelleme: 15 Ekim 2026</p>
-            </div>
-            <div class="bg-slate-50 p-4 border-t border-slate-200 text-center">
-                <button onclick="closeModal('gizlilikModal')" class="bg-promer-navy hover:bg-promer-blue text-white font-bold px-6 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-check mr-1"></i> Okudum, Anladım
-                </button>
-            </div>
-        </div>
+<!-- YÜKLEME EKRANI -->
+<div id="loading-screen" style="display:none;">
+  <div class="spinner"></div>
+  Veriler Yükleniyor...
+</div>
+
+<!-- ANA İÇERİK -->
+<div id="main-content" class="container" style="visibility:hidden;">
+  
+  <div class="ust-bar">
+    <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
+    <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış Yap</button>
+  </div>
+
+  <h1>🐜 Müşteri Takip Sistemi</h1>
+
+  <div class="bugun-panel" id="bugunPanel">
+    <h2>📅 Randevular <span class="tarih" id="bugunTarih"></span></h2>
+    <div class="hafta-bar" id="haftaBar"></div>
+    <div class="bugun-liste" id="bugunListe"></div>
+    <div class="bugun-butonlar">
+      <button onclick="seciliGunIsListesiYazdir()">🖨️ Seçili Günün İş Listesini Yazdır</button>
+      <button onclick="haftayiYenile()">🔄 Yenile</button>
     </div>
+  </div>
 
-    <script>
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+  <div class="dashboard">
+    <div class="kart kart-toplam"><div class="baslik">👥 Toplam</div><div class="sayi" id="kartToplam">0</div><div class="alt" id="kartToplamAlt">-</div></div>
+    <div class="kart kart-yapildi"><div class="baslik">✅ Yapıldı</div><div class="sayi" id="kartYapildi">0</div><div class="alt" id="kartYapildiAlt">-</div></div>
+    <div class="kart kart-bugun"><div class="baslik">📅 Bugün</div><div class="sayi" id="kartBugun">0</div><div class="alt">Bugün işlem günü</div></div>
+    <div class="kart kart-yaklasan"><div class="baslik">🔔 Yaklaşan</div><div class="sayi" id="kartYaklasan">0</div><div class="alt">3 gün içinde</div></div>
+    <div class="kart kart-gecmis"><div class="baslik">⚠️ Gecikmiş</div><div class="sayi" id="kartGecmis">0</div><div class="alt">İşlem tarihi geçti</div></div>
+    <div class="kart kart-ciro-toplam"><div class="baslik">💵 Toplam Ciro</div><div class="sayi" id="kartCiroToplam">₺0</div><div class="alt">Tüm zamanlar</div></div>
+    <div class="kart kart-ay-secim">
+      <div class="baslik">📅 Aylık Ciro</div>
+      <div class="ay-secim-kutu">
+        <select id="aySecim" onchange="aySecimGuncelle()">
+          <option value="">Ay Seçiniz</option>
+          <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option><option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option><option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option><option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
+        </select>
+        <select id="yilSecim" onchange="aySecimGuncelle()"></select>
+        <div class="sonuc">
+          <div>İşlem<strong id="aySecimAdet">0</strong></div>
+          <div>Ciro<strong id="aySecimCiro">₺0</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+  <div class="arac-cubugu">
+    <div class="filtre-bar">
+      <button type="button" class="aktif" data-filtre="hepsi" onclick="filtreSec(this)">📋 Hepsi</button>
+      <button type="button" data-filtre="konut" onclick="filtreSec(this)">🏠 Konutlar</button>
+      <button type="button" data-filtre="isletme" onclick="filtreSec(this)">🏢 İşletmeler</button>
+      <button type="button" data-filtre="bugun" onclick="filtreSec(this)">📅 Bugün</button>
+      <button type="button" data-filtre="yaklasan" onclick="filtreSec(this)">🔔 Yaklaşan</button>
+      <button type="button" data-filtre="gecmis" onclick="filtreSec(this)">⚠️ Gecikmiş</button>
+      <button type="button" data-filtre="yapildi" onclick="filtreSec(this)">✅ Yapıldı</button>
+      <button type="button" data-filtre="yapilmadi" onclick="filtreSec(this)">⏳ Yapılmadı</button>
+    </div>
+    <button type="button" class="excel-btn" onclick="excelAktar()">📥 Excel'e Aktar</button>
+    <button type="button" class="ice-aktar-btn" onclick="iceAktarmaAc()">📤 Toplu İçe Aktar</button>
+  </div>
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal('kvkkModal');
-                closeModal('gizlilikModal');
-            }
+  <div class="tarih-filtre">
+    <label>📅 Tarih Filtre:</label>
+    <input type="date" id="tarihFiltreInput" onchange="tarihFiltrele()">
+    <button type="button" onclick="bugunTarihSec()">📌 Bugüne Git</button>
+    <button type="button" onclick="tarihFiltreTemizle()" class="temizle-btn">❌ Temizle</button>
+    <span id="tarihFiltreBilgi" style="font-size:13px;color:#7f8c8d;margin-left:auto;"></span>
+  </div>
+
+  <input type="text" class="arama" id="aramaKutusu" placeholder="🔍 Ara (ad, işletme, telefon, ilçe, mahalle, haşere, not...)">
+
+  <table>
+    <thead>
+      <tr><th>✅</th><th>🕐 Saat</th><th>Tip</th><th>Ad / İşletme</th><th>Telefon</th><th>Adres</th><th>Haşere</th><th>💰 Fiyat</th><th>İşlem Tarihi</th><th>Sonraki İşlem</th><th>Not</th><th>İşlem</th></tr>
+    </thead>
+    <tbody id="tabloBody"></tbody>
+  </table>
+
+  <div class="ozet-bar">
+    <div>📋 <b>Görünen kayıt:</b> <span id="ozetAdet">0</span></div>
+    <div>✅ <b>Yapıldı:</b> <span class="yapildi-span" id="ozetYapildi">0</span></div>
+    <div>⏳ <b>Yapılmadı:</b> <span class="yapilmadi-span" id="ozetYapilmadi">0</span></div>
+    <div>💰 <b>Görünen ciro:</b> <span id="ozetCiro">₺0</span></div>
+  </div>
+</div>
+
+<!-- MÜŞTERİ EKLEME/DÜZENLEME MODALI -->
+<div class="modal-arkaplan" id="musteriModal">
+  <div class="modal" style="max-width: 800px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+      <h3 id="modalBaslik" style="margin:0; color:#2c3e50; font-size:18px;">➕ Yeni Müşteri Ekle</h3>
+      <button type="button" onclick="modalKapat3()" style="margin:0; padding:5px 12px; background:#e74c3c; border-radius:50%; font-size:14px;">✖</button>
+    </div>
+    <form id="musteriForm">
+      <div class="duzenleme-bilgi">✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span></div>
+      <div class="tip-kutusu">
+        <strong>Müşteri Tipi:</strong>
+        <label><input type="radio" name="tip" value="konut" checked onchange="tipDegistir()"><span>🏠 Konut</span></label>
+        <label><input type="radio" name="tip" value="isletme" onchange="tipDegistir()"><span>🏢 İşletme</span></label>
+      </div>
+      <div class="grid">
+        <div><label id="adLabel">Ad</label><input type="text" id="ad" required></div>
+        <div id="soyadAlani"><label>Soyad</label><input type="text" id="soyad"></div>
+        <div><label>Telefon</label><input type="tel" id="telefon" placeholder="05XX XXX XX XX" required></div>
+        <div><label>İlçe</label><select id="ilce" required onchange="mahalleleriDoldur()"><option value="">İlçe Seçiniz</option></select></div>
+        <div><label>Mahalle</label><select id="mahalle" required disabled><option value="">Önce İlçe Seçiniz</option></select></div>
+        <div><label>Sokak / Cadde</label><input type="text" id="sokak" required></div>
+        <div><label>Bina No</label><input type="text" id="binaNo"></div>
+        <div><label>Daire No</label><input type="text" id="daireNo"></div>
+        <div>
+          <label>Haşere</label>
+          <select id="hasere" required>
+            <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Arı</option><option>Uyuz</option><option>Diğer</option>
+          </select>
+        </div>
+        <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
+        <div><label>🕐 Saat</label><input type="time" id="saat"></div>
+        <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
+        <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
+      </div>
+      <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
+      
+      <div style="display:flex; gap:10px; margin-top:20px; border-top:1px solid #eee; padding-top:15px; justify-content:flex-end;">
+        <button type="button" onclick="modalKapat3()" style="background:#95a5a6;">İptal</button>
+        <button type="submit" id="kaydetBtn">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- WHATSAPP MODALI -->
+<div class="modal-arkaplan" id="whatsappModal">
+  <div class="modal">
+    <h3>📱 WhatsApp Hatırlatma Mesajı</h3>
+    <textarea id="mesajIcerik"></textarea>
+    <div class="modal-butonlar">
+      <button type="button" class="btn-iptal" onclick="modalKapat()">❌ İptal</button>
+      <button type="button" class="btn-gonder" onclick="whatsappGonder()">✅ WhatsApp'ta Aç</button>
+    </div>
+  </div>
+</div>
+
+<!-- İÇE AKTARMA MODALI -->
+<div class="modal-arkaplan" id="iceAktarModal">
+  <div class="modal">
+    <h3>📤 Toplu İçe Aktar</h3>
+    <p style="font-size:13px; color:#7f8c8d; margin-top:-10px; line-height:1.5;">Her satıra bir kayıt yaz:<br><code style="background:#f0f0f0;padding:4px 8px;border-radius:4px;font-size:11px;display:block;margin-top:6px;">Ad Soyad | Telefon | İlçe | Mahalle | Sokak | Haşere | Fiyat | Tarih (GG.AA.YYYY) | Saat | Not</code></p>
+    <textarea id="iceAktarIcerik" class="buyuk" placeholder="Ali Yılmaz | 05321111111 | Kadıköy | Caferağa | Moda Cad. No:5 | Pire | 2500 | 20.10.2025 | 14:00 | Kedi var"></textarea>
+    <div class="modal-butonlar">
+      <button type="button" class="btn-iptal" onclick="modalKapat2()">❌ İptal</button>
+      <button type="button" class="btn-mor" onclick="iceAktarCalistir()">✅ İçe Aktar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANA SCRIPT -->
+<script>
+  const MAHALLELER = {
+    "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"], "Arnavutköy": ["Anadolu","Arnavutköy Merkez","Bolluca","Haraççı","Hadımköy","Taşoluk"], "Ataşehir": ["Atatürk","Barbaros","Esatpaşa","Fetih","İçerenköy","Kayışdağı","Küçükbakkalköy","Mevlana","Mimar Sinan","Mustafa Kemal","Örnek","Yeni Çamlıca","Yenisahra"], "Avcılar": ["Ambarlı","Cihangir","Denizköşkler","Firuzköy","Gümüşpala","Merkez","Mustafa Kemal Paşa","Tahtakale","Üniversite","Yeşilkent"], "Bağcılar": ["Bağlar","Barbaros","Çınar","Demirkapı","Evren","Fatih","Fevzi Çakmak","Göztepe","Güneşli","Hürriyet","İnönü","Kâzım Karabekir","Kemalpaşa","Kirazlı","Mahmutbey","Merkez","Sancaktepe","Yavuz Selim","Yenigün","Yenimahalle","Yıldıztepe","100. Yıl"], "Bahçelievler": ["Bahçelievler Merkez","Cumhuriyet","Çobançeşme","Fevzi Çakmak","Hürriyet","Kocasinan","Siyavuşpaşa","Soğanlı","Şirinevler","Yenibosna","Zafer"], "Bakırköy": ["Ataköy 1. Kısım","Ataköy 2-5-6. Kısım","Ataköy 3-4-11. Kısım","Ataköy 7-8-9-10. Kısım","Basınköy","Cevizlik","Kartaltepe","Osmaniye","Sakızağacı","Şenlikköy","Yenimahalle","Yeşilköy","Yeşilyurt","Zeytinlik","Zuhuratbaba"], "Başakşehir": ["Altınşehir","Bahçeşehir 1. Kısım","Bahçeşehir 2. Kısım","Başak","Başakşehir","Güvercintepe","İkitelli OSB","Kayabaşı","Şahintepe","Şamlar","Ziya Gökalp"], "Bayrampaşa": ["Altıntepsi","Cevatpaşa","İsmetpaşa","Kartaltepe","Kocatepe","Muratpaşa","Orta","Terazidere","Vatan","Yenidoğan","Yıldırım"], "Beşiktaş": ["Abbasağa","Akat","Arnavutköy","Balmumcu","Cihannüma","Dikilitaş","Etiler","Gayrettepe","Konaklar","Kültür","Kuruçeşme","Levazım","Levent","Mecidiye","Muradiye","Nisbetiye","Ortaköy","Sinanpaşa","Türkali","Ulus","Vişnezade","Yıldız"], "Beykoz": ["Acarlar","Anadolu Hisarı","Anadolufeneri","Baklacı","Cumhuriyet","Çamlıbahçe","Çengeldere","Çubuklu","Göllü","Göksu","Gümüşsuyu","İncirköy","Kanlıca","Kavacık","Merkez","Ortaçeşme","Paşabahçe","Rüzgarlıbahçe","Soğuksu","Tokatköy","Yalıköy","Yenimahalle"], "Beylikdüzü": ["Adnan Kahveci","Barış","Büyükşehir","Cumhuriyet","Dereağzı","Gürpınar","Kavaklı","Marmara","Sahil","Yakuplu"], "Beyoğlu": ["Arap Cami","Asmalı Mescit","Bedrettin","Bereketzade","Bostan","Bülbül","Camiikebir","Cihangir","Çatma Mescit","Çukur","Emekyemez","Evliya Çelebi","Fetihtepe","Firuzağa","Gümüşsuyu","Hacıahmet","Hacımimi","Halıcıoğlu","Hüseyinağa","İstiklal","Kadımehmet Efendi","Kaptanpaşa","Karaköy","Kasımpaşa","Katip Mustafa Çelebi","Keçeci Piri","Kemankeş Karamustafa Paşa","Kılıçali Paşa","Kocatepe","Kulaksız","Kuloğlu","Küçük Piyale","Müeyyedzade","Örnektepe","Piri Paşa","Piyalepaşa","Şahkulu","Şehit Muhtar","Sütlüce","Taksim","Tomtom","Yahya Kahya","Yenişehir"], "Büyükçekmece": ["19 Mayıs","Alkent 2000","Atatürk","Bahçelievler","Celaliye","Cumhuriyet","Çakmaklı","Dizdariye","Ekinoba","Fatih","Güzelce","Hürriyet","Kamiloba","Karaağaç","Kumburgaz","Mimaroba","Mimarsinan","Muratçeşme","Pınartepe","Sinanoba","Türkoba","Ulus","Yenimahalle"], "Çatalca": ["Binkılıç","Çakıl","Çanakça","Dağyenice","Elbasan","Ferhatpaşa","Gökçeali","Hallaçlı","Hisarbeyli","İnceğiz","İzzettin","Kaleiçi","Karacaköy","Kestanelik","Muratbey","Ormanlı","Ovayenice","Subaşı","Yalıköy"], "Çekmeköy": ["Aydınlar","Cumhuriyet","Çamlık","Çatalmeşe","Ekşioğlu","Güngören","Hamidiye","Kirazlıdere","Mehmet Akif","Mimar Sinan","Nişantepe","Ömerli","Soğukpınar","Sultançiftliği","Taşdelen","Alemdağ","Reşadiye"], "Esenler": ["Birlik","Çiftehavuzlar","Davutpaşa","Fatih","Fevzi Çakmak","Havaalanı","Kâzım Karabekir","Kemer","Menderes","Mimar Sinan","Namık Kemal","Nene Hatun","Oruçreis","Tuna","Turgutreis","Yavuz Selim","Yüzyıl"], "Esenyurt": ["Akçaburgaz","Ardıçlı","Aşık Veysel","Atatürk","Bağlarçeşme","Balıkyolu","Barbaros Hayrettin Paşa","Battalgazi","Cumhuriyet","Çınar","Esenkent","Fatih","Gökevler","Güzelyurt","Hürriyet","İncirtepe","İnönü","İstiklal","Koza","Mehmet Akif Ersoy","Mehterçeşme","Mevlana","Namık Kemal","Necip Fazıl Kısakürek","Orhan Gazi","Osmangazi","Pınar","Piri Reis","Saadetdere","Selahaddin Eyyubi","Sultaniye","Şehitler","Talatpaşa","Turgut Özal","Üçevler","Yenikent","Yeşilkent","Zafer"], "Eyüpsultan": ["Akşemsettin","Alibeyköy","Çırçır","Defterdar","Düğmeciler","Emniyettepe","Esentepe","Göktürk","Güzeltepe","İslambey","Karadolap","Kemerburgaz","Mimar Sinan","Nişanca","Rami Cuma","Rami Yeni","Sakarya","Silahtarağa","Topçular","Yeşilpınar"], "Fatih": ["Aksaray","Akşemsettin","Atikali","Ayvansaray","Balat","Beyazıt","Cerrahpaşa","Cibali","Demirtaş","Haseki Sultan","Hırkai Şerif","Hobyar","İskenderpaşa","Karagümrük","Koca Mustafapaşa","Mevlanakapı","Mimar Hayrettin","Mimar Kemalettin","Molla Fenari","Molla Gürani","Şehremini","Sultan Ahmet","Süleymaniye","Topkapı","Yedikule","Zeyrek"], "Gaziosmanpaşa": ["Bağlarbaşı","Barbaros Hayrettin Paşa","Fevzi Çakmak","Hürriyet","Karadeniz","Karayolları","Karlıtepe","Kâzım Karabekir","Merkez","Mevlana","Pazariçi","Sarıgöl","Şemsipaşa","Yeni Mahalle","Yenidoğan","Yıldıztabya"], "Güngören": ["Abdurrahman Nafiz Gürman","Akıncılar","Gençosman","Güneştepe","Güven","Haznedar","Mareşal Çakmak","Mehmet Nesih Özmen","Merkez","Sanayi","Tozkoparan"], "Kadıköy": ["19 Mayıs","Acıbadem","Bostancı","Caddebostan","Caferağa","Dumlupınar","Eğitim","Erenköy","Fenerbahçe","Feneryolu","Fikirtepe","Göztepe","Hasanpaşa","Koşuyolu","Kozyatağı","Merdivenköy","Osmanağa","Rasimpaşa","Sahrayıcedit","Suadiye","Zühtüpaşa"], "Kağıthane": ["Çağlayan","Çeliktepe","Emniyet Evleri","Gültepe","Gürsel","Hamidiye","Harmantepe","Hürriyet","Mehmet Akif Ersoy","Merkez","Nurtepe","Orta","Sanayi","Seyrantepe","Şirintepe","Talatpaşa","Telsizler","Yahya Kemal","Yeşilce"], "Kartal": ["Atalar","Cevizli","Cumhuriyet","Çavuşoğlu","Esentepe","Gümüşpınar","Hürriyet","Karlıktepe","Kordonboyu","Orhantepe","Orta","Petrol İş","Soğanlık Yeni","Topselvi","Uğur Mumcu","Yakacık Çarşı","Yakacık Yeni","Yalı","Yukarı"], "Küçükçekmece": ["Atakent","Atatürk","Beşyol","Cennet","Cumhuriyet","Fatih","Fevzi Çakmak","Gültepe","Halkalı Merkez","İnönü","İstasyon","Kanarya","Kartaltepe","Kemalpaşa","Mehmet Akif","Söğütlü Çeşme","Sultan Murat","Tevfikbey","Yarımburgaz","Yeni Mahalle","Yeşilova"], "Maltepe": ["Altayçeşme","Altıntepe","Aydınevler","Bağlarbaşı","Başıbüyük","Büyükbakkalköy","Cevizli","Çınar","Esenkent","Feyzullah","Fındıklı","Girne","Gülensu","Gülsuyu","İdealtepe","Küçükyalı","Yalı","Zümrütevler"], "Pendik": ["Ahmet Yesevi","Bahçelievler","Batı","Çamçeşme","Çınardere","Doğu","Dumlupınar","Ertuğrul Gazi","Esenler","Esenyalı","Fatih","Fevzi Çakmak","Güllübağlar","Güzelyalı","Harmandere","Kavakpınar","Kaynarca","Kurtköy","Orhangazi","Orta","Ramazanoğlu","Sanayi","Sapanbağları","Sülüntepe","Şeyhli","Velibaba","Yayalar","Yeni","Yenişehir","Yeşilbağlar"], "Sancaktepe": ["Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","Hilal","İnönü","Kemal Türkler","Meclis","Merve","Mevlana","Osmangazi","Paşaköy","Safa","Sarıgazi","Veysel Karani","Yenidoğan","Yunus Emre"], "Sarıyer": ["Ayazağa","Bahçeköy","Baltalimanı","Büyükdere","Cumhuriyet","Çayırbaşı","Darüşşafaka","Emirgan","Ferahevler","Fatih Sultan Mehmet","Gümüşdere","Huzur","İstinye","Kâzım Karabekir","Kireçburnu","Kocataş","Maden","Maslak","PTT Evleri","Pınar","Poligon","Reşitpaşa","Rumeli Hisarı","Rumeli Kavağı","Sarıyer Merkez","Tarabya","Uskumruköy","Yeniköy","Zekeriyaköy"], "Silivri": ["Alibey","Alipaşa","Büyükçavuşlu","Cumhuriyet","Çanta Balaban","Çanta Sancaktepe","Değirmenköy","Fatih","Gümüşyaka","Kadıköy","Kavaklı","Mimarsinan","Ortaköy","Piri Mehmet Paşa","Semizkumlar","Selimpaşa","Sinanoba","Yeni","Yolçatı"], "Sultanbeyli": ["Abdurrahmangazi","Adil","Ahmet Yesevi","Akşemsettin","Battalgazi","Fatih","Hamidiye","Hasanpaşa","Mecidiye","Mehmet Akif","Mimar Sinan","Necip Fazıl","Orhangazi","Turgut Reis","Yavuz Selim"], "Sultangazi": ["50. Yıl","75. Yıl","Cebeci","Cumhuriyet","Esentepe","Eski Habipler","Gazi","Habibler","İsmetpaşa","Malkoçoğlu","Sultançiftliği","Uğur Mumcu","Yayla","Yunus Emre","Zübeyde Hanım"], "Şile": ["Ağva","Balibey","Çavuş","Hacıkasım","Kumbaba","Meşrutiyet","Yeniköy"], "Şişli": ["19 Mayıs","Bozkurt","Cumhuriyet","Duatepe","Ergenekon","Esentepe","Eskişehir","Feriköy","Fulya","Gülbahar","Halaskargazi","Halide Edip Adıvar","Harbiye","İnönü","İzzetpaşa","Kaptanpaşa","Kuştepe","Mahmut Şevket Paşa","Mecidiyeköy","Merkez","Meşrutiyet","Nişantaşı","Okmeydanı","Paşa","Pangaltı","Teşvikiye","Yayla"], "Tuzla": ["Anadolu","Aydınlı","Aydıntepe","Cami","Evliya Çelebi","Fatih","İçmeler","İstasyon","Mescit","Mimar Sinan","Orhanlı","Orta","Postane","Şifa","Tepeören","Yayla"], "Ümraniye": ["Adem Yavuz","Altınşehir","Armağanevler","Aşağı Dudullu","Atakent","Atatürk","Cemil Meriç","Çakmak","Çamlık","Dumlupınar","Elmalıkent","Esenevler","Fatih Sultan Mehmet","Hekimbaşı","Huzur","Ihlamurkuyu","İnkılap","İstiklal","Kâzım Karabekir","Madenler","Mehmet Akif","Namık Kemal","Necip Fazıl","Parseller","Saray","Site","Şerifali","Tantavi","Tatlısu","Tepeüstü","Yamanevler","Yukarı Dudullu"], "Üsküdar": ["Acıbadem","Ahmediye","Altunizade","Aziz Mahmut Hüdayi","Bahçelievler","Barbaros","Beylerbeyi","Bulgurlu","Burhaniye","Cumhuriyet","Çengelköy","Ferah","Güzeltepe","İcadiye","Kandilli","Kirazlıtepe","Kısıklı","Küçük Çamlıca","Küçüksu","Kuzguncuk","Mehmet Akif Ersoy","Mimar Sinan","Murat Reis","Salacak","Selami Ali","Selimiye","Sultantepe","Ünalan","Valide-i Atik","Yavuztürk","Zeynep Kamil"], "Zeytinburnu": ["Beştelsiz","Çırpıcı","Gökalp","Kazlıçeşme","Maltepe","Merkezefendi","Nuripaşa","Seyitnizam","Sümer","Telsiz","Veliefendi","Yenidoğan","Yeşiltepe"]
+  };
+
+  let musteriler = [];
+  let aktifFiltre = 'hepsi';
+  let aktifTelefon = '';
+  let duzenlenenId = null;
+  let aktifTarihFiltre = '';
+  let seciliGunIndex = -1;
+
+  const form = document.getElementById('musteriForm');
+  const tabloBody = document.getElementById('tabloBody');
+  const aramaKutusu = document.getElementById('aramaKutusu');
+  const ilceSelect = document.getElementById('ilce');
+  const mahalleSelect = document.getElementById('mahalle');
+  const kaydetBtn = document.getElementById('kaydetBtn');
+
+  function paraFormat(sayi) {
+    if (!sayi && sayi !== 0) return '-';
+    return '₺' + Number(sayi).toLocaleString('tr-TR');
+  }
+
+  function tarihFormat(t) {
+    if (!t) return '-';
+    const [y, m, g] = t.split('-');
+    return `${g}.${m}.${y}`;
+  }
+
+  function bugunISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function yeniMusteriAc() {
+    formTemizle();
+    document.getElementById('modalBaslik').textContent = '➕ Yeni Müşteri Ekle';
+    kaydetBtn.textContent = '➕ Kaydet';
+    kaydetBtn.classList.remove('btn-guncelle');
+    form.classList.remove('duzenleme-modu');
+    document.getElementById('musteriModal').classList.add('aktif');
+  }
+
+  function modalKapat3() {
+    document.getElementById('musteriModal').classList.remove('aktif');
+    duzenlemeyiIptalEt();
+  }
+
+  async function tikDegistir(id) {
+    const m = musteriler.find(x => x.id === id);
+    if (!m || !window.db) return;
+    try {
+      await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: !m.yapildi });
+    } catch (e) { alert('Hata: ' + e.message); }
+  }
+
+  function haftaGunleriniAl() {
+    const bugun = new Date();
+    const gun = bugun.getDay();
+    const pazartesiFark = gun === 0 ? -6 : 1 - gun;
+    const pazartesi = new Date(bugun);
+    pazartesi.setDate(bugun.getDate() + pazartesiFark);
+    const isimler = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
+    const bugunISOStr = bugunISO();
+    const gunler = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(pazartesi);
+      d.setDate(pazartesi.getDate() + i);
+      const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const adet = musteriler.filter(m => m.sonrakiTarih === iso || m.islemTarihi === iso).length;
+      gunler.push({ isim: isimler[i], iso: iso, bugunMu: iso === bugunISOStr, adet: adet });
+    }
+    return gunler;
+  }
+
+  function haftayiYenile() {
+    const gunler = haftaGunleriniAl();
+    const bar = document.getElementById('haftaBar');
+    bar.innerHTML = '';
+    if (seciliGunIndex === -1) {
+      const bugunIdx = gunler.findIndex(g => g.bugunMu);
+      seciliGunIndex = bugunIdx >= 0 ? bugunIdx : 0;
+    }
+    gunler.forEach((g, i) => {
+      const btn = document.createElement('button');
+      let cls = '';
+      if (i === seciliGunIndex) cls += ' aktif';
+      if (g.bugunMu) cls += ' bugun-gun';
+      if (g.adet === 0) cls += ' bos';
+      btn.className = cls;
+      btn.onclick = () => gunSec(i);
+      btn.innerHTML = `<span class="gun-isim">${g.isim}</span><span class="gun-tarih">${g.iso.split('-').reverse().join('.').slice(0,5)}</span><span class="gun-adet">${g.adet} iş</span>`;
+      bar.appendChild(btn);
+    });
+    gunListesiniGuncelle(gunler[seciliGunIndex]);
+  }
+
+  function gunSec(index) { seciliGunIndex = index; haftayiYenile(); }
+
+  function gunListesiniGuncelle(gun) {
+    document.getElementById('bugunTarih').textContent = gun.isim + ', ' + gun.iso.split('-').reverse().join('.');
+    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
+    const liste = document.getElementById('bugunListe');
+    if (isler.length === 0) {
+      liste.innerHTML = `<div class="bugun-bos">📭 ${gun.isim} için planlanmış işlem yok</div>`;
+      return;
+    }
+    liste.innerHTML = '';
+    isler.forEach(m => {
+      const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
+      const saatMetni = m.saat || 'Saat belirtilmedi';
+      const fiyatMetni = m.fiyat ? `💰 ${paraFormat(m.fiyat)}` : '';
+      const yapildi = m.yapildi === true;
+      const div = document.createElement('div');
+      div.className = 'bugun-item' + (yapildi ? ' yapildi' : '');
+      div.innerHTML = `
+        <input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onclick="event.stopPropagation(); tikDegistir('${m.id}')">
+        <div class="saat">🕐 ${saatMetni} ${m.sonrakiTarih === gun.iso && m.islemTarihi !== gun.iso ? '<span class="badge">RANDEVU</span>' : ''} ${m.islemTarihi === gun.iso ? '<span class="badge" style="background:#f39c12;">BUGÜN</span>' : ''}</div>
+        <div class="isim">${isim} ${m.web ? '<span class="rozet rozet-web">🌐 Web</span>' : ''}</div>
+        <div class="bilgi">📍 ${m.ilce} / ${m.mahalle}<br>🐜 ${m.hasere} ${fiyatMetni ? ' • ' + fiyatMetni : ''}<br>📞 ${m.telefon}</div>
+      `;
+      div.onclick = (e) => { if (e.target.type !== 'checkbox') duzenle(m.id); };
+      liste.appendChild(div);
+    });
+  }
+
+  function seciliGunIsListesiYazdir() {
+    const gunler = haftaGunleriniAl();
+    const gun = gunler[seciliGunIndex];
+    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
+    if (isler.length === 0) { alert(`${gun.isim} için iş yok!`); return; }
+    let toplamCiro = isler.reduce((s, m) => s + (Number(m.fiyat) || 0), 0);
+    const tarihMetni = `${gun.isim}, ${gun.iso.split('-').reverse().join('.')}`;
+    let html = `<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>İş Listesi</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; color: #000; }
+      h1 { text-align: center; font-size: 22px; margin-bottom: 5px; }
+      .tarih { text-align: center; color: #555; margin-bottom: 20px; font-size: 14px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+      th, td { border: 1px solid #333; padding: 8px; text-align: left; font-size: 12px; vertical-align: top; }
+      th { background: #2c3e50; color: #fff; }
+      .toplam { margin-top: 20px; text-align: right; font-size: 16px; font-weight: bold; }
+      .checkbox { font-size: 18px; }
+      .yapildi { background: #85c1e9; color: #154360; font-weight: 600; }
+      @media print { body { padding: 0; } }
+    </style></head><body>
+    <h1>🐜 İş Listesi</h1><div class="tarih">${tarihMetni}</div>
+    <table><thead><tr><th style="width:30px;">✔</th><th style="width:60px;">Saat</th><th>Müşteri</th><th>Adres</th><th>Haşere</th><th>Telefon</th><th>Fiyat</th><th>Not</th></tr></thead><tbody>`;
+    isler.forEach(m => {
+      const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
+      const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
+      const yapildi = m.yapildi === true;
+      html += `<tr${yapildi ? ' class="yapildi"' : ''}><td class="checkbox">${yapildi ? '☑' : '☐'}</td><td><b>${m.saat || '-'}</b></td><td><b>${isim}</b></td><td>${adres}</td><td>${m.hasere}</td><td>${m.telefon}</td><td>${m.fiyat ? paraFormat(m.fiyat) : '-'}</td><td>${m.notlar || ''}</td></tr>`;
+    });
+    html += `</tbody></table><div class="toplam">Toplam: ${isler.length} iş • ${paraFormat(toplamCiro)}</div><script>setTimeout(function(){window.print();}, 300);<\/script></body></html>`;
+    const w = window.open('', '_blank');
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function ilceMenusunuDoldur() {
+    Object.keys(MAHALLELER).forEach(ilce => {
+      const opt = document.createElement('option'); opt.value = ilce; opt.textContent = ilce; ilceSelect.appendChild(opt);
+    });
+  }
+  ilceMenusunuDoldur();
+
+  function yilMenusunuDoldur() {
+    const yilSelect = document.getElementById('yilSecim');
+    const simdikiYil = new Date().getFullYear();
+    yilSelect.innerHTML = '';
+    for (let y = simdikiYil + 1; y >= simdikiYil - 5; y--) {
+      const opt = document.createElement('option'); opt.value = y; opt.textContent = y; if (y === simdikiYil) opt.selected = true; yilSelect.appendChild(opt);
+    }
+  }
+  yilMenusunuDoldur();
+
+  function aySecimBaslat() {
+    const bugun = new Date();
+    document.getElementById('aySecim').value = bugun.getMonth();
+    document.getElementById('yilSecim').value = bugun.getFullYear();
+  }
+  aySecimBaslat();
+
+  function aySecimGuncelle() {
+    const ay = document.getElementById('aySecim').value;
+    const yil = document.getElementById('yilSecim').value;
+    if (ay === '') { document.getElementById('aySecimAdet').textContent = '0'; document.getElementById('aySecimCiro').textContent = '₺0'; return; }
+    const ayNum = Number(ay), yilNum = Number(yil);
+    let adet = 0, ciro = 0;
+    musteriler.forEach(m => {
+      if (!m.islemTarihi) return;
+      const [y, a, g] = m.islemTarihi.split('-').map(Number);
+      if (y === yilNum && (a - 1) === ayNum) { adet++; ciro += Number(m.fiyat) || 0; }
+    });
+    document.getElementById('aySecimAdet').textContent = adet;
+    document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
+  }
+
+  function mahalleleriDoldur(secilenMahalle = '') {
+    const secilenIlce = ilceSelect.value;
+    mahalleSelect.innerHTML = '';
+    if (!secilenIlce) { mahalleSelect.disabled = true; mahalleSelect.innerHTML = '<option value="">Önce İlçe Seçiniz</option>'; return; }
+    mahalleSelect.disabled = false;
+    const bosOpt = document.createElement('option'); bosOpt.value = ''; bosOpt.textContent = 'Mahalle Seçiniz'; mahalleSelect.appendChild(bosOpt);
+    (MAHALLELER[secilenIlce] || []).forEach(m => {
+      const opt = document.createElement('option'); opt.value = m; opt.textContent = m; mahalleSelect.appendChild(opt);
+    });
+    if (secilenMahalle) mahalleSelect.value = secilenMahalle;
+  }
+
+  function tipDegistir() {
+    const tip = document.querySelector('input[name="tip"]:checked').value;
+    const adLabel = document.getElementById('adLabel');
+    const soyadAlani = document.getElementById('soyadAlani');
+    const soyadInput = document.getElementById('soyad');
+    if (tip === 'isletme') { adLabel.textContent = 'İşletme Adı'; ad.placeholder = 'Örn: ABC Market'; soyadAlani.style.display = 'none'; soyadInput.required = false; soyadInput.value = ''; }
+    else { adLabel.textContent = 'Ad'; ad.placeholder = ''; soyadAlani.style.display = 'block'; soyadInput.required = true; }
+  }
+  tipDegistir();
+
+  function filtreSec(btn) {
+    document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
+    btn.classList.add('aktif');
+    aktifFiltre = btn.dataset.filtre;
+    listele(aramaKutusu.value);
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const tip = document.querySelector('input[name="tip"]:checked').value;
+    const veri = {
+      tip: tip, ad: ad.value.trim(), soyad: tip === 'konut' ? soyad.value.trim() : '',
+      telefon: telefon.value.trim(), ilce: ilce.value, mahalle: mahalle.value,
+      sokak: sokak.value.trim(), binaNo: binaNo.value.trim(), daireNo: daireNo.value.trim(),
+      hasere: hasere.value, fiyat: fiyat.value ? Number(fiyat.value) : 0,
+      saat: saat.value || '', islemTarihi: islemTarihi.value,
+      sonrakiTarih: sonrakiTarih.value || '', notlar: notlar.value.trim()
+    };
+    
+    if (!window.db) { alert('Veritabanı bağlantısı yok. Lütfen sayfayı yenileyip tekrar deneyin.'); return; }
+    kaydetBtn.disabled = true; kaydetBtn.textContent = 'Kaydediliyor...';
+
+    try {
+      if (duzenlenenId) {
+        await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', duzenlenenId), veri);
+        alert('✅ Kayıt güncellendi!');
+        modalKapat3();
+      } else {
+        veri.yapildi = false;
+        await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), veri);
+        alert('✅ Yeni müşteri başarıyla eklendi!');
+        modalKapat3();
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Kayıt hatası: ' + error.message);
+    } finally {
+      kaydetBtn.disabled = false; kaydetBtn.textContent = duzenlenenId ? '💾 Güncelle' : '➕ Kaydet';
+    }
+  });
+
+  function formTemizle() {
+    form.reset(); document.querySelector('input[name="tip"][value="konut"]').checked = true; tipDegistir(); mahalleleriDoldur();
+  }
+
+  function duzenle(id) {
+    const m = musteriler.find(x => x.id === id);
+    if (!m) return;
+    duzenlenenId = id;
+    document.querySelector(`input[name="tip"][value="${m.tip}"]`).checked = true;
+    tipDegistir();
+    document.getElementById('ad').value = m.ad; document.getElementById('soyad').value = m.soyad || '';
+    document.getElementById('telefon').value = m.telefon; document.getElementById('ilce').value = m.ilce;
+    mahalleleriDoldur(m.mahalle); document.getElementById('sokak').value = m.sokak;
+    document.getElementById('binaNo').value = m.binaNo || ''; document.getElementById('daireNo').value = m.daireNo || '';
+    document.getElementById('hasere').value = m.hasere; document.getElementById('fiyat').value = m.fiyat || '';
+    document.getElementById('saat').value = m.saat || ''; document.getElementById('islemTarihi').value = m.islemTarihi;
+    document.getElementById('sonrakiTarih').value = m.sonrakiTarih || ''; document.getElementById('notlar').value = m.notlar || '';
+    
+    form.classList.add('duzenleme-modu');
+    document.getElementById('modalBaslik').textContent = '✏️ Müşteri Düzenle';
+    kaydetBtn.textContent = '💾 Güncelle'; kaydetBtn.classList.add('btn-guncelle');
+    const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+    document.getElementById('duzenlenenIsim').textContent = isim;
+    
+    document.getElementById('musteriModal').classList.add('aktif');
+  }
+
+  function duzenlemeyiIptalEt() {
+    duzenlenenId = null; form.classList.remove('duzenleme-modu');
+    kaydetBtn.textContent = '➕ Kaydet'; kaydetBtn.classList.remove('btn-guncelle');
+    formTemizle();
+  }
+
+  async function sil(id) {
+    if (confirm('Bu kaydı silmek istediğinize emin misiniz?') && window.db) {
+      try {
+        await window.fbDeleteDoc(window.fbDoc(window.db, 'musteriler', id));
+        if (duzenlenenId === id) modalKapat3();
+      } catch (e) { alert('Silme hatası: ' + e.message); }
+    }
+  }
+
+  function telefonWhatsappFormat(tel) {
+    let s = (tel || '').replace(/\D/g, '');
+    if (!s) return ''; if (s.startsWith('0')) s = s.substring(1); if (!s.startsWith('90')) s = '90' + s; return s;
+  }
+
+  function gunHesapla(tarih) {
+    if (!tarih) return null;
+    const bugun = new Date(); bugun.setHours(0,0,0,0);
+    const hedef = new Date(tarih); hedef.setHours(0,0,0,0);
+    return Math.ceil((hedef - bugun) / (1000*60*60*24));
+  }
+
+  function dashboardGuncelle() {
+    let toplam = musteriler.length, bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0, konutSayi = 0, isletmeSayi = 0, ciroToplam = 0, yapildiSayi = 0;
+    musteriler.forEach(m => {
+      if (m.tip === 'konut') konutSayi++; else isletmeSayi++;
+      if (m.yapildi === true) yapildiSayi++;
+      const fark = gunHesapla(m.sonrakiTarih);
+      if (fark !== null) { if (fark === 0) bugunSayi++; else if (fark > 0 && fark <= 3) yaklasanSayi++; else if (fark < 0) gecmisSayi++; }
+      ciroToplam += Number(m.fiyat) || 0;
+    });
+    document.getElementById('kartToplam').textContent = toplam;
+    document.getElementById('kartToplamAlt').textContent = `🏠 ${konutSayi}  •  🏢 ${isletmeSayi}`;
+    document.getElementById('kartYapildi').textContent = yapildiSayi;
+    document.getElementById('kartYapildiAlt').textContent = `${toplam > 0 ? Math.round(yapildiSayi/toplam*100) : 0}% tamamlandı`;
+    document.getElementById('kartBugun').textContent = bugunSayi;
+    document.getElementById('kartYaklasan').textContent = yaklasanSayi;
+    document.getElementById('kartGecmis').textContent = gecmisSayi;
+    document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
+  }
+
+  function tarihFiltrele() { aktifTarihFiltre = document.getElementById('tarihFiltreInput').value; document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : ''; listele(aramaKutusu.value); }
+  function bugunTarihSec() { document.getElementById('tarihFiltreInput').value = bugunISO(); tarihFiltrele(); }
+  function tarihFiltreTemizle() { document.getElementById('tarihFiltreInput').value = ''; aktifTarihFiltre = ''; document.getElementById('tarihFiltreBilgi').textContent = ''; listele(aramaKutusu.value); }
+
+  function excelAktar() {
+    if (musteriler.length === 0) { alert('Aktarılacak kayıt yok!'); return; }
+    const basliklar = ['Yapıldı','Tip','Ad/İşletme','Soyad','Telefon','İlçe','Mahalle','Sokak/Cadde','Bina No','Daire No','Haşere','Fiyat (₺)','İşlem Tarihi','Saat','Sonraki İşlem Tarihi','Notlar'];
+    const satirlar = musteriler.map(m => [m.yapildi ? 'EVET' : 'HAYIR', m.tip === 'isletme' ? 'İşletme' : 'Konut', m.ad, m.soyad || '', m.telefon, m.ilce, m.mahalle, m.sokak, m.binaNo || '', m.daireNo || '', m.hasere, m.fiyat ? Number(m.fiyat).toLocaleString('tr-TR') : '', tarihFormat(m.islemTarihi), m.saat || '', m.sonrakiTarih ? tarihFormat(m.sonrakiTarih) : '', m.notlar || '']);
+    const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+    const csv = [basliklar.map(escape).join(';'), ...satirlar.map(s => s.map(escape).join(';'))].join('\r\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `musteriler_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
+  }
+
+  function iceAktarmaAc() { document.getElementById('iceAktarIcerik').value = ''; document.getElementById('iceAktarModal').classList.add('aktif'); }
+  function modalKapat2() { document.getElementById('iceAktarModal').classList.remove('aktif'); }
+
+  async function iceAktarCalistir() {
+    const icerik = document.getElementById('iceAktarIcerik').value.trim();
+    if (!icerik) { alert('Metin boş!'); return; }
+    if (!window.db) { alert('Veritabanı bağlantısı yok.'); return; }
+    
+    const satirlar = icerik.split('\n').filter(s => s.trim());
+    let basarili = 0, atlanan = 0;
+    const batch = window.fbWriteBatch(window.db);
+
+    satirlar.forEach(satir => {
+      const parcalar = satir.split('|').map(p => p.trim());
+      if (parcalar.length < 7) { atlanan++; return; }
+      const [adSoyad, telefon, ilce, mahalle, sokak, hasere, fiyatStr, tarihStr, saatStr, notStr] = parcalar;
+      let islemTarihi = '';
+      if (tarihStr && tarihStr.includes('.')) { const [g, a, y] = tarihStr.split('.').map(x => x.trim()); islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`; }
+      const adParcalari = adSoyad.split(' ');
+      
+      const musteri = {
+        tip: 'konut', ad: adParcalari[0] || '', soyad: adParcalari.slice(1).join(' ') || '',
+        telefon: telefon || '', ilce: ilce || '', mahalle: mahalle || '', sokak: sokak || '',
+        binaNo: '', daireNo: '', hasere: hasere || 'Diğer', fiyat: fiyatStr ? Number(fiyatStr.replace(/\D/g, '')) : 0,
+        saat: saatStr || '', islemTarihi: islemTarihi || bugunISO(), sonrakiTarih: '', notlar: notStr || '', yapildi: false
+      };
+      
+      const newDocRef = window.fbDoc(window.fbCollection(window.db, 'musteriler'));
+      batch.set(newDocRef, musteri);
+      basarili++;
+    });
+
+    try {
+      await batch.commit();
+      modalKapat2();
+      alert(`✅ ${basarili} kayıt buluta eklendi!${atlanan ? '\n⚠️ ' + atlanan + ' satır atlandı.' : ''}`);
+    } catch (e) {
+      alert('İçe aktarma hatası: ' + e.message);
+    }
+  }
+
+  function whatsappAc(id) {
+    const m = musteriler.find(x => x.id === id);
+    if (!m) return;
+    if (!m.sonrakiTarih) { alert('Sonraki işlem tarihi yok.'); return; }
+    const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+    const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
+    const gunFarki = gunHesapla(m.sonrakiTarih);
+    let zamanMetni = ''; if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`; else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`; else zamanMetni = `${gunFarki} gün sonra yapılacak`;
+    const fiyatSatiri = m.fiyat ? `\n💰 Hizmet ücreti: ${paraFormat(m.fiyat)}` : '';
+    const mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Son işlem tarihi: ${tarihFormat(m.islemTarihi)}\n🔔 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}${fiyatSatiri}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
+    aktifTelefon = telefonWhatsappFormat(m.telefon);
+    document.getElementById('mesajIcerik').value = mesaj;
+    document.getElementById('whatsappModal').classList.add('aktif');
+  }
+
+  function modalKapat() { document.getElementById('whatsappModal').classList.remove('aktif'); }
+  function whatsappGonder() { window.open(`https://wa.me/${aktifTelefon}?text=${encodeURIComponent(document.getElementById('mesajIcerik').value)}`, '_blank'); modalKapat(); }
+
+  function listele(filter = '') {
+    tabloBody.innerHTML = '';
+    const f = filter.toLowerCase(); const bugun = bugunISO();
+    let gorunenAdet = 0, gorunenCiro = 0, gorunenYapildi = 0, gorunenYapilmadi = 0;
+    let liste = [...musteriler];
+    if (aktifTarihFiltre) liste = liste.filter(m => m.islemTarihi === aktifTarihFiltre || m.sonrakiTarih === aktifTarihFiltre);
+
+    liste.filter(m => {
+      if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
+      if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
+      if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
+      if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
+      const fark = gunHesapla(m.sonrakiTarih);
+      if (aktifFiltre === 'bugun' && fark !== 0) return false;
+      if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
+      if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
+      const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
+      return metin.includes(f);
+    }).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99')).forEach(m => {
+      gorunenAdet++; gorunenCiro += Number(m.fiyat) || 0;
+      const yapildi = m.yapildi === true;
+      if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
+
+      const farkGun = gunHesapla(m.sonrakiTarih); let satirClass = '', uyari = '';
+      const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
+      if (yapildi) { satirClass = 'yapildi-satir'; if (bugunMu) satirClass += ' bugun-satir'; }
+      else if (bugunMu) { satirClass = 'bugun-satir'; uyari = ' 🎯 BUGÜN'; }
+      else if (farkGun !== null) {
+        if (farkGun < 0) { satirClass = 'gecmis'; uyari = ` (${Math.abs(farkGun)} gün gecikti!)`; }
+        else if (farkGun <= 3) { satirClass = 'yaklasan'; uyari = ` (${farkGun} gün kaldı)`; }
+      }
+      if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
+
+      const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
+      const webRozet = m.web ? ' <span class="rozet rozet-web">🌐 Web</span>' : '';
+      const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+      const sonrakiGosterim = m.sonrakiTarih ? `${tarihFormat(m.sonrakiTarih)}${uyari}` : '<em style="color:#95a5a6;">Belirtilmedi</em>';
+      const waDisabled = m.sonrakiTarih ? '' : 'disabled';
+      const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
+      const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
+
+      const tr = document.createElement('tr'); tr.className = satirClass;
+      tr.innerHTML = `
+        <td class="tik-hucre"><input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onchange="tikDegistir('${m.id}')" title="Yapıldı olarak işaretle"></td>
+        <td><strong>${m.saat || '-'}</strong></td>
+        <td>${rozet}${webRozet}</td>
+        <td><strong>${isim}</strong></td>
+        <td>${m.telefon}</td>
+        <td>${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
+        <td>${m.hasere}</td>
+        <td>${fiyatGosterim}</td>
+        <td>${tarihFormat(m.islemTarihi)}</td>
+        <td>${sonrakiGosterim}</td>
+        <td>${notGosterim}</td>
+        <td>
+          <button class="duzenle" onclick="duzenle('${m.id}')">✏️</button>
+          <button class="whatsapp-btn" onclick="whatsappAc('${m.id}')" ${waDisabled}>📱</button>
+          <button class="sil" onclick="sil('${m.id}')">Sil</button>
+        </td>
+      `;
+      tabloBody.appendChild(tr);
+    });
+
+    document.getElementById('ozetAdet').textContent = gorunenAdet;
+    document.getElementById('ozetYapildi').textContent = gorunenYapildi;
+    document.getElementById('ozetYapilmadi').textContent = gorunenYapilmadi;
+    document.getElementById('ozetCiro').textContent = paraFormat(gorunenCiro);
+  }
+
+  aramaKutusu.addEventListener('input', e => listele(e.target.value));
+  document.getElementById('whatsappModal').addEventListener('click', function(e) { if (e.target === this) modalKapat(); });
+  document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
+</script>
+
+<!-- FIREBASE MODULE (ÇİFT KAYIT ÖNLEYİCİ EKLENDİ) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+    authDomain: "promer-randevu.firebaseapp.com",
+    projectId: "promer-randevu",
+    storageBucket: "promer-randevu.firebasestorage.app",
+    messagingSenderId: "406588092985",
+    appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.fbAddDoc = addDoc;
+  window.fbUpdateDoc = updateDoc;
+  window.fbDeleteDoc = deleteDoc;
+  window.fbDoc = doc;
+  window.fbCollection = collection;
+  window.fbWriteBatch = writeBatch;
+  window.db = db;         
+  window.auth = auth;     
+
+  onAuthStateChanged(auth, (user) => {
+    const gate = document.getElementById('auth-gate');
+    const mainContent = document.getElementById('main-content');
+    const loadingScreen = document.getElementById('loading-screen');
+
+    if (user) {
+      if (gate) gate.style.display = 'none';
+      if (loadingScreen) loadingScreen.style.display = 'flex';
+      
+      if (!window.dbUnsubscribe) {
+        // 1. MÜŞTERİLERİ DİNLE
+        window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
+          let geciciMusteriler = [];
+          snapshot.forEach(docSnap => {
+            geciciMusteriler.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          
+          musteriler.length = 0; 
+          musteriler.push(...geciciMusteriler);
+          
+          listele(aramaKutusu.value);
+          dashboardGuncelle();
+          aySecimGuncelle();
+          haftayiYenile();
+          
+          if (loadingScreen) loadingScreen.style.display = 'none';
+          if (mainContent) mainContent.style.visibility = 'visible';
+        }, (error) => {
+          console.error("Veritabanı hatası:", error);
+          if (loadingScreen) loadingScreen.style.display = 'none';
+          if (mainContent) mainContent.style.visibility = 'visible';
         });
 
-        const ILCELER = [
-            "Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy",
-            "Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece",
-            "Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa",
-            "Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Sancaktepe",
-            "Sarıyer","Sultangazi","Şişli","Ümraniye","Üsküdar","Zeytinburnu"
-        ];
+        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (⭐ ÇİFT KAYIT KİLİDİ EKLENDİ)
+        const islenenBookings = new Set(); // İşlenen randevuları tutan kilit mekanizması
 
-        const PROMER_WA_NO = "908504660022";
-
-        const COCKROACH_TYPES = ['Hamam Böceği İlaçlama', 'Karafatma İlaçlama', 'Kalorifer Böceği İlaçlama'];
-
-        const PEST_DETAILS = {
-            "Susam Böceği İlaçlama": { desc: "Nemli ve rutubetli alanlara özel kokusuz sıvı mikro kapsül rezidüel uygulama.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Hamam Böceği İlaçlama": { desc: "Jel ve sıvı çift yöntem. Detaylı bilgi aşağıdadır.", time: "Alanın kapalı kalması gerekmez.", isWarning: false },
-            "Uyuz Böceği İlaçlama": { desc: "Kişisel eşyalar, yatak ve kumaş dokulara nüfuz eden Promer derinlemesine ilaçlama protokolü.", time: "İlaç kuruyana kadar 6-8 saat alanda insan ve evcil hayvan bulunmamalıdır.", isWarning: true },
-            "Tahta Kurusu İlaçlama": { desc: "İnatçı haşere grubunda yer alan tahta kurusu için özel protokol. Detaylı bilgi aşağıdadır.", time: "Uygulama sonrası 7-8 saat alan kapalı tutulmalıdır.", isWarning: true },
-            "Kene İlaçlama": { desc: "Bahçe, peyzaj ve bina çevrelerine yönelik koruyucu bariyer ilaçlaması.", time: "İlaç kuruyana kadar 6-8 saat uygulama alanına girilmemelidir.", isWarning: true },
-            "Tahta Kurdu İlaçlama": { desc: "Ahşap eşyalara ve strüktürlere enjeksiyon & yüzey emprenye yöntemi.", time: "2-3 Saat havalandırma yapılması yeterlidir.", isWarning: false },
-            "Gümüşcün Gümüş Böceği İlaçlama": { desc: "Banyo, lavabo ve tesisat boşluklarına jel ve kokusuz sıvı uygulaması.", time: "1 Saat havalandırma yeterlidir.", isWarning: false },
-            "Çıyan & Kırkayak İlaçlama": { desc: "Bodrum ve zemin kat giriş hatlarına koruyucu bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Güve İlaçlama": { desc: "Gardırop, halı ve kumaş depolama alanlarına yönelik özel buharlı ilaçlama.", time: "Havalandırma sonrası kıyafetler güvenle kullanılabilir.", isWarning: false },
-            "Karınca İlaçlama": { desc: "Kraliçeyi ve tüm koloniyi yok eden özel organik jel yem tekniği.", time: "Mekandan çıkış gerektirmez.", isWarning: false },
-            "Kuş Biti İlaçlama": { desc: "Yatak, koltuk ve tüm zemin ilaçlanır. Detaylı bilgi aşağıdadır.", time: "İlaç kuruyana kadar 4-7 saat alanda durulmamalıdır.", isWarning: true },
-            "Kalorifer Böceği İlaçlama": { desc: "Jel ve sıvı çift yöntem. Detaylı bilgi aşağıdadır.", time: "Alanın kapalı kalması gerekmez.", isWarning: false },
-            "Örümcek İlaçlama": { desc: "Tavan araları ve dış cephe köşelerine ağ engelleyici sıvı.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Yılan İlaçlama": { desc: "Bahçe ve bina çevresi için doğal içerikli kovucu bariyer.", time: "Uygulama sonrası 3-4 saat sahaya girilmez.", isWarning: false },
-            "Arı & Yaban Arısı İlaçlama": { desc: "Yuva tespiti ve koruyucu kıyafetli ekiplerle güvenli uzaklaştırma. Yuva konumuna göre fiyatlandırılır.", time: "İşlem süresince 1 saat alan boş tutulur. Özel teklif gereklidir.", isWarning: true },
-            "Karafatma İlaçlama": { desc: "Jel ve sıvı çift yöntem. Detaylı bilgi aşağıdadır.", time: "Alanın kapalı kalması gerekmez.", isWarning: false },
-            "Sinek & Kara Sinek İlaçlama": { desc: "Uçkun mücadelesine yönelik Sağlık Bakanlığı onaylı püskürtme.", time: "1-2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Bit İlaçlama": { desc: "Tekstil ve yaşam alanları için hijyenik sıvı bariyer.", time: "İlaç kuruyana kadar 6-8 saat alanda durulmamalıdır.", isWarning: true },
-            "Fare & Kemirgen İlaçlama": { desc: "Kilitli güvenlik istasyonları (rodentisit) bina ve daire çevrelerine yerleştirilir. Detaylı bilgi aşağıdadır.", time: "Kapalı kalma süresi yoktur, günlük yaşama engel olmaz.", isWarning: false },
-            "Salyangoz İlaçlama": { desc: "Peyzaj ve bahçelere özel granül bariyer.", time: "Uygulama sonrası 2 saat çim alanlara basılmamalıdır.", isWarning: false },
-            "Akrep İlaçlama": { desc: "Sıvı ilaçlama yöntemi. Detaylı bilgi aşağıdadır.", time: "İlaç kuruyana kadar 3-4 saat alan kapalı tutulmalıdır.", isWarning: true },
-            "Pire İlaçlama": { desc: "Daire geneli detaylı sıvı ilaçlama. Detaylı bilgi aşağıdadır.", time: "İlaç kuruyana kadar 4-6 saat alanda durulmamalıdır.", isWarning: true },
-            "Tespih Böceği İlaçlama": { desc: "Nemli alanlara özel kokusuz sıvı uygulama.", time: "2 Saat havalandırma yeterlidir.", isWarning: false },
-            "Kulağakaçan İlaçlama": { desc: "Pervaz altları ve kapı girişlerine sıvı bariyer.", time: "2 Saat havalandırma yeterlidir.", isWarning: false }
-        };
-
-        const SPECIAL_PRICING = {
-            "Arı & Yaban Arısı İlaçlama": {
-                price: 5000,
-                label: "ÖZEL TEKLİF",
-                message: "Arı ve yaban arısı ilaçlama hizmetimiz <strong>5.000 TL'den başlayan</strong> özel fiyatlarla sunulmaktadır. Kesin fiyat için lütfen <strong>0850 466 00 22</strong> numaralı hattımızı arayın."
-            }
-        };
-
-        let state = {
-            placeType: 'ev',
-            pestType: 'Hamam Böceği İlaçlama',
-            m2: 85
-        };
-
-        const PLACE_LABELS = {
-            ev: 'Ev / Daire', isyeri: 'İş Yeri / Ofis', restoran: 'Restoran / Gıda Tesisi',
-            apartman: 'Bina / Site Ortak Alanı', fabrika: 'Fabrika / Depo / Ticari Tesis'
-        };
-
-        const TARIFF_STEPS = [
-            { range: '0 - 100 m²', maxM2: 100, price: 2500 },
-            { range: '101 - 130 m²', maxM2: 130, price: 2750 },
-            { range: '131 - 160 m²', maxM2: 160, price: 3000 },
-            { range: '161 - 190 m²', maxM2: 190, price: 3250 },
-            { range: '191 - 220 m²', maxM2: 220, price: 3500 },
-            { range: '221 - 250 m²', maxM2: 250, price: 3750 }
-        ];
-
-        function toggleFleaDetails() {
-            const content = document.getElementById('flea-details-content');
-            const icon = document.getElementById('flea-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function toggleRodentDetails() {
-            const content = document.getElementById('rodent-details-content');
-            const icon = document.getElementById('rodent-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function toggleScorpionDetails() {
-            const content = document.getElementById('scorpion-details-content');
-            const icon = document.getElementById('scorpion-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function toggleBirdliceDetails() {
-            const content = document.getElementById('birdlice-details-content');
-            const icon = document.getElementById('birdlice-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function toggleBedbugDetails() {
-            const content = document.getElementById('bedbug-details-content');
-            const icon = document.getElementById('bedbug-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function toggleCockroachDetails() {
-            const content = document.getElementById('cockroach-details-content');
-            const icon = document.getElementById('cockroach-toggle-icon');
-            content.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function setPlaceType(type, btnElement) {
-            state.placeType = type;
-            document.querySelectorAll('.place-btn').forEach(b => {
-                b.classList.remove('active', 'border-promer-green', 'bg-emerald-50', 'text-emerald-900', 'border-promer-blue', 'bg-blue-50/60', 'text-slate-900');
-                b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
-            });
-            btnElement.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
-            btnElement.classList.add('active', 'border-promer-green', 'bg-emerald-50', 'text-emerald-900');
-            recalculatePrice();
-        }
-
-        function syncFromSlider(val) {
-            state.m2 = parseInt(val) || 10;
-            document.getElementById('m2-number-input').value = state.m2;
-            recalculatePrice();
-        }
-
-        function syncFromInput(val) {
-            let num = parseInt(val) || 10;
-            if (num > 50000) num = 50000;
-            state.m2 = num;
-            document.getElementById('m2-slider').value = Math.min(num, 500);
-            recalculatePrice();
-        }
-
-        function recalculatePrice() {
-            const pestSelect = document.getElementById('pest-select');
-            state.pestType = pestSelect.value;
-
-            const details = PEST_DETAILS[state.pestType] || { desc: "Promer standart ilaçlama protokolü uygulanır.", time: "1 Saat havalandırma yeterlidir.", isWarning: false };
-            document.getElementById('pest-info-text').innerText = details.desc;
-            document.getElementById('pest-time-text').innerText = details.time;
-
-            const timeContainer = document.getElementById('pest-time-container');
-            if (details.isWarning) {
-                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-amber-900 bg-amber-50/90 p-2.5 rounded-xl";
-                timeContainer.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600"></i><span id="pest-time-text">${details.time}</span>`;
-            } else {
-                timeContainer.className = "flex items-center gap-2 pt-2 border-t border-blue-200/60 font-bold text-emerald-950 bg-emerald-50/90 p-2.5 rounded-xl";
-                timeContainer.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span id="pest-time-text">${details.time}</span>`;
-            }
-
-            const fleaBox = document.getElementById('flea-detail-box');
-            const rodentBox = document.getElementById('rodent-detail-box');
-            const scorpionBox = document.getElementById('scorpion-detail-box');
-            const birdliceBox = document.getElementById('birdlice-detail-box');
-            const bedbugBox = document.getElementById('bedbug-detail-box');
-            const cockroachBox = document.getElementById('cockroach-detail-box');
-            const normalInfoBox = document.getElementById('pest-info-box');
-            
-            fleaBox.classList.add('hidden');
-            rodentBox.classList.add('hidden');
-            scorpionBox.classList.add('hidden');
-            birdliceBox.classList.add('hidden');
-            bedbugBox.classList.add('hidden');
-            cockroachBox.classList.add('hidden');
-            normalInfoBox.classList.remove('hidden');
-            
-            if (state.pestType === 'Pire İlaçlama') {
-                fleaBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            } else if (state.pestType === 'Fare & Kemirgen İlaçlama') {
-                rodentBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            } else if (state.pestType === 'Akrep İlaçlama') {
-                scorpionBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            } else if (state.pestType === 'Kuş Biti İlaçlama') {
-                birdliceBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            } else if (state.pestType === 'Tahta Kurusu İlaçlama') {
-                bedbugBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            } else if (COCKROACH_TYPES.includes(state.pestType)) {
-                cockroachBox.classList.remove('hidden');
-                normalInfoBox.classList.add('hidden');
-            }
-
-            if (SPECIAL_PRICING[state.pestType]) {
-                const special = SPECIAL_PRICING[state.pestType];
-                document.getElementById('m2-section').style.display = 'none';
-                document.getElementById('extra-m2-cost').innerText = '—';
-                document.getElementById('subtotal-display').innerText = '—';
-                document.getElementById('tax-display').innerText = '—';
-                document.getElementById('grand-total-display').innerHTML = `<span class="text-2xl">${special.label}</span><br><span class="text-lg">${special.price.toLocaleString('tr-TR')} TL'den başlayan</span>`;
-                document.getElementById('second-session-info').innerHTML = special.message;
-                document.getElementById('booking-summary-price').innerText = `${special.price.toLocaleString('tr-TR')} TL'den başlayan`;
-                document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.pestType}`;
-                document.getElementById('tariff-badge').innerText = 'Özel Fiyat';
-                renderTariffCards();
-                return;
-            } else {
-                document.getElementById('m2-section').style.display = 'block';
-            }
-
-            if (state.m2 > 500) {
-                document.getElementById('extra-m2-cost').innerText = '—';
-                document.getElementById('subtotal-display').innerText = '—';
-                document.getElementById('tax-display').innerText = '—';
-                document.getElementById('grand-total-display').innerHTML = '<span class="text-2xl">ÖZEL TEKLİF</span>';
-                document.getElementById('second-session-info').innerHTML = '<strong>Büyük Alan (500 m²+):</strong> Bu büyüklükteki alanlar için özel fiyatlandırma yapılmaktadır. Lütfen <strong>0850 466 00 22</strong> numaralı hattımızdan teklif alın.';
-                document.getElementById('booking-summary-price').innerText = 'Özel Teklif';
-                document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
-                document.getElementById('tariff-badge').innerText = '500 m²+ Özel Fiyat';
-                renderTariffCards();
-                return;
-            }
-
-            let basePrice = 2500;
-            let extraCost = 0;
-
-            if (state.m2 > 100) {
-                const extraM2 = state.m2 - 100;
-                const steps = Math.ceil(extraM2 / 30);
-                extraCost = steps * 250;
-            }
-
-            const subtotal = basePrice + extraCost;
-            const tax = Math.round(subtotal * 0.20);
-            const grandTotal = subtotal + tax;
-
-            document.getElementById('extra-m2-cost').innerText = '+' + extraCost.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('subtotal-display').innerText = subtotal.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('tax-display').innerText = tax.toLocaleString('tr-TR') + ' TL';
-            document.getElementById('grand-total-display').innerText = grandTotal.toLocaleString('tr-TR') + ' TL';
-
-            const secondSessionBox = document.getElementById('second-session-info');
-            if (state.pestType === 'Tahta Kurusu İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Tahtakurusu Protokolü:</strong> Yumurta kırma evresi ve yerleşmiş sorunlar için her seans ayrı ücretlendirilir. 2. seans indirimi uygulanmaz.';
-            } else if (state.pestType === 'Pire İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Pire Protokolü:</strong> 21. günden sonra pire sorunu devam ederse <strong>2. seans %50 İNDİRİMLİ</strong> olarak uygulanır.';
-            } else if (state.pestType === 'Kuş Biti İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Kuş Biti Protokolü:</strong> 21. günden sonra kuş biti sorunu devam ederse <strong>2. seans %50 İNDİRİMLİ</strong> olarak uygulanır.';
-            } else if (COCKROACH_TYPES.includes(state.pestType)) {
-                secondSessionBox.innerHTML = '<strong>Promer Hamam Böceği Protokolü:</strong> 28. günden (4. hafta) sonra sorun devam ederse <strong>2. seans %50 İNDİRİMLİ</strong> olarak uygulanır. Alanın kapalı kalması gerekmez.';
-            } else if (state.pestType === 'Fare & Kemirgen İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Kemirgen Protokolü:</strong> Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde 2. seans desteği sağlanır.';
-            } else if (state.pestType === 'Akrep İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Akrep Protokolü:</strong> Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde 2. seans desteği sağlanır.';
-            } else {
-                const secondPrice = Math.round((subtotal * 0.5) * 1.20);
-                secondSessionBox.innerHTML = `<strong>2. Seans Promer İndirimi:</strong> İhtiyaç duyulması halinde yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak <strong>${secondPrice.toLocaleString('tr-TR')} TL</strong> (KDV Dahil) fiyattan uygulanır.`;
-            }
-
-            document.getElementById('booking-summary-price').innerText = grandTotal.toLocaleString('tr-TR') + ' TL (KDV Dahil)';
-            document.getElementById('booking-summary-details').innerText = `${PLACE_LABELS[state.placeType]} / ${state.m2} m² / ${state.pestType}`;
-            document.getElementById('tariff-badge').innerText = 
-                state.m2 <= 100 ? '0 - 100 m² Tarifesi' :
-                state.m2 <= 130 ? '101 - 130 m² Tarifesi' :
-                state.m2 <= 160 ? '131 - 160 m² Tarifesi' :
-                state.m2 <= 190 ? '161 - 190 m² Tarifesi' :
-                state.m2 <= 220 ? '191 - 220 m² Tarifesi' :
-                state.m2 <= 250 ? '221 - 250 m² Tarifesi' : '251 - 500 m² Tarifesi';
-
-            renderTariffCards();
-        }
-
-        function renderTariffCards() {
-            const container = document.getElementById('tariff-cards-container');
-            container.innerHTML = '';
-
-            TARIFF_STEPS.forEach(step => {
-                const isActive = (state.m2 <= step.maxM2 && (step.maxM2 === 100 || state.m2 > (step.maxM2 - 30)));
-                const card = document.createElement('div');
-                card.className = `p-4 rounded-2xl border text-center transition-all ${
-                    isActive 
-                    ? 'bg-promer-blue text-white border-promer-blue shadow-lg scale-105 font-bold' 
-                    : 'bg-slate-50 border-slate-200 text-slate-700'
-                }`;
-
-                card.innerHTML = `
-                    <span class="block text-xs uppercase tracking-wider ${isActive ? 'text-blue-100' : 'text-slate-400'} font-semibold">${step.range}</span>
-                    <span class="block text-lg font-black my-1">${step.price.toLocaleString('tr-TR')} TL</span>
-                    <span class="text-[10px] ${isActive ? 'text-white' : 'text-slate-500'} font-normal">+ KDV Hariç</span>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        async function renderTimeSlots() {
-            const sel = document.getElementById('cust-saat');
-            const dateInput = document.getElementById('cust-date').value;
-            
-            const allSlots = [
-                '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
-                '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
-                '18:00 – 19:30'
-            ];
-            
-            let blockedSlots = {};
-            
-            try {
-                if (window.firebaseDB && window.firebaseGetDocs) {
-                    const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
-                    const snapshot = await window.firebaseGetDocs(blockedRef);
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        if (data.date === dateInput && data.blocked) {
-                            blockedSlots[data.slot] = true;
-                        }
-                    });
-                }
-            } catch (error) {
-                console.log('Firebase hatası (önemsiz):', error);
-            }
-            
-            const availableSlots = allSlots.filter(slot => !blockedSlots[slot]);
-            
-            if (availableSlots.length === 0) {
-                sel.innerHTML = '<option value="">Bu tarihte müsait saat yok</option>';
-                return;
-            }
-            
-            sel.innerHTML = '<option value="">Saat Seçin</option>' + 
-                availableSlots.map(s => `<option value="${s}">${s}</option>`).join('');
-        }
-
-        function transferCalcToBooking() {
-            document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        async function submitBooking(e) {
-            e.preventDefault();
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const ilce = document.getElementById('cust-ilce').value;
-            const address = document.getElementById('cust-address').value || "Belirtilmedi";
-            const date = document.getElementById('cust-date').value;
-            const saat = document.getElementById('cust-saat').value;
-            const grandTotal = document.getElementById('grand-total-display').innerText;
-
-            // ⭐ 1. FIREBASE'E KAYDET
-            if (window.firebaseAddDoc && window.firebaseDB) {
+        window.bookingsUnsubscribe = onSnapshot(collection(db, 'bookings'), (snapshot) => {
+          snapshot.docChanges().forEach(async (change) => {
+            if (change.type === 'added' || change.type === 'modified') {
+              const data = change.doc.data();
+              const bookingId = change.doc.id;
+              
+              // Eğer daha önce aktarılmadıysa VE şu an işlenmiyorsa
+              if (!data.aktarildi && !islenenBookings.has(bookingId)) {
+                islenenBookings.add(bookingId); // Kilidi koy
+                
                 try {
-                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'bookings'), {
-                        adSoyad: name, telefon: phone, ilce: ilce, adres: address, tarih: date, slot: saat,
-                        mekanTipi: PLACE_LABELS[state.placeType], m2: state.m2, hasere: state.pestType,
-                        toplamTutar: grandTotal, olusturmaTarihi: new Date().toISOString(), aktarildi: false
-                    });
-                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'blocked_slots'), {
-                        date: date, slot: saat, blocked: true, createdAt: new Date().toISOString()
-                    });
-                    console.log("✅ Randevu buluta kaydedildi.");
+                  const yeniMusteri = {
+                    tip: data.tip || 'konut',
+                    ad: data.ad || data.isim || data.name || 'İsimsiz',
+                    soyad: data.soyad || '',
+                    telefon: data.telefon || data.phone || data.tel || '',
+                    ilce: data.ilce || '',
+                    mahalle: data.mahalle || '',
+                    sokak: data.sokak || data.adres || '',
+                    binaNo: data.binaNo || '',
+                    daireNo: data.daireNo || '',
+                    hasere: data.hasere || 'Diğer',
+                    fiyat: Number(data.fiyat) || 0,
+                    saat: data.saat || data.slot || '',
+                    islemTarihi: data.tarih || data.islemTarihi || new Date().toISOString().split('T')[0],
+                    sonrakiTarih: '',
+                    notlar: data.notlar || data.not || 'Web sitesinden otomatik alındı.',
+                    yapildi: false,
+                    web: true
+                  };
+
+                  await addDoc(collection(db, 'musteriler'), yeniMusteri);
+                  await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
+                  console.log("✅ Randevu başarıyla müşterilere aktarıldı:", bookingId);
                 } catch (error) {
-                    console.error("❌ Bulut kayıt hatası:", error);
+                  console.error("❌ Aktarım hatası:", error);
+                  islenenBookings.delete(bookingId); // Hata olursa kilidi aç
                 }
+              }
             }
+          });
+        }, (error) => {
+          console.log("Bookings dinleniyor ancak hata var:", error);
+        });
+      }
+    } else {
+      if (gate) gate.style.display = 'flex';
+      if (mainContent) mainContent.style.visibility = 'hidden';
+      if (loadingScreen) loadingScreen.style.display = 'none';
+      if (window.dbUnsubscribe) { window.dbUnsubscribe(); window.dbUnsubscribe = null; }
+      if (window.bookingsUnsubscribe) { window.bookingsUnsubscribe(); window.bookingsUnsubscribe = null; }
+      musteriler.length = 0;
+    }
+  });
 
-            // ⭐ 2. WHATSAPP MESAJINI HAZIRLA
-            const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
-----------------------------------
-• Ad Soyad   : ${name}
-• Telefon    : ${phone}
-• İlçe       : ${ilce}
-• Adres      : ${address}
-• Tarih / Saat: ${date} - ${saat}
-• Mekan      : ${PLACE_LABELS[state.placeType]} (${state.m2} m²)
-• Haşere Türü: ${state.pestType}
-----------------------------------
-• Toplam Tutar: ${grandTotal}`;
+  window.adminLogin = async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const err = document.getElementById('login-error');
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      if (err) err.style.display = 'none';
+    } catch (e) {
+      let msg = 'Giriş başarısız';
+      if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
+      else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
+      else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
+      else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
+      else msg = '❌ Hata: ' + e.code;
+      if (err) { err.textContent = msg; err.style.display = 'block'; }
+    }
+  };
 
-            document.getElementById('sms-summary-text').innerText = summaryText;
+  window.adminLogout = () => signOut(auth);
+</script>
 
-            const waMsg = encodeURIComponent(summaryText);
-            document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
-
-            // ⭐ 3. ONAY EKRANINI GÖSTER
-            document.getElementById('confirmation-card').classList.remove('hidden');
-            document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        window.onload = function() {
-            const ilceSelect = document.getElementById('cust-ilce');
-            ilceSelect.innerHTML = '<option value="">İlçe Seçin</option>' + ILCELER.map(i => `<option value="${i}">${i}</option>`).join('');
-
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const yyyy = tomorrow.getFullYear();
-            const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-            const dd = String(tomorrow.getDate()).padStart(2, '0');
-            
-            const dateInput = document.getElementById('cust-date');
-            dateInput.min = `${yyyy}-${mm}-${dd}`;
-            dateInput.value = `${yyyy}-${mm}-${dd}`;
-
-            document.getElementById('menu-btn').onclick = () => {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            };
-
-            recalculatePrice();
-            renderTimeSlots();
-        };
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
-            authDomain: "promer-randevu.firebaseapp.com",
-            projectId: "promer-randevu",
-            storageBucket: "promer-randevu.firebasestorage.app",
-            messagingSenderId: "406588092985",
-            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
-        };
-        
-        try {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            
-            window.firebaseDB = db;
-            window.firebaseGetDocs = getDocs;
-            window.firebaseCollection = collection;
-            window.firebaseAddDoc = addDoc; // ⭐ Firebase'e veri ekleme fonksiyonu eklendi
-            
-            window.dispatchEvent(new Event('firebaseReady'));
-        } catch (error) {
-            console.log('Firebase başlatma hatası:', error);
-        }
-    </script>
 </body>
 </html>
