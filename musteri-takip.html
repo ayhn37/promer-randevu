@@ -851,7 +851,7 @@
   document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
 </script>
 
-<!-- FIREBASE MODULE (OTOMATİK AKTARIM BURADA) -->
+<!-- FIREBASE MODULE (ÇİFT KAYIT ÖNLEYİCİ EKLENDİ) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
@@ -889,7 +889,7 @@
       if (loadingScreen) loadingScreen.style.display = 'flex';
       
       if (!window.dbUnsubscribe) {
-        // 1. MÜŞTERİLERİ DİNLE VE TABLOYA YAZ
+        // 1. MÜŞTERİLERİ DİNLE
         window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
           let geciciMusteriler = [];
           snapshot.forEach(docSnap => {
@@ -912,40 +912,47 @@
           if (mainContent) mainContent.style.visibility = 'visible';
         });
 
-        // 2. YENİ GELEN RANDEVULARI (BOOKINGS) DİNLE VE OTOMATİK AKTAR
+        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (⭐ ÇİFT KAYIT KİLİDİ EKLENDİ)
+        const islenenBookings = new Set(); // İşlenen randevuları tutan kilit mekanizması
+
         window.bookingsUnsubscribe = onSnapshot(collection(db, 'bookings'), (snapshot) => {
           snapshot.docChanges().forEach(async (change) => {
-            if (change.type === 'added') {
+            if (change.type === 'added' || change.type === 'modified') {
               const data = change.doc.data();
+              const bookingId = change.doc.id;
               
-              // Eğer bu randevu daha önce müşteri takip sistemine aktarılmadıysa
-              if (!data.aktarildi) {
-                // Admin panelinden gelen verileri eşleştir (farklı isimlendirmeleri yakalar)
-                const yeniMusteri = {
-                  tip: data.tip || 'konut',
-                  ad: data.ad || data.isim || data.name || 'İsimsiz',
-                  soyad: data.soyad || '',
-                  telefon: data.telefon || data.phone || data.tel || '',
-                  ilce: data.ilce || '',
-                  mahalle: data.mahalle || '',
-                  sokak: data.sokak || data.adres || '',
-                  binaNo: data.binaNo || '',
-                  daireNo: data.daireNo || '',
-                  hasere: data.hasere || 'Diğer',
-                  fiyat: Number(data.fiyat) || 0,
-                  saat: data.saat || data.slot || '',
-                  islemTarihi: data.tarih || data.islemTarihi || new Date().toISOString().split('T')[0],
-                  sonrakiTarih: '',
-                  notlar: data.notlar || data.not || 'Web sitesinden otomatik alındı.',
-                  yapildi: false,
-                  web: true // Web'den geldiğini işaretle
-                };
-
-                // Müşterilere ekle
-                await addDoc(collection(db, 'musteriler'), yeniMusteri);
+              // Eğer daha önce aktarılmadıysa VE şu an işlenmiyorsa
+              if (!data.aktarildi && !islenenBookings.has(bookingId)) {
+                islenenBookings.add(bookingId); // Kilidi koy
                 
-                // Randevuyu "aktarıldı" olarak işaretle ki bir daha eklenmesin
-                await updateDoc(doc(db, 'bookings', change.doc.id), { aktarildi: true });
+                try {
+                  const yeniMusteri = {
+                    tip: data.tip || 'konut',
+                    ad: data.ad || data.isim || data.name || 'İsimsiz',
+                    soyad: data.soyad || '',
+                    telefon: data.telefon || data.phone || data.tel || '',
+                    ilce: data.ilce || '',
+                    mahalle: data.mahalle || '',
+                    sokak: data.sokak || data.adres || '',
+                    binaNo: data.binaNo || '',
+                    daireNo: data.daireNo || '',
+                    hasere: data.hasere || 'Diğer',
+                    fiyat: Number(data.fiyat) || 0,
+                    saat: data.saat || data.slot || '',
+                    islemTarihi: data.tarih || data.islemTarihi || new Date().toISOString().split('T')[0],
+                    sonrakiTarih: '',
+                    notlar: data.notlar || data.not || 'Web sitesinden otomatik alındı.',
+                    yapildi: false,
+                    web: true
+                  };
+
+                  await addDoc(collection(db, 'musteriler'), yeniMusteri);
+                  await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
+                  console.log("✅ Randevu başarıyla müşterilere aktarıldı:", bookingId);
+                } catch (error) {
+                  console.error("❌ Aktarım hatası:", error);
+                  islenenBookings.delete(bookingId); // Hata olursa kilidi aç
+                }
               }
             }
           });
