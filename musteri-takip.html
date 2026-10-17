@@ -851,10 +851,10 @@
   document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
 </script>
 
-<!-- FIREBASE MODULE -->
+<!-- FIREBASE MODULE (ÇİFT KAYIT ÖNLEYİCİ EKLENDİ) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -912,14 +912,19 @@
           if (mainContent) mainContent.style.visibility = 'visible';
         });
 
-        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (KESİN ÇÖZÜM)
+        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (⭐ ÇİFT KAYIT KİLİDİ EKLENDİ)
+        const islenenBookings = new Set(); // İşlenen randevuları tutan kilit mekanizması
+
         window.bookingsUnsubscribe = onSnapshot(collection(db, 'bookings'), (snapshot) => {
           snapshot.docChanges().forEach(async (change) => {
             if (change.type === 'added' || change.type === 'modified') {
               const data = change.doc.data();
               const bookingId = change.doc.id;
               
-              if (!data.aktarildi) {
+              // Eğer daha önce aktarılmadıysa VE şu an işlenmiyorsa
+              if (!data.aktarildi && !islenenBookings.has(bookingId)) {
+                islenenBookings.add(bookingId); // Kilidi koy
+                
                 try {
                   const yeniMusteri = {
                     tip: data.tip || 'konut',
@@ -941,15 +946,12 @@
                     web: true
                   };
 
-                  // ⭐ ÇİFT KAYIT ÇÖZÜMÜ: addDoc yerine setDoc kullanarak randevu ID'sini müşteri ID'si yapıyoruz.
-                  // Böylece aynı event iki kez gelse bile üzerine yazar, 2. bir kayıt oluşturmaz.
-                  await setDoc(doc(db, 'musteriler', bookingId), yeniMusteri);
-                  
-                  // Aktarıldı olarak işaretle
+                  await addDoc(collection(db, 'musteriler'), yeniMusteri);
                   await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
                   console.log("✅ Randevu başarıyla müşterilere aktarıldı:", bookingId);
                 } catch (error) {
                   console.error("❌ Aktarım hatası:", error);
+                  islenenBookings.delete(bookingId); // Hata olursa kilidi aç
                 }
               }
             }
