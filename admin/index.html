@@ -59,7 +59,7 @@
                     </div>
                     <div>
                         <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
-                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.3</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.4</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -209,8 +209,17 @@
             return `${y}-${m}-${day}`;
         }
 
+        // Pazar günü ise bir sonraki günü (Pazartesi) döndürür
+        function getValidToday() {
+            let d = new Date();
+            if (d.getDay() === 0) {
+                d.setDate(d.getDate() + 1);
+            }
+            return d;
+        }
+
         function todayKey() {
-            return formatDateKey(new Date());
+            return formatDateKey(getValidToday());
         }
 
         function setFbStatus(ok, text) {
@@ -420,7 +429,8 @@
         }
         function goToday() {
             currentDate = new Date();
-            selectedDate = todayKey();
+            // getValidToday() sayesinde bugün Pazar ise Pazartesi'yi seçer
+            selectedDate = todayKey(); 
             renderCalendar();
             renderSelectedDay();
         }
@@ -443,7 +453,8 @@
         }
 
         window.addEventListener('firebaseReady', () => {
-            selectedDate = todayKey();
+            // getValidToday() sayesinde bugün Pazar ise açılışta Pazartesi'yi seçer
+            selectedDate = todayKey(); 
             currentDate = new Date();
             renderCalendar();
             renderSelectedDay();
