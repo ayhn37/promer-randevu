@@ -9,6 +9,7 @@
   h1 { text-align: center; color: #2c3e50; }
   .container { max-width: 1400px; margin: auto; }
 
+  /* DASHBOARD */
   .dashboard {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px; margin-bottom: 20px;
@@ -24,7 +25,6 @@
   .kart .alt { font-size: 11px; color: #95a5a6; margin-top: 4px; }
   .kart-toplam { border-left-color: #3498db; }
   .kart-bugun { border-left-color: #27ae60; }
-  /* ⭐ Yapıldı kartı belirgin MAVİ */
   .kart-yapildi {
     border-left-color: #1a5276;
     background: linear-gradient(135deg,#d6eaf8 0%,#85c1e9 100%);
@@ -47,6 +47,7 @@
   .ay-secim-kutu .sonuc div { text-align: right; font-size: 12px; color: #7f8c8d; }
   .ay-secim-kutu .sonuc div strong { display: block; font-size: 22px; color: #16a085; font-weight: bold; margin-top: 2px; }
 
+  /* BUGÜN PANELİ */
   .bugun-panel {
     background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
     color: #fff; padding: 20px; border-radius: 12px;
@@ -107,7 +108,6 @@
     position: relative;
   }
   .bugun-item:hover { background: rgba(255,255,255,0.25); transform: translateX(4px); }
-  /* ⭐ Pano kartı yapıldı → BELİRGİN MAVİ */
   .bugun-item.yapildi {
     background: rgba(21,67,96,0.75);
     border-left-color: #85c1e9;
@@ -144,6 +144,7 @@
   }
   .bugun-butonlar button:hover { background: rgba(255,255,255,0.4); }
 
+  /* FORM */
   form {
     background: #fff; padding: 20px; border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;
@@ -193,6 +194,7 @@
   .btn-iptal-duzenle { background: #e74c3c !important; display: none; }
   form.duzenleme-modu .btn-iptal-duzenle { display: inline-block; }
 
+  /* ARAÇ ÇUBUĞU */
   .arac-cubugu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
   .filtre-bar { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
   .filtre-bar button {
@@ -233,6 +235,7 @@
     border: 1px solid #ccc; border-radius: 6px;
   }
 
+  /* TABLO */
   table {
     width: 100%; border-collapse: collapse; background: #fff;
     border-radius: 10px; overflow: hidden;
@@ -243,7 +246,6 @@
   tr:hover { background: #f9f9f9; }
   .duzenlenen-satir { outline: 3px solid #f39c12 !important; outline-offset: -3px; }
 
-  /* ⭐ TİK KUTUSU - MAVİ */
   .tik-kutu {
     width: 22px; height: 22px; cursor: pointer;
     accent-color: #1a5276;
@@ -251,7 +253,6 @@
   }
   .tik-hucre { text-align: center !important; padding: 10px 6px !important; }
 
-  /* ⭐ YAPILDI SATIRI - BELİRGİN MAVİ (üstü çizili YOK) */
   .yapildi-satir {
     background: #85c1e9 !important;
     border-left: 6px solid #1a5276 !important;
@@ -285,7 +286,6 @@
   }
   .bugun-satir:hover { background: linear-gradient(90deg, #c3e6cb 0%, #b1dfbb 100%) !important; }
 
-  /* ⭐ Yapıldı + bugün → MAVİ öncelikli (daha koyu) */
   .yapildi-satir.bugun-satir {
     background: #5dade2 !important;
     border-left-color: #154360 !important;
@@ -315,6 +315,7 @@
   .ozet-bar .yapildi-span { color: #1a5276; }
   .ozet-bar .yapilmadi-span { color: #e67e22; }
 
+  /* MODAL */
   .modal-arkaplan {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 999;
@@ -355,7 +356,41 @@
 </style>
 </head>
 <body>
-<div class="container">
+
+<!-- GİRİŞ KAPISI (FIREBASE AUTH) -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#020617;display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:32px;width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#0f2b5c,#1e40af);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+        <span style="font-size:24px;">🛡️</span>
+      </div>
+      <h2 style="color:#fff;font-size:18px;margin:0 0 4px 0;font-weight:800;">Yönetici Girişi</h2>
+      <p style="color:#64748b;font-size:12px;margin:0;">Promer Müşteri Takip Sistemi</p>
+    </div>
+    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
+           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
+    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
+           onkeypress="if(event.key==='Enter')adminLogin()"
+           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
+    <button onclick="adminLogin()"
+            style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">
+      Giriş Yap
+    </button>
+    <p id="login-error" style="color:#f87171;font-size:12px;text-align:center;margin:12px 0 0 0;display:none;"></p>
+    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;">
+      <a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a>
+    </p>
+  </div>
+</div>
+
+<!-- ANA İÇERİK -->
+<div id="main-content" class="container" style="visibility:hidden;">
+  <div style="text-align:right;margin-bottom:10px;">
+    <button onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()"
+            style="background:#e74c3c;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;">
+      🚪 Çıkış
+    </button>
+  </div>
   <h1>🐜 Müşteri Takip Sistemi</h1>
 
   <div class="bugun-panel" id="bugunPanel">
@@ -427,13 +462,11 @@
     <div class="duzenleme-bilgi">
       ✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span>
     </div>
-
     <div class="tip-kutusu">
       <strong>Müşteri Tipi:</strong>
       <label><input type="radio" name="tip" value="konut" checked onchange="tipDegistir()"><span>🏠 Konut</span></label>
       <label><input type="radio" name="tip" value="isletme" onchange="tipDegistir()"><span>🏢 İşletme</span></label>
     </div>
-
     <div class="grid">
       <div><label id="adLabel">Ad</label><input type="text" id="ad" required></div>
       <div id="soyadAlani"><label>Soyad</label><input type="text" id="soyad"></div>
@@ -461,12 +494,10 @@
       <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
       <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
     </div>
-
     <div style="margin-top: 12px;">
       <label>📝 Notlar</label>
       <textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea>
     </div>
-
     <button type="submit" id="kaydetBtn">➕ Kaydet</button>
     <button type="button" class="btn-iptal-duzenle" onclick="duzenlemeyiIptalEt()">❌ Düzenlemeyi İptal Et</button>
     <button type="button" onclick="formTemizle()" style="background:#7f8c8d;">🧹 Temizle</button>
@@ -516,6 +547,7 @@
   </div>
 </div>
 
+<!-- MODALLAR -->
 <div class="modal-arkaplan" id="whatsappModal">
   <div class="modal">
     <h3>📱 WhatsApp Hatırlatma Mesajı</h3>
@@ -545,6 +577,7 @@
   </div>
 </div>
 
+<!-- ANA SCRIPT -->
 <script>
   const MAHALLELER = {
     "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"],
@@ -737,7 +770,6 @@
       th { background: #2c3e50; color: #fff; }
       .toplam { margin-top: 20px; text-align: right; font-size: 16px; font-weight: bold; }
       .checkbox { font-size: 18px; }
-      /* ⭐ Yapıldı satırı BELİRGİN MAVİ, üstü çizili YOK */
       .yapildi { background: #85c1e9; color: #154360; font-weight: 600; }
       @media print { body { padding: 0; } }
     </style></head><body>
@@ -765,113 +797,7 @@
     html += `</tbody></table>
       <div class="toplam">Toplam: ${isler.length} iş • ${paraFormat(toplamCiro)}</div>
       <script>setTimeout(function(){window.print();}, 300);<\/script>
-      <!-- 🔥 FIREBASE AUTH KONTROLÜ -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
-    authDomain: "promer-randevu.firebaseapp.com",
-    projectId: "promer-randevu",
-    storageBucket: "promer-randevu.firebasestorage.app",
-    messagingSenderId: "406588092985",
-    appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
-  };
-
-  try {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Sayfa açılınca içeriği gizle (giriş yapılmamışsa görünmesin)
-    const icerikler = document.body.children;
-    for (let i = 0; i < icerikler.length; i++) {
-      const el = icerikler[i];
-      if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
-        el.style.visibility = 'hidden';
-      }
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      const gate = document.getElementById('auth-gate');
-      const icerikler = document.body.children;
-
-      if (user) {
-        // Giriş yapıldı → içeriği göster
-        if (gate) gate.style.display = 'none';
-        for (let i = 0; i < icerikler.length; i++) {
-          const el = icerikler[i];
-          if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
-            el.style.visibility = 'visible';
-          }
-        }
-      } else {
-        // Giriş yapılmadı → login ekranını göster, içeriği gizle
-        if (gate) gate.style.display = 'flex';
-        for (let i = 0; i < icerikler.length; i++) {
-          const el = icerikler[i];
-          if (el.id !== 'auth-gate' && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
-            el.style.visibility = 'hidden';
-          }
-        }
-      }
-    });
-
-    window.adminLogin = async () => {
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value;
-      const err = document.getElementById('login-error');
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        if (err) err.style.display = 'none';
-      } catch (e) {
-        let msg = 'Giriş başarısız';
-        if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
-        else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
-        else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
-        else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
-        else msg = '❌ Hata: ' + e.code;
-        if (err) {
-          err.textContent = msg;
-          err.style.display = 'block';
-        }
-      }
-    };
-
-    window.adminLogout = () => signOut(auth);
-
-    console.log('✅ Firebase Auth hazır');
-  } catch (error) {
-    console.error('Firebase başlatma hatası:', error);
-    alert('Firebase bağlantısı kurulamadı!');
-  }
-</script>
     </body></html>`;
-   <!-- 🔥 FIREBASE AUTH GİRİŞ EKRANI -->
-<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#020617;display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Segoe UI',Arial,sans-serif;">
-  <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:32px;width:100%;max-width:380px;">
-    <div style="text-align:center;margin-bottom:20px;">
-      <div style="width:52px;height:52px;background:linear-gradient(135deg,#0f2b5c,#1e40af);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-        <span style="font-size:24px;">🛡️</span>
-      </div>
-      <h2 style="color:#fff;font-size:18px;margin:0 0 4px 0;font-weight:800;">Yönetici Girişi</h2>
-      <p style="color:#64748b;font-size:12px;margin:0;">Promer Müşteri Takip Sistemi</p>
-    </div>
-    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
-           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
-    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
-           onkeypress="if(event.key==='Enter')adminLogin()"
-           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
-    <button onclick="adminLogin()"
-            style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">
-      Giriş Yap
-    </button>
-    <p id="login-error" style="color:#f87171;font-size:12px;text-align:center;margin:12px 0 0 0;display:none;"></p>
-    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;">
-      <a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a>
-    </p>
-  </div>
-</div>
     const w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
@@ -1283,7 +1209,6 @@
         let satirClass = '', uyari = '';
         const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
 
-        // ⭐ Yapıldı → BELİRGİN MAVİ satır (öncelikli)
         if (yapildi) {
           satirClass = 'yapildi-satir';
           if (bugunMu) satirClass += ' bugun-satir';
@@ -1352,10 +1277,73 @@
     if (e.target === this) modalKapat2();
   });
 
+  // Başlangıç
   listele();
   dashboardGuncelle();
   aySecimGuncelle();
   haftayiYenile();
 </script>
+
+<!-- FIREBASE AUTH -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+    authDomain: "promer-randevu.firebaseapp.com",
+    projectId: "promer-randevu",
+    storageBucket: "promer-randevu.firebasestorage.app",
+    messagingSenderId: "406588092985",
+    appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      const gate = document.getElementById('auth-gate');
+      const mainContent = document.getElementById('main-content');
+
+      if (user) {
+        if (gate) gate.style.display = 'none';
+        if (mainContent) mainContent.style.visibility = 'visible';
+      } else {
+        if (gate) gate.style.display = 'flex';
+        if (mainContent) mainContent.style.visibility = 'hidden';
+      }
+    });
+
+    window.adminLogin = async () => {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      const err = document.getElementById('login-error');
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        if (err) err.style.display = 'none';
+      } catch (e) {
+        let msg = 'Giriş başarısız';
+        if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
+        else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
+        else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
+        else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
+        else msg = '❌ Hata: ' + e.code;
+        if (err) {
+          err.textContent = msg;
+          err.style.display = 'block';
+        }
+      }
+    };
+
+    window.adminLogout = () => signOut(auth);
+
+    console.log('✅ Firebase Auth hazır');
+  } catch (error) {
+    console.error('Firebase başlatma hatası:', error);
+    alert('Firebase bağlantısı kurulamadı!');
+  }
+</script>
+
 </body>
 </html>
