@@ -1408,7 +1408,7 @@
             document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function submitBooking(e) {
+        async function submitBooking(e) {
             e.preventDefault();
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
@@ -1418,6 +1418,24 @@
             const saat = document.getElementById('cust-saat').value;
             const grandTotal = document.getElementById('grand-total-display').innerText;
 
+            // ⭐ 1. FIREBASE'E KAYDET
+            if (window.firebaseAddDoc && window.firebaseDB) {
+                try {
+                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'bookings'), {
+                        adSoyad: name, telefon: phone, ilce: ilce, adres: address, tarih: date, slot: saat,
+                        mekanTipi: PLACE_LABELS[state.placeType], m2: state.m2, hasere: state.pestType,
+                        toplamTutar: grandTotal, olusturmaTarihi: new Date().toISOString(), aktarildi: false
+                    });
+                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'blocked_slots'), {
+                        date: date, slot: saat, blocked: true, createdAt: new Date().toISOString()
+                    });
+                    console.log("✅ Randevu buluta kaydedildi.");
+                } catch (error) {
+                    console.error("❌ Bulut kayıt hatası:", error);
+                }
+            }
+
+            // ⭐ 2. WHATSAPP MESAJINI HAZIRLA
             const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
 ----------------------------------
 • Ad Soyad   : ${name}
@@ -1435,6 +1453,7 @@
             const waMsg = encodeURIComponent(summaryText);
             document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
 
+            // ⭐ 3. ONAY EKRANINI GÖSTER
             document.getElementById('confirmation-card').classList.remove('hidden');
             document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
         }
@@ -1464,7 +1483,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
@@ -1482,6 +1501,7 @@
             window.firebaseDB = db;
             window.firebaseGetDocs = getDocs;
             window.firebaseCollection = collection;
+            window.firebaseAddDoc = addDoc; // ⭐ Firebase'e veri ekleme fonksiyonu eklendi
             
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
