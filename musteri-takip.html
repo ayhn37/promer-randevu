@@ -10,184 +10,76 @@
   .container { max-width: 1400px; margin: auto; }
 
   /* DASHBOARD */
-  .dashboard {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin-bottom: 20px;
-  }
-  .kart {
-    background: #fff; padding: 16px; border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border-left: 5px solid #3498db; transition: .2s;
-  }
+  .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kart { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #3498db; transition: .2s; }
   .kart:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
   .kart .baslik { font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
   .kart .sayi { font-size: 30px; font-weight: bold; color: #2c3e50; margin-top: 6px; line-height: 1; }
   .kart .alt { font-size: 11px; color: #95a5a6; margin-top: 4px; }
   .kart-toplam { border-left-color: #3498db; }
   .kart-bugun { border-left-color: #27ae60; }
-  .kart-yapildi {
-    border-left-color: #1a5276;
-    background: linear-gradient(135deg,#d6eaf8 0%,#85c1e9 100%);
-  }
+  .kart-yapildi { border-left-color: #1a5276; background: linear-gradient(135deg,#d6eaf8 0%,#85c1e9 100%); }
   .kart-gecmis { border-left-color: #e74c3c; }
   .kart-yaklasan { border-left-color: #f39c12; }
   .kart-ciro-toplam { border-left-color: #d35400; background: linear-gradient(135deg,#fff 0%,#fef5e7 100%); }
-  .kart-ay-secim {
-    border-left-color: #16a085;
-    background: linear-gradient(135deg,#fff 0%,#e8f8f5 100%);
-    grid-column: span 2;
-  }
+  .kart-ay-secim { border-left-color: #16a085; background: linear-gradient(135deg,#fff 0%,#e8f8f5 100%); grid-column: span 2; }
   .ay-secim-kutu { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .ay-secim-kutu select {
-    padding: 6px 10px; border: 2px solid #16a085;
-    border-radius: 6px; font-size: 14px; font-weight: bold;
-    background: #fff; color: #16a085; cursor: pointer;
-  }
+  .ay-secim-kutu select { padding: 6px 10px; border: 2px solid #16a085; border-radius: 6px; font-size: 14px; font-weight: bold; background: #fff; color: #16a085; cursor: pointer; }
   .ay-secim-kutu .sonuc { display: flex; gap: 15px; margin-left: auto; flex-wrap: wrap; }
   .ay-secim-kutu .sonuc div { text-align: right; font-size: 12px; color: #7f8c8d; }
   .ay-secim-kutu .sonuc div strong { display: block; font-size: 22px; color: #16a085; font-weight: bold; margin-top: 2px; }
 
   /* BUGÜN PANELİ */
-  .bugun-panel {
-    background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
-    color: #fff; padding: 20px; border-radius: 12px;
-    margin-bottom: 20px; box-shadow: 0 4px 16px rgba(39,174,96,0.3);
-  }
-  .bugun-panel h2 {
-    margin: 0 0 15px 0; font-size: 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 10px;
-  }
-  .bugun-panel h2 .tarih {
-    font-size: 14px; font-weight: normal; opacity: 0.9;
-    background: rgba(255,255,255,0.2);
-    padding: 4px 12px; border-radius: 20px;
-  }
-  .hafta-bar {
-    display: flex; gap: 6px; margin-bottom: 15px;
-    overflow-x: auto; padding-bottom: 4px;
-  }
-  .hafta-bar button {
-    margin: 0; flex: 1; min-width: 100px;
-    background: rgba(255,255,255,0.15);
-    color: #fff; padding: 10px 8px;
-    border-radius: 8px; border: 2px solid rgba(255,255,255,0.2);
-    font-size: 12px; cursor: pointer; transition: .2s;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
+  .bugun-panel { background: linear-gradient(135deg, #27ae60 0%, #16a085 100%); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(39,174,96,0.3); }
+  .bugun-panel h2 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .bugun-panel h2 .tarih { font-size: 14px; font-weight: normal; opacity: 0.9; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
+  .hafta-bar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
+  .hafta-bar button { margin: 0; flex: 1; min-width: 100px; background: rgba(255,255,255,0.15); color: #fff; padding: 10px 8px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); font-size: 12px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .hafta-bar button:hover { background: rgba(255,255,255,0.25); }
-  .hafta-bar button.aktif {
-    background: #fff; color: #27ae60;
-    border-color: #fff; transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
+  .hafta-bar button.aktif { background: #fff; color: #27ae60; border-color: #fff; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
   .hafta-bar button .gun-isim { font-weight: bold; font-size: 13px; }
   .hafta-bar button .gun-tarih { font-size: 10px; opacity: 0.85; }
   .hafta-bar button.aktif .gun-tarih { opacity: 0.7; }
-  .hafta-bar button .gun-adet {
-    background: rgba(0,0,0,0.2); color: #fff;
-    padding: 1px 8px; border-radius: 10px;
-    font-size: 10px; font-weight: bold; margin-top: 2px;
-  }
+  .hafta-bar button .gun-adet { background: rgba(0,0,0,0.2); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 2px; }
   .hafta-bar button.aktif .gun-adet { background: #27ae60; color: #fff; }
   .hafta-bar button.bos .gun-adet { background: rgba(0,0,0,0.1); color: rgba(255,255,255,0.5); }
   .hafta-bar button.bugun-gun { border-color: #f39c12; background: rgba(243,156,18,0.3); }
   .hafta-bar button.bugun-gun.aktif { background: #f39c12; color: #fff; }
   .hafta-bar button.bugun-gun.aktif .gun-adet { background: rgba(0,0,0,0.3); }
 
-  .bugun-liste {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
-  }
-  .bugun-item {
-    background: rgba(255,255,255,0.15);
-    padding: 12px 14px; border-radius: 8px;
-    backdrop-filter: blur(10px);
-    border-left: 4px solid #fff;
-    cursor: pointer; transition: .2s;
-    position: relative;
-  }
+  .bugun-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+  .bugun-item { background: rgba(255,255,255,0.15); padding: 12px 14px; border-radius: 8px; backdrop-filter: blur(10px); border-left: 4px solid #fff; cursor: pointer; transition: .2s; position: relative; }
   .bugun-item:hover { background: rgba(255,255,255,0.25); transform: translateX(4px); }
-  .bugun-item.yapildi {
-    background: rgba(21,67,96,0.75);
-    border-left-color: #85c1e9;
-    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3);
-  }
-  .bugun-item .tik-kutu {
-    position: absolute; top: 8px; right: 8px;
-    width: 24px; height: 24px;
-    cursor: pointer; accent-color: #fff;
-    transform: scale(1.3);
-  }
-  .bugun-item .saat {
-    font-weight: bold; font-size: 15px;
-    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
-    flex-wrap: wrap; padding-right: 30px;
-  }
-  .bugun-item .saat .badge {
-    background: #fff; color: #27ae60;
-    padding: 2px 8px; border-radius: 10px; font-size: 11px;
-  }
+  .bugun-item.yapildi { background: rgba(21,67,96,0.75); border-left-color: #85c1e9; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3); }
+  .bugun-item .tik-kutu { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; cursor: pointer; accent-color: #fff; transform: scale(1.3); }
+  .bugun-item .saat { font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; padding-right: 30px; }
+  .bugun-item .saat .badge { background: #fff; color: #27ae60; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
   .bugun-item .isim { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-  .bugun-item.yapildi .isim { font-weight: bold; }
   .bugun-item .bilgi { font-size: 12px; opacity: 0.9; line-height: 1.4; }
-  .bugun-bos {
-    text-align: center; padding: 30px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 8px; font-size: 15px;
-  }
+  .bugun-bos { text-align: center; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 15px; }
   .bugun-butonlar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .bugun-butonlar button {
-    margin: 0; background: rgba(255,255,255,0.25);
-    color: #fff; padding: 8px 16px; font-size: 13px;
-    border: 2px solid rgba(255,255,255,0.4); font-weight: bold;
-  }
+  .bugun-butonlar button { margin: 0; background: rgba(255,255,255,0.25); color: #fff; padding: 8px 16px; font-size: 13px; border: 2px solid rgba(255,255,255,0.4); font-weight: bold; }
   .bugun-butonlar button:hover { background: rgba(255,255,255,0.4); }
 
   /* FORM */
-  form {
-    background: #fff; padding: 20px; border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px;
-    transition: .3s;
-  }
+  form { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; transition: .3s; }
   form.duzenleme-modu { border: 3px solid #f39c12; box-shadow: 0 4px 16px rgba(243,156,18,0.3); }
-  .duzenleme-bilgi {
-    display: none; background: #fff3cd;
-    border-left: 4px solid #f39c12;
-    padding: 10px 14px; border-radius: 6px;
-    margin-bottom: 15px; color: #7d5a00; font-size: 14px;
-  }
+  .duzenleme-bilgi { display: none; background: #fff3cd; border-left: 4px solid #f39c12; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; color: #7d5a00; font-size: 14px; }
   form.duzenleme-modu .duzenleme-bilgi { display: block; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #34495e; }
-  input, select, textarea {
-    width: 100%; padding: 8px; border: 1px solid #ccc;
-    border-radius: 6px; font-size: 14px; background: #fff;
-    font-family: Arial, sans-serif;
-  }
+  input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; font-family: Arial, sans-serif; }
   textarea { resize: vertical; min-height: 60px; }
   select:disabled { background: #f0f0f0; color: #999; cursor: not-allowed; }
 
-  .tip-kutusu {
-    display: flex; gap: 10px; margin-bottom: 15px;
-    background: #ecf0f1; padding: 10px; border-radius: 8px; align-items: center;
-  }
+  .tip-kutusu { display: flex; gap: 10px; margin-bottom: 15px; background: #ecf0f1; padding: 10px; border-radius: 8px; align-items: center; }
   .tip-kutusu strong { color: #2c3e50; margin-right: 10px; }
-  .tip-kutusu label {
-    display: flex; align-items: center; gap: 5px;
-    font-weight: normal; margin: 0; cursor: pointer;
-    background: #fff; padding: 8px 14px; border-radius: 6px;
-    border: 2px solid #ccc; transition: .2s;
-  }
+  .tip-kutusu label { display: flex; align-items: center; gap: 5px; font-weight: normal; margin: 0; cursor: pointer; background: #fff; padding: 8px 14px; border-radius: 6px; border: 2px solid #ccc; transition: .2s; }
   .tip-kutusu input[type="radio"] { width: auto; margin: 0; }
   .tip-kutusu label:has(input:checked) { border-color: #27ae60; background: #d5f4e6; }
 
-  button {
-    margin-top: 15px; padding: 10px 20px; border: none;
-    background: #27ae60; color: #fff; border-radius: 6px;
-    cursor: pointer; font-size: 15px;
-  }
+  button { margin-top: 15px; padding: 10px 20px; border: none; background: #27ae60; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; }
   button:hover { background: #219150; }
   .btn-guncelle { background: #f39c12 !important; }
   .btn-guncelle:hover { background: #e67e22 !important; }
@@ -197,10 +89,7 @@
   /* ARAÇ ÇUBUĞU */
   .arac-cubugu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
   .filtre-bar { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
-  .filtre-bar button {
-    margin: 0; background: #bdc3c7; color: #2c3e50;
-    padding: 8px 14px; font-size: 13px;
-  }
+  .filtre-bar button { margin: 0; background: #bdc3c7; color: #2c3e50; padding: 8px 14px; font-size: 13px; }
   .filtre-bar button:hover { background: #95a5a6; }
   .filtre-bar button.aktif { background: #2c3e50; color: #fff; }
   .filtre-bar button.aktif:hover { background: #1a252f; }
@@ -212,127 +101,66 @@
   .ice-aktar-btn { margin: 0; background: #8e44ad; color: #fff; padding: 8px 16px; font-size: 13px; font-weight: bold; }
   .ice-aktar-btn:hover { background: #6c3483; }
 
-  .tarih-filtre {
-    display: flex; gap: 10px; align-items: center;
-    background: #fff; padding: 12px 16px;
-    border-radius: 8px; margin-bottom: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    flex-wrap: wrap;
-  }
+  .tarih-filtre { display: flex; gap: 10px; align-items: center; background: #fff; padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); flex-wrap: wrap; }
   .tarih-filtre label { margin: 0; font-size: 13px; }
-  .tarih-filtre input[type="date"] {
-    width: auto; padding: 6px 10px;
-    border: 2px solid #3498db; border-radius: 6px;
-    font-weight: bold; color: #2c3e50;
-  }
+  .tarih-filtre input[type="date"] { width: auto; padding: 6px 10px; border: 2px solid #3498db; border-radius: 6px; font-weight: bold; color: #2c3e50; }
   .tarih-filtre button { margin: 0; padding: 6px 14px; font-size: 13px; background: #3498db; }
   .tarih-filtre button:hover { background: #2980b9; }
   .tarih-filtre .temizle-btn { background: #e74c3c; }
   .tarih-filtre .temizle-btn:hover { background: #c0392b; }
 
-  .arama {
-    margin-bottom: 15px; padding: 10px; width: 100%;
-    border: 1px solid #ccc; border-radius: 6px;
-  }
+  .arama { margin-bottom: 15px; padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 6px; }
 
   /* TABLO */
-  table {
-    width: 100%; border-collapse: collapse; background: #fff;
-    border-radius: 10px; overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
   th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: top; }
   th { background: #2c3e50; color: #fff; }
   tr:hover { background: #f9f9f9; }
   .duzenlenen-satir { outline: 3px solid #f39c12 !important; outline-offset: -3px; }
 
-  .tik-kutu {
-    width: 22px; height: 22px; cursor: pointer;
-    accent-color: #1a5276;
-    transform: scale(1.2);
-  }
+  .tik-kutu { width: 22px; height: 22px; cursor: pointer; accent-color: #1a5276; transform: scale(1.2); }
   .tik-hucre { text-align: center !important; padding: 10px 6px !important; }
 
-  .yapildi-satir {
-    background: #85c1e9 !important;
-    border-left: 6px solid #1a5276 !important;
-    font-weight: 600 !important;
-  }
+  .yapildi-satir { background: #85c1e9 !important; border-left: 6px solid #1a5276 !important; font-weight: 600 !important; }
   .yapildi-satir:hover { background: #5dade2 !important; }
   .yapildi-satir td { color: #154360 !important; }
   .yapildi-satir td strong { color: #154360 !important; }
 
   .sil { background: #e74c3c; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; }
   .sil:hover { background: #c0392b; }
-  .duzenle {
-    background: #f39c12; padding: 5px 10px; font-size: 12px;
-    border-radius: 4px; color: #fff; border: none; cursor: pointer; margin-right: 4px;
-  }
+  .duzenle { background: #f39c12; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; margin-right: 4px; }
   .duzenle:hover { background: #e67e22; }
-  .whatsapp-btn {
-    background: #25D366; padding: 5px 10px; font-size: 12px;
-    border-radius: 4px; color: #fff; border: none; cursor: pointer;
-    font-weight: bold; margin-right: 4px;
-  }
+  .whatsapp-btn { background: #25D366; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-right: 4px; }
   .whatsapp-btn:hover { background: #1ebe5b; }
   .whatsapp-btn:disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
 
   .yaklasan { background: #fff3cd !important; }
   .gecmis { background: #f8d7da !important; }
-  .bugun-satir {
-    background: linear-gradient(90deg, #d4edda 0%, #c3e6cb 100%) !important;
-    border-left: 5px solid #27ae60 !important;
-    font-weight: 500;
-  }
+  .bugun-satir { background: linear-gradient(90deg, #d4edda 0%, #c3e6cb 100%) !important; border-left: 5px solid #27ae60 !important; font-weight: 500; }
   .bugun-satir:hover { background: linear-gradient(90deg, #c3e6cb 0%, #b1dfbb 100%) !important; }
-
-  .yapildi-satir.bugun-satir {
-    background: #5dade2 !important;
-    border-left-color: #154360 !important;
-  }
+  .yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
 
   .rozet { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
   .rozet-isletme { background: #3498db; color: #fff; }
   .rozet-konut { background: #27ae60; color: #fff; }
 
   .kucuk-not { font-size: 11px; color: #7f8c8d; margin-top: 4px; }
-  .not-kutusu {
-    background: #fffbea; border-left: 3px solid #f39c12;
-    padding: 4px 8px; border-radius: 4px;
-    font-size: 11px; color: #7d5a00;
-    margin-top: 4px; max-width: 200px; word-wrap: break-word;
-  }
+  .not-kutusu { background: #fffbea; border-left: 3px solid #f39c12; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: #7d5a00; margin-top: 4px; max-width: 200px; word-wrap: break-word; }
   .fiyat { font-weight: bold; color: #16a085; font-size: 15px; white-space: nowrap; }
   .fiyat-belirtilmedi { color: #bdc3c7; font-style: italic; font-size: 12px; }
 
-  .ozet-bar {
-    margin-top: 15px; background: #fff; padding: 15px 20px;
-    border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;
-  }
+  .ozet-bar { margin-top: 15px; background: #fff; padding: 15px 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
   .ozet-bar div { font-size: 14px; color: #2c3e50; }
   .ozet-bar span { font-weight: bold; color: #16a085; font-size: 18px; }
   .ozet-bar .yapildi-span { color: #1a5276; }
   .ozet-bar .yapilmadi-span { color: #e67e22; }
 
   /* MODAL */
-  .modal-arkaplan {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5); z-index: 999;
-    justify-content: center; align-items: center;
-  }
+  .modal-arkaplan { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
   .modal-arkaplan.aktif { display: flex; }
-  .modal {
-    background: #fff; padding: 20px; border-radius: 10px;
-    max-width: 520px; width: 92%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    max-height: 90vh; overflow-y: auto;
-  }
+  .modal { background: #fff; padding: 20px; border-radius: 10px; max-width: 520px; width: 92%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
   .modal h3 { margin-top: 0; color: #25D366; }
-  .modal textarea {
-    width: 100%; min-height: 180px; padding: 10px;
-    border: 1px solid #ccc; border-radius: 6px;
-    font-family: Arial, sans-serif; font-size: 14px; resize: vertical;
-  }
+  .modal textarea { width: 100%; min-height: 180px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; resize: vertical; }
   .modal textarea.buyuk { min-height: 250px; font-family: monospace; font-size: 12px; }
   .modal-butonlar { display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end; flex-wrap: wrap; }
   .modal-butonlar button { margin: 0; }
@@ -343,11 +171,14 @@
   .btn-mor { background: #8e44ad; }
   .btn-mor:hover { background: #6c3483; }
 
+  /* YÜKLEME EKRANI */
+  #loading-screen { position: fixed; inset: 0; background: #f4f6f9; z-index: 9998; display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 18px; color: #2c3e50; font-weight: bold; }
+  .spinner { width: 40px; height: 40px; border: 4px solid #ccc; border-top-color: #27ae60; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   @media print {
     body { background: #fff; padding: 0; }
-    .dashboard, form, .arac-cubugu, .arama, .ozet-bar,
-    .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar,
-    button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
+    .dashboard, form, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
     .bugun-panel { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 2px solid #000; padding: 15px !important; }
     .bugun-item { background: #f9f9f9 !important; color: #000 !important; border: 1px solid #ccc !important; backdrop-filter: none !important; }
     .bugun-item .saat .badge { background: #000 !important; color: #fff !important; }
@@ -357,7 +188,7 @@
 </head>
 <body>
 
-<!-- GİRİŞ KAPISI (FIREBASE AUTH) -->
+<!-- GİRİŞ KAPISI -->
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#020617;display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Segoe UI',Arial,sans-serif;">
   <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:32px;width:100%;max-width:380px;">
     <div style="text-align:center;margin-bottom:20px;">
@@ -367,37 +198,29 @@
       <h2 style="color:#fff;font-size:18px;margin:0 0 4px 0;font-weight:800;">Yönetici Girişi</h2>
       <p style="color:#64748b;font-size:12px;margin:0;">Promer Müşteri Takip Sistemi</p>
     </div>
-    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
-           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
-    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
-           onkeypress="if(event.key==='Enter')adminLogin()"
-           style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
-    <button onclick="adminLogin()"
-            style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">
-      Giriş Yap
-    </button>
+    <input id="login-email" type="email" placeholder="E-posta" autocomplete="username" style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:10px;box-sizing:border-box;" />
+    <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password" onkeypress="if(event.key==='Enter')window.adminLogin()" style="width:100%;background:#020617;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;margin-bottom:14px;box-sizing:border-box;" />
+    <button onclick="window.adminLogin()" style="width:100%;background:#1e40af;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Giriş Yap</button>
     <p id="login-error" style="color:#f87171;font-size:12px;text-align:center;margin:12px 0 0 0;display:none;"></p>
-    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;">
-      <a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a>
-    </p>
+    <p style="color:#475569;font-size:11px;text-align:center;margin:16px 0 0 0;"><a href="/admin/" style="color:#60a5fa;text-decoration:none;">← Yönetim Paneline Dön</a></p>
   </div>
+</div>
+
+<!-- YÜKLEME EKRANI -->
+<div id="loading-screen" style="display:none;">
+  <div class="spinner"></div>
+  Veriler Yükleniyor...
 </div>
 
 <!-- ANA İÇERİK -->
 <div id="main-content" class="container" style="visibility:hidden;">
   <div style="text-align:right;margin-bottom:10px;">
-    <button onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()"
-            style="background:#e74c3c;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;">
-      🚪 Çıkış
-    </button>
+    <button onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()" style="background:#e74c3c;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;">🚪 Çıkış</button>
   </div>
-  <h1>🐜 Müşteri Takip Sistemi</h1>
+  <h1>🐜 Müşteri Takip Sistemi <span style="font-size:14px;color:#27ae60;font-weight:normal;">(Bulut Bağlantısı Aktif)</span></h1>
 
   <div class="bugun-panel" id="bugunPanel">
-    <h2>
-      📅 Randevular
-      <span class="tarih" id="bugunTarih"></span>
-    </h2>
+    <h2>📅 Randevular <span class="tarih" id="bugunTarih"></span></h2>
     <div class="hafta-bar" id="haftaBar"></div>
     <div class="bugun-liste" id="bugunListe"></div>
     <div class="bugun-butonlar">
@@ -407,47 +230,18 @@
   </div>
 
   <div class="dashboard">
-    <div class="kart kart-toplam">
-      <div class="baslik">👥 Toplam</div>
-      <div class="sayi" id="kartToplam">0</div>
-      <div class="alt" id="kartToplamAlt">-</div>
-    </div>
-    <div class="kart kart-yapildi">
-      <div class="baslik">✅ Yapıldı</div>
-      <div class="sayi" id="kartYapildi">0</div>
-      <div class="alt" id="kartYapildiAlt">-</div>
-    </div>
-    <div class="kart kart-bugun">
-      <div class="baslik">📅 Bugün</div>
-      <div class="sayi" id="kartBugun">0</div>
-      <div class="alt">Bugün işlem günü</div>
-    </div>
-    <div class="kart kart-yaklasan">
-      <div class="baslik">🔔 Yaklaşan</div>
-      <div class="sayi" id="kartYaklasan">0</div>
-      <div class="alt">3 gün içinde</div>
-    </div>
-    <div class="kart kart-gecmis">
-      <div class="baslik">⚠️ Gecikmiş</div>
-      <div class="sayi" id="kartGecmis">0</div>
-      <div class="alt">İşlem tarihi geçti</div>
-    </div>
-    <div class="kart kart-ciro-toplam">
-      <div class="baslik">💵 Toplam Ciro</div>
-      <div class="sayi" id="kartCiroToplam">₺0</div>
-      <div class="alt">Tüm zamanlar</div>
-    </div>
+    <div class="kart kart-toplam"><div class="baslik">👥 Toplam</div><div class="sayi" id="kartToplam">0</div><div class="alt" id="kartToplamAlt">-</div></div>
+    <div class="kart kart-yapildi"><div class="baslik">✅ Yapıldı</div><div class="sayi" id="kartYapildi">0</div><div class="alt" id="kartYapildiAlt">-</div></div>
+    <div class="kart kart-bugun"><div class="baslik">📅 Bugün</div><div class="sayi" id="kartBugun">0</div><div class="alt">Bugün işlem günü</div></div>
+    <div class="kart kart-yaklasan"><div class="baslik">🔔 Yaklaşan</div><div class="sayi" id="kartYaklasan">0</div><div class="alt">3 gün içinde</div></div>
+    <div class="kart kart-gecmis"><div class="baslik">⚠️ Gecikmiş</div><div class="sayi" id="kartGecmis">0</div><div class="alt">İşlem tarihi geçti</div></div>
+    <div class="kart kart-ciro-toplam"><div class="baslik">💵 Toplam Ciro</div><div class="sayi" id="kartCiroToplam">₺0</div><div class="alt">Tüm zamanlar</div></div>
     <div class="kart kart-ay-secim">
       <div class="baslik">📅 Aylık Ciro</div>
       <div class="ay-secim-kutu">
         <select id="aySecim" onchange="aySecimGuncelle()">
           <option value="">Ay Seçiniz</option>
-          <option value="0">Ocak</option><option value="1">Şubat</option>
-          <option value="2">Mart</option><option value="3">Nisan</option>
-          <option value="4">Mayıs</option><option value="5">Haziran</option>
-          <option value="6">Temmuz</option><option value="7">Ağustos</option>
-          <option value="8">Eylül</option><option value="9">Ekim</option>
-          <option value="10">Kasım</option><option value="11">Aralık</option>
+          <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option><option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option><option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option><option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
         </select>
         <select id="yilSecim" onchange="aySecimGuncelle()"></select>
         <div class="sonuc">
@@ -459,9 +253,7 @@
   </div>
 
   <form id="musteriForm">
-    <div class="duzenleme-bilgi">
-      ✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span>
-    </div>
+    <div class="duzenleme-bilgi">✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span></div>
     <div class="tip-kutusu">
       <strong>Müşteri Tipi:</strong>
       <label><input type="radio" name="tip" value="konut" checked onchange="tipDegistir()"><span>🏠 Konut</span></label>
@@ -479,14 +271,7 @@
       <div>
         <label>Haşere</label>
         <select id="hasere" required>
-          <option value="">Seçiniz</option>
-          <option>Hamam Böceği</option><option>Kalorifer Böceği</option>
-          <option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option>
-          <option>Sinek</option><option>Sivrisinek</option><option>Fare</option>
-          <option>Sıçan</option><option>Akrep</option><option>Örümcek</option>
-          <option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option>
-          <option>Kene</option><option>Kertenkele</option><option>Arı</option>
-          <option>Uyuz</option><option>Diğer</option>
+          <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Arı</option><option>Uyuz</option><option>Diğer</option>
         </select>
       </div>
       <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
@@ -494,10 +279,7 @@
       <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
       <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
     </div>
-    <div style="margin-top: 12px;">
-      <label>📝 Notlar</label>
-      <textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea>
-    </div>
+    <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
     <button type="submit" id="kaydetBtn">➕ Kaydet</button>
     <button type="button" class="btn-iptal-duzenle" onclick="duzenlemeyiIptalEt()">❌ Düzenlemeyi İptal Et</button>
     <button type="button" onclick="formTemizle()" style="background:#7f8c8d;">🧹 Temizle</button>
@@ -530,11 +312,7 @@
 
   <table>
     <thead>
-      <tr>
-        <th>✅</th>
-        <th>🕐 Saat</th><th>Tip</th><th>Ad / İşletme</th><th>Telefon</th><th>Adres</th>
-        <th>Haşere</th><th>💰 Fiyat</th><th>İşlem Tarihi</th><th>Sonraki İşlem</th><th>Not</th><th>İşlem</th>
-      </tr>
+      <tr><th>✅</th><th>🕐 Saat</th><th>Tip</th><th>Ad / İşletme</th><th>Telefon</th><th>Adres</th><th>Haşere</th><th>💰 Fiyat</th><th>İşlem Tarihi</th><th>Sonraki İşlem</th><th>Not</th><th>İşlem</th></tr>
     </thead>
     <tbody id="tabloBody"></tbody>
   </table>
@@ -551,7 +329,6 @@
 <div class="modal-arkaplan" id="whatsappModal">
   <div class="modal">
     <h3>📱 WhatsApp Hatırlatma Mesajı</h3>
-    <p style="font-size:13px; color:#7f8c8d; margin-top:-10px;">Mesajı düzenleyebilirsin:</p>
     <textarea id="mesajIcerik"></textarea>
     <div class="modal-butonlar">
       <button type="button" class="btn-iptal" onclick="modalKapat()">❌ İptal</button>
@@ -563,12 +340,7 @@
 <div class="modal-arkaplan" id="iceAktarModal">
   <div class="modal">
     <h3>📤 Toplu İçe Aktar</h3>
-    <p style="font-size:13px; color:#7f8c8d; margin-top:-10px; line-height:1.5;">
-      Her satıra bir kayıt yaz:<br>
-      <code style="background:#f0f0f0;padding:4px 8px;border-radius:4px;font-size:11px;display:block;margin-top:6px;">
-        Ad Soyad | Telefon | İlçe | Mahalle | Sokak | Haşere | Fiyat | Tarih (GG.AA.YYYY) | Saat | Not
-      </code>
-    </p>
+    <p style="font-size:13px; color:#7f8c8d; margin-top:-10px; line-height:1.5;">Her satıra bir kayıt yaz:<br><code style="background:#f0f0f0;padding:4px 8px;border-radius:4px;font-size:11px;display:block;margin-top:6px;">Ad Soyad | Telefon | İlçe | Mahalle | Sokak | Haşere | Fiyat | Tarih (GG.AA.YYYY) | Saat | Not</code></p>
     <textarea id="iceAktarIcerik" class="buyuk" placeholder="Ali Yılmaz | 05321111111 | Kadıköy | Caferağa | Moda Cad. No:5 | Pire | 2500 | 20.10.2025 | 14:00 | Kedi var"></textarea>
     <div class="modal-butonlar">
       <button type="button" class="btn-iptal" onclick="modalKapat2()">❌ İptal</button>
@@ -580,53 +352,17 @@
 <!-- ANA SCRIPT -->
 <script>
   const MAHALLELER = {
-    "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"],
-    "Arnavutköy": ["Anadolu","Arnavutköy Merkez","Bolluca","Haraççı","Hadımköy","Taşoluk"],
-    "Ataşehir": ["Atatürk","Barbaros","Esatpaşa","Fetih","İçerenköy","Kayışdağı","Küçükbakkalköy","Mevlana","Mimar Sinan","Mustafa Kemal","Örnek","Yeni Çamlıca","Yenisahra"],
-    "Avcılar": ["Ambarlı","Cihangir","Denizköşkler","Firuzköy","Gümüşpala","Merkez","Mustafa Kemal Paşa","Tahtakale","Üniversite","Yeşilkent"],
-    "Bağcılar": ["Bağlar","Barbaros","Çınar","Demirkapı","Evren","Fatih","Fevzi Çakmak","Göztepe","Güneşli","Hürriyet","İnönü","Kâzım Karabekir","Kemalpaşa","Kirazlı","Mahmutbey","Merkez","Sancaktepe","Yavuz Selim","Yenigün","Yenimahalle","Yıldıztepe","100. Yıl"],
-    "Bahçelievler": ["Bahçelievler Merkez","Cumhuriyet","Çobançeşme","Fevzi Çakmak","Hürriyet","Kocasinan","Siyavuşpaşa","Soğanlı","Şirinevler","Yenibosna","Zafer"],
-    "Bakırköy": ["Ataköy 1. Kısım","Ataköy 2-5-6. Kısım","Ataköy 3-4-11. Kısım","Ataköy 7-8-9-10. Kısım","Basınköy","Cevizlik","Kartaltepe","Osmaniye","Sakızağacı","Şenlikköy","Yenimahalle","Yeşilköy","Yeşilyurt","Zeytinlik","Zuhuratbaba"],
-    "Başakşehir": ["Altınşehir","Bahçeşehir 1. Kısım","Bahçeşehir 2. Kısım","Başak","Başakşehir","Güvercintepe","İkitelli OSB","Kayabaşı","Şahintepe","Şamlar","Ziya Gökalp"],
-    "Bayrampaşa": ["Altıntepsi","Cevatpaşa","İsmetpaşa","Kartaltepe","Kocatepe","Muratpaşa","Orta","Terazidere","Vatan","Yenidoğan","Yıldırım"],
-    "Beşiktaş": ["Abbasağa","Akat","Arnavutköy","Balmumcu","Cihannüma","Dikilitaş","Etiler","Gayrettepe","Konaklar","Kültür","Kuruçeşme","Levazım","Levent","Mecidiye","Muradiye","Nisbetiye","Ortaköy","Sinanpaşa","Türkali","Ulus","Vişnezade","Yıldız"],
-    "Beykoz": ["Acarlar","Anadolu Hisarı","Anadolufeneri","Baklacı","Cumhuriyet","Çamlıbahçe","Çengeldere","Çubuklu","Göllü","Göksu","Gümüşsuyu","İncirköy","Kanlıca","Kavacık","Merkez","Ortaçeşme","Paşabahçe","Rüzgarlıbahçe","Soğuksu","Tokatköy","Yalıköy","Yenimahalle"],
-    "Beylikdüzü": ["Adnan Kahveci","Barış","Büyükşehir","Cumhuriyet","Dereağzı","Gürpınar","Kavaklı","Marmara","Sahil","Yakuplu"],
-    "Beyoğlu": ["Arap Cami","Asmalı Mescit","Bedrettin","Bereketzade","Bostan","Bülbül","Camiikebir","Cihangir","Çatma Mescit","Çukur","Emekyemez","Evliya Çelebi","Fetihtepe","Firuzağa","Gümüşsuyu","Hacıahmet","Hacımimi","Halıcıoğlu","Hüseyinağa","İstiklal","Kadımehmet Efendi","Kaptanpaşa","Karaköy","Kasımpaşa","Katip Mustafa Çelebi","Keçeci Piri","Kemankeş Karamustafa Paşa","Kılıçali Paşa","Kocatepe","Kulaksız","Kuloğlu","Küçük Piyale","Müeyyedzade","Örnektepe","Piri Paşa","Piyalepaşa","Şahkulu","Şehit Muhtar","Sütlüce","Taksim","Tomtom","Yahya Kahya","Yenişehir"],
-    "Büyükçekmece": ["19 Mayıs","Alkent 2000","Atatürk","Bahçelievler","Celaliye","Cumhuriyet","Çakmaklı","Dizdariye","Ekinoba","Fatih","Güzelce","Hürriyet","Kamiloba","Karaağaç","Kumburgaz","Mimaroba","Mimarsinan","Muratçeşme","Pınartepe","Sinanoba","Türkoba","Ulus","Yenimahalle"],
-    "Çatalca": ["Binkılıç","Çakıl","Çanakça","Dağyenice","Elbasan","Ferhatpaşa","Gökçeali","Hallaçlı","Hisarbeyli","İnceğiz","İzzettin","Kaleiçi","Karacaköy","Kestanelik","Muratbey","Ormanlı","Ovayenice","Subaşı","Yalıköy"],
-    "Çekmeköy": ["Aydınlar","Cumhuriyet","Çamlık","Çatalmeşe","Ekşioğlu","Güngören","Hamidiye","Kirazlıdere","Mehmet Akif","Mimar Sinan","Nişantepe","Ömerli","Soğukpınar","Sultançiftliği","Taşdelen","Alemdağ","Reşadiye"],
-    "Esenler": ["Birlik","Çiftehavuzlar","Davutpaşa","Fatih","Fevzi Çakmak","Havaalanı","Kâzım Karabekir","Kemer","Menderes","Mimar Sinan","Namık Kemal","Nene Hatun","Oruçreis","Tuna","Turgutreis","Yavuz Selim","Yüzyıl"],
-    "Esenyurt": ["Akçaburgaz","Ardıçlı","Aşık Veysel","Atatürk","Bağlarçeşme","Balıkyolu","Barbaros Hayrettin Paşa","Battalgazi","Cumhuriyet","Çınar","Esenkent","Fatih","Gökevler","Güzelyurt","Hürriyet","İncirtepe","İnönü","İstiklal","Koza","Mehmet Akif Ersoy","Mehterçeşme","Mevlana","Namık Kemal","Necip Fazıl Kısakürek","Orhan Gazi","Osmangazi","Pınar","Piri Reis","Saadetdere","Selahaddin Eyyubi","Sultaniye","Şehitler","Talatpaşa","Turgut Özal","Üçevler","Yenikent","Yeşilkent","Zafer"],
-    "Eyüpsultan": ["Akşemsettin","Alibeyköy","Çırçır","Defterdar","Düğmeciler","Emniyettepe","Esentepe","Göktürk","Güzeltepe","İslambey","Karadolap","Kemerburgaz","Mimar Sinan","Nişanca","Rami Cuma","Rami Yeni","Sakarya","Silahtarağa","Topçular","Yeşilpınar"],
-    "Fatih": ["Aksaray","Akşemsettin","Atikali","Ayvansaray","Balat","Beyazıt","Cerrahpaşa","Cibali","Demirtaş","Haseki Sultan","Hırkai Şerif","Hobyar","İskenderpaşa","Karagümrük","Koca Mustafapaşa","Mevlanakapı","Mimar Hayrettin","Mimar Kemalettin","Molla Fenari","Molla Gürani","Şehremini","Sultan Ahmet","Süleymaniye","Topkapı","Yedikule","Zeyrek"],
-    "Gaziosmanpaşa": ["Bağlarbaşı","Barbaros Hayrettin Paşa","Fevzi Çakmak","Hürriyet","Karadeniz","Karayolları","Karlıtepe","Kâzım Karabekir","Merkez","Mevlana","Pazariçi","Sarıgöl","Şemsipaşa","Yeni Mahalle","Yenidoğan","Yıldıztabya"],
-    "Güngören": ["Abdurrahman Nafiz Gürman","Akıncılar","Gençosman","Güneştepe","Güven","Haznedar","Mareşal Çakmak","Mehmet Nesih Özmen","Merkez","Sanayi","Tozkoparan"],
-    "Kadıköy": ["19 Mayıs","Acıbadem","Bostancı","Caddebostan","Caferağa","Dumlupınar","Eğitim","Erenköy","Fenerbahçe","Feneryolu","Fikirtepe","Göztepe","Hasanpaşa","Koşuyolu","Kozyatağı","Merdivenköy","Osmanağa","Rasimpaşa","Sahrayıcedit","Suadiye","Zühtüpaşa"],
-    "Kağıthane": ["Çağlayan","Çeliktepe","Emniyet Evleri","Gültepe","Gürsel","Hamidiye","Harmantepe","Hürriyet","Mehmet Akif Ersoy","Merkez","Nurtepe","Orta","Sanayi","Seyrantepe","Şirintepe","Talatpaşa","Telsizler","Yahya Kemal","Yeşilce"],
-    "Kartal": ["Atalar","Cevizli","Cumhuriyet","Çavuşoğlu","Esentepe","Gümüşpınar","Hürriyet","Karlıktepe","Kordonboyu","Orhantepe","Orta","Petrol İş","Soğanlık Yeni","Topselvi","Uğur Mumcu","Yakacık Çarşı","Yakacık Yeni","Yalı","Yukarı"],
-    "Küçükçekmece": ["Atakent","Atatürk","Beşyol","Cennet","Cumhuriyet","Fatih","Fevzi Çakmak","Gültepe","Halkalı Merkez","İnönü","İstasyon","Kanarya","Kartaltepe","Kemalpaşa","Mehmet Akif","Söğütlü Çeşme","Sultan Murat","Tevfikbey","Yarımburgaz","Yeni Mahalle","Yeşilova"],
-    "Maltepe": ["Altayçeşme","Altıntepe","Aydınevler","Bağlarbaşı","Başıbüyük","Büyükbakkalköy","Cevizli","Çınar","Esenkent","Feyzullah","Fındıklı","Girne","Gülensu","Gülsuyu","İdealtepe","Küçükyalı","Yalı","Zümrütevler"],
-    "Pendik": ["Ahmet Yesevi","Bahçelievler","Batı","Çamçeşme","Çınardere","Doğu","Dumlupınar","Ertuğrul Gazi","Esenler","Esenyalı","Fatih","Fevzi Çakmak","Güllübağlar","Güzelyalı","Harmandere","Kavakpınar","Kaynarca","Kurtköy","Orhangazi","Orta","Ramazanoğlu","Sanayi","Sapanbağları","Sülüntepe","Şeyhli","Velibaba","Yayalar","Yeni","Yenişehir","Yeşilbağlar"],
-    "Sancaktepe": ["Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","Hilal","İnönü","Kemal Türkler","Meclis","Merve","Mevlana","Osmangazi","Paşaköy","Safa","Sarıgazi","Veysel Karani","Yenidoğan","Yunus Emre"],
-    "Sarıyer": ["Ayazağa","Bahçeköy","Baltalimanı","Büyükdere","Cumhuriyet","Çayırbaşı","Darüşşafaka","Emirgan","Ferahevler","Fatih Sultan Mehmet","Gümüşdere","Huzur","İstinye","Kâzım Karabekir","Kireçburnu","Kocataş","Maden","Maslak","PTT Evleri","Pınar","Poligon","Reşitpaşa","Rumeli Hisarı","Rumeli Kavağı","Sarıyer Merkez","Tarabya","Uskumruköy","Yeniköy","Zekeriyaköy"],
-    "Silivri": ["Alibey","Alipaşa","Büyükçavuşlu","Cumhuriyet","Çanta Balaban","Çanta Sancaktepe","Değirmenköy","Fatih","Gümüşyaka","Kadıköy","Kavaklı","Mimarsinan","Ortaköy","Piri Mehmet Paşa","Semizkumlar","Selimpaşa","Sinanoba","Yeni","Yolçatı"],
-    "Sultanbeyli": ["Abdurrahmangazi","Adil","Ahmet Yesevi","Akşemsettin","Battalgazi","Fatih","Hamidiye","Hasanpaşa","Mecidiye","Mehmet Akif","Mimar Sinan","Necip Fazıl","Orhangazi","Turgut Reis","Yavuz Selim"],
-    "Sultangazi": ["50. Yıl","75. Yıl","Cebeci","Cumhuriyet","Esentepe","Eski Habipler","Gazi","Habibler","İsmetpaşa","Malkoçoğlu","Sultançiftliği","Uğur Mumcu","Yayla","Yunus Emre","Zübeyde Hanım"],
-    "Şile": ["Ağva","Balibey","Çavuş","Hacıkasım","Kumbaba","Meşrutiyet","Yeniköy"],
-    "Şişli": ["19 Mayıs","Bozkurt","Cumhuriyet","Duatepe","Ergenekon","Esentepe","Eskişehir","Feriköy","Fulya","Gülbahar","Halaskargazi","Halide Edip Adıvar","Harbiye","İnönü","İzzetpaşa","Kaptanpaşa","Kuştepe","Mahmut Şevket Paşa","Mecidiyeköy","Merkez","Meşrutiyet","Nişantaşı","Okmeydanı","Paşa","Pangaltı","Teşvikiye","Yayla"],
-    "Tuzla": ["Anadolu","Aydınlı","Aydıntepe","Cami","Evliya Çelebi","Fatih","İçmeler","İstasyon","Mescit","Mimar Sinan","Orhanlı","Orta","Postane","Şifa","Tepeören","Yayla"],
-    "Ümraniye": ["Adem Yavuz","Altınşehir","Armağanevler","Aşağı Dudullu","Atakent","Atatürk","Cemil Meriç","Çakmak","Çamlık","Dumlupınar","Elmalıkent","Esenevler","Fatih Sultan Mehmet","Hekimbaşı","Huzur","Ihlamurkuyu","İnkılap","İstiklal","Kâzım Karabekir","Madenler","Mehmet Akif","Namık Kemal","Necip Fazıl","Parseller","Saray","Site","Şerifali","Tantavi","Tatlısu","Tepeüstü","Yamanevler","Yukarı Dudullu"],
-    "Üsküdar": ["Acıbadem","Ahmediye","Altunizade","Aziz Mahmut Hüdayi","Bahçelievler","Barbaros","Beylerbeyi","Bulgurlu","Burhaniye","Cumhuriyet","Çengelköy","Ferah","Güzeltepe","İcadiye","Kandilli","Kirazlıtepe","Kısıklı","Küçük Çamlıca","Küçüksu","Kuzguncuk","Mehmet Akif Ersoy","Mimar Sinan","Murat Reis","Salacak","Selami Ali","Selimiye","Sultantepe","Ünalan","Valide-i Atik","Yavuztürk","Zeynep Kamil"],
-    "Zeytinburnu": ["Beştelsiz","Çırpıcı","Gökalp","Kazlıçeşme","Maltepe","Merkezefendi","Nuripaşa","Seyitnizam","Sümer","Telsiz","Veliefendi","Yenidoğan","Yeşiltepe"]
+    "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"], "Arnavutköy": ["Anadolu","Arnavutköy Merkez","Bolluca","Haraççı","Hadımköy","Taşoluk"], "Ataşehir": ["Atatürk","Barbaros","Esatpaşa","Fetih","İçerenköy","Kayışdağı","Küçükbakkalköy","Mevlana","Mimar Sinan","Mustafa Kemal","Örnek","Yeni Çamlıca","Yenisahra"], "Avcılar": ["Ambarlı","Cihangir","Denizköşkler","Firuzköy","Gümüşpala","Merkez","Mustafa Kemal Paşa","Tahtakale","Üniversite","Yeşilkent"], "Bağcılar": ["Bağlar","Barbaros","Çınar","Demirkapı","Evren","Fatih","Fevzi Çakmak","Göztepe","Güneşli","Hürriyet","İnönü","Kâzım Karabekir","Kemalpaşa","Kirazlı","Mahmutbey","Merkez","Sancaktepe","Yavuz Selim","Yenigün","Yenimahalle","Yıldıztepe","100. Yıl"], "Bahçelievler": ["Bahçelievler Merkez","Cumhuriyet","Çobançeşme","Fevzi Çakmak","Hürriyet","Kocasinan","Siyavuşpaşa","Soğanlı","Şirinevler","Yenibosna","Zafer"], "Bakırköy": ["Ataköy 1. Kısım","Ataköy 2-5-6. Kısım","Ataköy 3-4-11. Kısım","Ataköy 7-8-9-10. Kısım","Basınköy","Cevizlik","Kartaltepe","Osmaniye","Sakızağacı","Şenlikköy","Yenimahalle","Yeşilköy","Yeşilyurt","Zeytinlik","Zuhuratbaba"], "Başakşehir": ["Altınşehir","Bahçeşehir 1. Kısım","Bahçeşehir 2. Kısım","Başak","Başakşehir","Güvercintepe","İkitelli OSB","Kayabaşı","Şahintepe","Şamlar","Ziya Gökalp"], "Bayrampaşa": ["Altıntepsi","Cevatpaşa","İsmetpaşa","Kartaltepe","Kocatepe","Muratpaşa","Orta","Terazidere","Vatan","Yenidoğan","Yıldırım"], "Beşiktaş": ["Abbasağa","Akat","Arnavutköy","Balmumcu","Cihannüma","Dikilitaş","Etiler","Gayrettepe","Konaklar","Kültür","Kuruçeşme","Levazım","Levent","Mecidiye","Muradiye","Nisbetiye","Ortaköy","Sinanpaşa","Türkali","Ulus","Vişnezade","Yıldız"], "Beykoz": ["Acarlar","Anadolu Hisarı","Anadolufeneri","Baklacı","Cumhuriyet","Çamlıbahçe","Çengeldere","Çubuklu","Göllü","Göksu","Gümüşsuyu","İncirköy","Kanlıca","Kavacık","Merkez","Ortaçeşme","Paşabahçe","Rüzgarlıbahçe","Soğuksu","Tokatköy","Yalıköy","Yenimahalle"], "Beylikdüzü": ["Adnan Kahveci","Barış","Büyükşehir","Cumhuriyet","Dereağzı","Gürpınar","Kavaklı","Marmara","Sahil","Yakuplu"], "Beyoğlu": ["Arap Cami","Asmalı Mescit","Bedrettin","Bereketzade","Bostan","Bülbül","Camiikebir","Cihangir","Çatma Mescit","Çukur","Emekyemez","Evliya Çelebi","Fetihtepe","Firuzağa","Gümüşsuyu","Hacıahmet","Hacımimi","Halıcıoğlu","Hüseyinağa","İstiklal","Kadımehmet Efendi","Kaptanpaşa","Karaköy","Kasımpaşa","Katip Mustafa Çelebi","Keçeci Piri","Kemankeş Karamustafa Paşa","Kılıçali Paşa","Kocatepe","Kulaksız","Kuloğlu","Küçük Piyale","Müeyyedzade","Örnektepe","Piri Paşa","Piyalepaşa","Şahkulu","Şehit Muhtar","Sütlüce","Taksim","Tomtom","Yahya Kahya","Yenişehir"], "Büyükçekmece": ["19 Mayıs","Alkent 2000","Atatürk","Bahçelievler","Celaliye","Cumhuriyet","Çakmaklı","Dizdariye","Ekinoba","Fatih","Güzelce","Hürriyet","Kamiloba","Karaağaç","Kumburgaz","Mimaroba","Mimarsinan","Muratçeşme","Pınartepe","Sinanoba","Türkoba","Ulus","Yenimahalle"], "Çatalca": ["Binkılıç","Çakıl","Çanakça","Dağyenice","Elbasan","Ferhatpaşa","Gökçeali","Hallaçlı","Hisarbeyli","İnceğiz","İzzettin","Kaleiçi","Karacaköy","Kestanelik","Muratbey","Ormanlı","Ovayenice","Subaşı","Yalıköy"], "Çekmeköy": ["Aydınlar","Cumhuriyet","Çamlık","Çatalmeşe","Ekşioğlu","Güngören","Hamidiye","Kirazlıdere","Mehmet Akif","Mimar Sinan","Nişantepe","Ömerli","Soğukpınar","Sultançiftliği","Taşdelen","Alemdağ","Reşadiye"], "Esenler": ["Birlik","Çiftehavuzlar","Davutpaşa","Fatih","Fevzi Çakmak","Havaalanı","Kâzım Karabekir","Kemer","Menderes","Mimar Sinan","Namık Kemal","Nene Hatun","Oruçreis","Tuna","Turgutreis","Yavuz Selim","Yüzyıl"], "Esenyurt": ["Akçaburgaz","Ardıçlı","Aşık Veysel","Atatürk","Bağlarçeşme","Balıkyolu","Barbaros Hayrettin Paşa","Battalgazi","Cumhuriyet","Çınar","Esenkent","Fatih","Gökevler","Güzelyurt","Hürriyet","İncirtepe","İnönü","İstiklal","Koza","Mehmet Akif Ersoy","Mehterçeşme","Mevlana","Namık Kemal","Necip Fazıl Kısakürek","Orhan Gazi","Osmangazi","Pınar","Piri Reis","Saadetdere","Selahaddin Eyyubi","Sultaniye","Şehitler","Talatpaşa","Turgut Özal","Üçevler","Yenikent","Yeşilkent","Zafer"], "Eyüpsultan": ["Akşemsettin","Alibeyköy","Çırçır","Defterdar","Düğmeciler","Emniyettepe","Esentepe","Göktürk","Güzeltepe","İslambey","Karadolap","Kemerburgaz","Mimar Sinan","Nişanca","Rami Cuma","Rami Yeni","Sakarya","Silahtarağa","Topçular","Yeşilpınar"], "Fatih": ["Aksaray","Akşemsettin","Atikali","Ayvansaray","Balat","Beyazıt","Cerrahpaşa","Cibali","Demirtaş","Haseki Sultan","Hırkai Şerif","Hobyar","İskenderpaşa","Karagümrük","Koca Mustafapaşa","Mevlanakapı","Mimar Hayrettin","Mimar Kemalettin","Molla Fenari","Molla Gürani","Şehremini","Sultan Ahmet","Süleymaniye","Topkapı","Yedikule","Zeyrek"], "Gaziosmanpaşa": ["Bağlarbaşı","Barbaros Hayrettin Paşa","Fevzi Çakmak","Hürriyet","Karadeniz","Karayolları","Karlıtepe","Kâzım Karabekir","Merkez","Mevlana","Pazariçi","Sarıgöl","Şemsipaşa","Yeni Mahalle","Yenidoğan","Yıldıztabya"], "Güngören": ["Abdurrahman Nafiz Gürman","Akıncılar","Gençosman","Güneştepe","Güven","Haznedar","Mareşal Çakmak","Mehmet Nesih Özmen","Merkez","Sanayi","Tozkoparan"], "Kadıköy": ["19 Mayıs","Acıbadem","Bostancı","Caddebostan","Caferağa","Dumlupınar","Eğitim","Erenköy","Fenerbahçe","Feneryolu","Fikirtepe","Göztepe","Hasanpaşa","Koşuyolu","Kozyatağı","Merdivenköy","Osmanağa","Rasimpaşa","Sahrayıcedit","Suadiye","Zühtüpaşa"], "Kağıthane": ["Çağlayan","Çeliktepe","Emniyet Evleri","Gültepe","Gürsel","Hamidiye","Harmantepe","Hürriyet","Mehmet Akif Ersoy","Merkez","Nurtepe","Orta","Sanayi","Seyrantepe","Şirintepe","Talatpaşa","Telsizler","Yahya Kemal","Yeşilce"], "Kartal": ["Atalar","Cevizli","Cumhuriyet","Çavuşoğlu","Esentepe","Gümüşpınar","Hürriyet","Karlıktepe","Kordonboyu","Orhantepe","Orta","Petrol İş","Soğanlık Yeni","Topselvi","Uğur Mumcu","Yakacık Çarşı","Yakacık Yeni","Yalı","Yukarı"], "Küçükçekmece": ["Atakent","Atatürk","Beşyol","Cennet","Cumhuriyet","Fatih","Fevzi Çakmak","Gültepe","Halkalı Merkez","İnönü","İstasyon","Kanarya","Kartaltepe","Kemalpaşa","Mehmet Akif","Söğütlü Çeşme","Sultan Murat","Tevfikbey","Yarımburgaz","Yeni Mahalle","Yeşilova"], "Maltepe": ["Altayçeşme","Altıntepe","Aydınevler","Bağlarbaşı","Başıbüyük","Büyükbakkalköy","Cevizli","Çınar","Esenkent","Feyzullah","Fındıklı","Girne","Gülensu","Gülsuyu","İdealtepe","Küçükyalı","Yalı","Zümrütevler"], "Pendik": ["Ahmet Yesevi","Bahçelievler","Batı","Çamçeşme","Çınardere","Doğu","Dumlupınar","Ertuğrul Gazi","Esenler","Esenyalı","Fatih","Fevzi Çakmak","Güllübağlar","Güzelyalı","Harmandere","Kavakpınar","Kaynarca","Kurtköy","Orhangazi","Orta","Ramazanoğlu","Sanayi","Sapanbağları","Sülüntepe","Şeyhli","Velibaba","Yayalar","Yeni","Yenişehir","Yeşilbağlar"], "Sancaktepe": ["Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","Hilal","İnönü","Kemal Türkler","Meclis","Merve","Mevlana","Osmangazi","Paşaköy","Safa","Sarıgazi","Veysel Karani","Yenidoğan","Yunus Emre"], "Sarıyer": ["Ayazağa","Bahçeköy","Baltalimanı","Büyükdere","Cumhuriyet","Çayırbaşı","Darüşşafaka","Emirgan","Ferahevler","Fatih Sultan Mehmet","Gümüşdere","Huzur","İstinye","Kâzım Karabekir","Kireçburnu","Kocataş","Maden","Maslak","PTT Evleri","Pınar","Poligon","Reşitpaşa","Rumeli Hisarı","Rumeli Kavağı","Sarıyer Merkez","Tarabya","Uskumruköy","Yeniköy","Zekeriyaköy"], "Silivri": ["Alibey","Alipaşa","Büyükçavuşlu","Cumhuriyet","Çanta Balaban","Çanta Sancaktepe","Değirmenköy","Fatih","Gümüşyaka","Kadıköy","Kavaklı","Mimarsinan","Ortaköy","Piri Mehmet Paşa","Semizkumlar","Selimpaşa","Sinanoba","Yeni","Yolçatı"], "Sultanbeyli": ["Abdurrahmangazi","Adil","Ahmet Yesevi","Akşemsettin","Battalgazi","Fatih","Hamidiye","Hasanpaşa","Mecidiye","Mehmet Akif","Mimar Sinan","Necip Fazıl","Orhangazi","Turgut Reis","Yavuz Selim"], "Sultangazi": ["50. Yıl","75. Yıl","Cebeci","Cumhuriyet","Esentepe","Eski Habipler","Gazi","Habibler","İsmetpaşa","Malkoçoğlu","Sultançiftliği","Uğur Mumcu","Yayla","Yunus Emre","Zübeyde Hanım"], "Şile": ["Ağva","Balibey","Çavuş","Hacıkasım","Kumbaba","Meşrutiyet","Yeniköy"], "Şişli": ["19 Mayıs","Bozkurt","Cumhuriyet","Duatepe","Ergenekon","Esentepe","Eskişehir","Feriköy","Fulya","Gülbahar","Halaskargazi","Halide Edip Adıvar","Harbiye","İnönü","İzzetpaşa","Kaptanpaşa","Kuştepe","Mahmut Şevket Paşa","Mecidiyeköy","Merkez","Meşrutiyet","Nişantaşı","Okmeydanı","Paşa","Pangaltı","Teşvikiye","Yayla"], "Tuzla": ["Anadolu","Aydınlı","Aydıntepe","Cami","Evliya Çelebi","Fatih","İçmeler","İstasyon","Mescit","Mimar Sinan","Orhanlı","Orta","Postane","Şifa","Tepeören","Yayla"], "Ümraniye": ["Adem Yavuz","Altınşehir","Armağanevler","Aşağı Dudullu","Atakent","Atatürk","Cemil Meriç","Çakmak","Çamlık","Dumlupınar","Elmalıkent","Esenevler","Fatih Sultan Mehmet","Hekimbaşı","Huzur","Ihlamurkuyu","İnkılap","İstiklal","Kâzım Karabekir","Madenler","Mehmet Akif","Namık Kemal","Necip Fazıl","Parseller","Saray","Site","Şerifali","Tantavi","Tatlısu","Tepeüstü","Yamanevler","Yukarı Dudullu"], "Üsküdar": ["Acıbadem","Ahmediye","Altunizade","Aziz Mahmut Hüdayi","Bahçelievler","Barbaros","Beylerbeyi","Bulgurlu","Burhaniye","Cumhuriyet","Çengelköy","Ferah","Güzeltepe","İcadiye","Kandilli","Kirazlıtepe","Kısıklı","Küçük Çamlıca","Küçüksu","Kuzguncuk","Mehmet Akif Ersoy","Mimar Sinan","Murat Reis","Salacak","Selami Ali","Selimiye","Sultantepe","Ünalan","Valide-i Atik","Yavuztürk","Zeynep Kamil"], "Zeytinburnu": ["Beştelsiz","Çırpıcı","Gökalp","Kazlıçeşme","Maltepe","Merkezefendi","Nuripaşa","Seyitnizam","Sümer","Telsiz","Veliefendi","Yenidoğan","Yeşiltepe"]
   };
 
-  let musteriler = JSON.parse(localStorage.getItem('musteriler')) || [];
+  let musteriler = []; // Firebase'den doldurulacak
   let aktifFiltre = 'hepsi';
   let aktifTelefon = '';
   let duzenlenenId = null;
   let aktifTarihFiltre = '';
   let seciliGunIndex = -1;
+  let db, auth;
+  let unsubscribeSnapshot = null;
 
   const form = document.getElementById('musteriForm');
   const tabloBody = document.getElementById('tabloBody');
@@ -651,15 +387,13 @@
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   }
 
-  function tikDegistir(id) {
+  // ⭐ FIREBASE'E YAPILDI OLARAK İŞARETLE
+  async function tikDegistir(id) {
     const m = musteriler.find(x => x.id === id);
-    if (!m) return;
-    m.yapildi = !m.yapildi;
-    kaydet();
-    listele(aramaKutusu.value);
-    dashboardGuncelle();
-    aySecimGuncelle();
-    haftayiYenile();
+    if (!m || !db) return;
+    try {
+      await window.fbUpdateDoc(window.fbDoc(db, 'musteriler', id), { yapildi: !m.yapildi });
+    } catch (e) { alert('Hata: ' + e.message); }
   }
 
   function haftaGunleriniAl() {
@@ -697,25 +431,17 @@
       if (g.adet === 0) cls += ' bos';
       btn.className = cls;
       btn.onclick = () => gunSec(i);
-      btn.innerHTML = `
-        <span class="gun-isim">${g.isim}</span>
-        <span class="gun-tarih">${g.iso.split('-').reverse().join('.').slice(0,5)}</span>
-        <span class="gun-adet">${g.adet} iş</span>
-      `;
+      btn.innerHTML = `<span class="gun-isim">${g.isim}</span><span class="gun-tarih">${g.iso.split('-').reverse().join('.').slice(0,5)}</span><span class="gun-adet">${g.adet} iş</span>`;
       bar.appendChild(btn);
     });
     gunListesiniGuncelle(gunler[seciliGunIndex]);
   }
 
-  function gunSec(index) {
-    seciliGunIndex = index;
-    haftayiYenile();
-  }
+  function gunSec(index) { seciliGunIndex = index; haftayiYenile(); }
 
   function gunListesiniGuncelle(gun) {
     document.getElementById('bugunTarih').textContent = gun.isim + ', ' + gun.iso.split('-').reverse().join('.');
-    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso)
-      .sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
+    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
     const liste = document.getElementById('bugunListe');
     if (isler.length === 0) {
       liste.innerHTML = `<div class="bugun-bos">📭 ${gun.isim} için planlanmış işlem yok</div>`;
@@ -727,27 +453,15 @@
       const saatMetni = m.saat || 'Saat belirtilmedi';
       const fiyatMetni = m.fiyat ? `💰 ${paraFormat(m.fiyat)}` : '';
       const yapildi = m.yapildi === true;
-
       const div = document.createElement('div');
       div.className = 'bugun-item' + (yapildi ? ' yapildi' : '');
       div.innerHTML = `
-        <input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''}
-               onclick="event.stopPropagation(); tikDegistir(${m.id})" title="Yapıldı olarak işaretle">
-        <div class="saat">
-          🕐 ${saatMetni}
-          ${m.sonrakiTarih === gun.iso && m.islemTarihi !== gun.iso ? '<span class="badge">RANDEVU</span>' : ''}
-          ${m.islemTarihi === gun.iso ? '<span class="badge" style="background:#f39c12;">BUGÜN</span>' : ''}
-        </div>
+        <input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onclick="event.stopPropagation(); tikDegistir('${m.id}')">
+        <div class="saat">🕐 ${saatMetni} ${m.sonrakiTarih === gun.iso && m.islemTarihi !== gun.iso ? '<span class="badge">RANDEVU</span>' : ''} ${m.islemTarihi === gun.iso ? '<span class="badge" style="background:#f39c12;">BUGÜN</span>' : ''}</div>
         <div class="isim">${isim}</div>
-        <div class="bilgi">
-          📍 ${m.ilce} / ${m.mahalle}<br>
-          🐜 ${m.hasere} ${fiyatMetni ? ' • ' + fiyatMetni : ''}<br>
-          📞 ${m.telefon}
-        </div>
+        <div class="bilgi">📍 ${m.ilce} / ${m.mahalle}<br>🐜 ${m.hasere} ${fiyatMetni ? ' • ' + fiyatMetni : ''}<br>📞 ${m.telefon}</div>
       `;
-      div.onclick = (e) => {
-        if (e.target.type !== 'checkbox') duzenle(m.id);
-      };
+      div.onclick = (e) => { if (e.target.type !== 'checkbox') duzenle(m.id); };
       liste.appendChild(div);
     });
   }
@@ -755,8 +469,7 @@
   function seciliGunIsListesiYazdir() {
     const gunler = haftaGunleriniAl();
     const gun = gunler[seciliGunIndex];
-    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso)
-      .sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
+    const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
     if (isler.length === 0) { alert(`${gun.isim} için iş yok!`); return; }
     let toplamCiro = isler.reduce((s, m) => s + (Number(m.fiyat) || 0), 0);
     const tarihMetni = `${gun.isim}, ${gun.iso.split('-').reverse().join('.')}`;
@@ -774,30 +487,14 @@
       @media print { body { padding: 0; } }
     </style></head><body>
     <h1>🐜 İş Listesi</h1><div class="tarih">${tarihMetni}</div>
-    <table><thead><tr>
-      <th style="width:30px;">✔</th><th style="width:60px;">Saat</th>
-      <th>Müşteri</th><th>Adres</th><th>Haşere</th>
-      <th>Telefon</th><th>Fiyat</th><th>Not</th>
-    </tr></thead><tbody>`;
+    <table><thead><tr><th style="width:30px;">✔</th><th style="width:60px;">Saat</th><th>Müşteri</th><th>Adres</th><th>Haşere</th><th>Telefon</th><th>Fiyat</th><th>Not</th></tr></thead><tbody>`;
     isler.forEach(m => {
       const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
       const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
       const yapildi = m.yapildi === true;
-      html += `<tr${yapildi ? ' class="yapildi"' : ''}>
-        <td class="checkbox">${yapildi ? '☑' : '☐'}</td>
-        <td><b>${m.saat || '-'}</b></td>
-        <td><b>${isim}</b></td>
-        <td>${adres}</td>
-        <td>${m.hasere}</td>
-        <td>${m.telefon}</td>
-        <td>${m.fiyat ? paraFormat(m.fiyat) : '-'}</td>
-        <td>${m.notlar || ''}</td>
-      </tr>`;
+      html += `<tr${yapildi ? ' class="yapildi"' : ''}><td class="checkbox">${yapildi ? '☑' : '☐'}</td><td><b>${m.saat || '-'}</b></td><td><b>${isim}</b></td><td>${adres}</td><td>${m.hasere}</td><td>${m.telefon}</td><td>${m.fiyat ? paraFormat(m.fiyat) : '-'}</td><td>${m.notlar || ''}</td></tr>`;
     });
-    html += `</tbody></table>
-      <div class="toplam">Toplam: ${isler.length} iş • ${paraFormat(toplamCiro)}</div>
-      <script>setTimeout(function(){window.print();}, 300);<\/script>
-    </body></html>`;
+    html += `</tbody></table><div class="toplam">Toplam: ${isler.length} iş • ${paraFormat(toplamCiro)}</div><script>setTimeout(function(){window.print();}, 300);<\/script></body></html>`;
     const w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
@@ -805,9 +502,7 @@
 
   function ilceMenusunuDoldur() {
     Object.keys(MAHALLELER).forEach(ilce => {
-      const opt = document.createElement('option');
-      opt.value = ilce; opt.textContent = ilce;
-      ilceSelect.appendChild(opt);
+      const opt = document.createElement('option'); opt.value = ilce; opt.textContent = ilce; ilceSelect.appendChild(opt);
     });
   }
   ilceMenusunuDoldur();
@@ -817,10 +512,7 @@
     const simdikiYil = new Date().getFullYear();
     yilSelect.innerHTML = '';
     for (let y = simdikiYil + 1; y >= simdikiYil - 5; y--) {
-      const opt = document.createElement('option');
-      opt.value = y; opt.textContent = y;
-      if (y === simdikiYil) opt.selected = true;
-      yilSelect.appendChild(opt);
+      const opt = document.createElement('option'); opt.value = y; opt.textContent = y; if (y === simdikiYil) opt.selected = true; yilSelect.appendChild(opt);
     }
   }
   yilMenusunuDoldur();
@@ -835,20 +527,13 @@
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
-    if (ay === '') {
-      document.getElementById('aySecimAdet').textContent = '0';
-      document.getElementById('aySecimCiro').textContent = '₺0';
-      return;
-    }
+    if (ay === '') { document.getElementById('aySecimAdet').textContent = '0'; document.getElementById('aySecimCiro').textContent = '₺0'; return; }
     const ayNum = Number(ay), yilNum = Number(yil);
     let adet = 0, ciro = 0;
     musteriler.forEach(m => {
       if (!m.islemTarihi) return;
       const [y, a, g] = m.islemTarihi.split('-').map(Number);
-      if (y === yilNum && (a - 1) === ayNum) {
-        adet++;
-        ciro += Number(m.fiyat) || 0;
-      }
+      if (y === yilNum && (a - 1) === ayNum) { adet++; ciro += Number(m.fiyat) || 0; }
     });
     document.getElementById('aySecimAdet').textContent = adet;
     document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
@@ -857,19 +542,11 @@
   function mahalleleriDoldur(secilenMahalle = '') {
     const secilenIlce = ilceSelect.value;
     mahalleSelect.innerHTML = '';
-    if (!secilenIlce) {
-      mahalleSelect.disabled = true;
-      mahalleSelect.innerHTML = '<option value="">Önce İlçe Seçiniz</option>';
-      return;
-    }
+    if (!secilenIlce) { mahalleSelect.disabled = true; mahalleSelect.innerHTML = '<option value="">Önce İlçe Seçiniz</option>'; return; }
     mahalleSelect.disabled = false;
-    const bosOpt = document.createElement('option');
-    bosOpt.value = ''; bosOpt.textContent = 'Mahalle Seçiniz';
-    mahalleSelect.appendChild(bosOpt);
+    const bosOpt = document.createElement('option'); bosOpt.value = ''; bosOpt.textContent = 'Mahalle Seçiniz'; mahalleSelect.appendChild(bosOpt);
     (MAHALLELER[secilenIlce] || []).forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m; opt.textContent = m;
-      mahalleSelect.appendChild(opt);
+      const opt = document.createElement('option'); opt.value = m; opt.textContent = m; mahalleSelect.appendChild(opt);
     });
     if (secilenMahalle) mahalleSelect.value = secilenMahalle;
   }
@@ -879,18 +556,8 @@
     const adLabel = document.getElementById('adLabel');
     const soyadAlani = document.getElementById('soyadAlani');
     const soyadInput = document.getElementById('soyad');
-    if (tip === 'isletme') {
-      adLabel.textContent = 'İşletme Adı';
-      ad.placeholder = 'Örn: ABC Market';
-      soyadAlani.style.display = 'none';
-      soyadInput.required = false;
-      soyadInput.value = '';
-    } else {
-      adLabel.textContent = 'Ad';
-      ad.placeholder = '';
-      soyadAlani.style.display = 'block';
-      soyadInput.required = true;
-    }
+    if (tip === 'isletme') { adLabel.textContent = 'İşletme Adı'; ad.placeholder = 'Örn: ABC Market'; soyadAlani.style.display = 'none'; soyadInput.required = false; soyadInput.value = ''; }
+    else { adLabel.textContent = 'Ad'; ad.placeholder = ''; soyadAlani.style.display = 'block'; soyadInput.required = true; }
   }
   tipDegistir();
 
@@ -901,53 +568,45 @@
     listele(aramaKutusu.value);
   }
 
-  form.addEventListener('submit', function(e) {
+  // ⭐ FIREBASE'E KAYDET
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
     const tip = document.querySelector('input[name="tip"]:checked').value;
     const veri = {
-      tip: tip,
-      ad: ad.value.trim(),
-      soyad: tip === 'konut' ? soyad.value.trim() : '',
-      telefon: telefon.value.trim(),
-      ilce: ilce.value, mahalle: mahalle.value,
-      sokak: sokak.value.trim(),
-      binaNo: binaNo.value.trim(), daireNo: daireNo.value.trim(),
-      hasere: hasere.value,
-      fiyat: fiyat.value ? Number(fiyat.value) : 0,
-      saat: saat.value || '',
-      islemTarihi: islemTarihi.value,
-      sonrakiTarih: sonrakiTarih.value || '',
-      notlar: notlar.value.trim()
+      tip: tip, ad: ad.value.trim(), soyad: tip === 'konut' ? soyad.value.trim() : '',
+      telefon: telefon.value.trim(), ilce: ilce.value, mahalle: mahalle.value,
+      sokak: sokak.value.trim(), binaNo: binaNo.value.trim(), daireNo: daireNo.value.trim(),
+      hasere: hasere.value, fiyat: fiyat.value ? Number(fiyat.value) : 0,
+      saat: saat.value || '', islemTarihi: islemTarihi.value,
+      sonrakiTarih: sonrakiTarih.value || '', notlar: notlar.value.trim()
     };
-    if (duzenlenenId) {
-      const idx = musteriler.findIndex(m => m.id === duzenlenenId);
-      if (idx !== -1) musteriler[idx] = { ...musteriler[idx], ...veri };
-      alert('✅ Kayıt güncellendi!');
-      duzenlemeyiIptalEt();
-    } else {
-      veri.id = Date.now();
-      veri.yapildi = false;
-      musteriler.push(veri);
-      form.reset();
-      document.querySelector('input[name="tip"][value="konut"]').checked = true;
-      tipDegistir();
-      mahalleleriDoldur();
-    }
-    kaydet();
-    listele(aramaKutusu.value);
-    dashboardGuncelle();
-    aySecimGuncelle();
-    haftayiYenile();
-  });
+    
+    if (!db) { alert('Veritabanı bağlantısı yok.'); return; }
+    kaydetBtn.disabled = true; kaydetBtn.textContent = 'Kaydediliyor...';
 
-  function kaydet() { localStorage.setItem('musteriler', JSON.stringify(musteriler)); }
+    try {
+      if (duzenlenenId) {
+        await window.fbUpdateDoc(window.fbDoc(db, 'musteriler', duzenlenenId), veri);
+        alert('✅ Kayıt güncellendi!');
+        duzenlemeyiIptalEt();
+      } else {
+        veri.yapildi = false;
+        await window.fbAddDoc(window.fbCollection(db, 'musteriler'), veri);
+        form.reset();
+        document.querySelector('input[name="tip"][value="konut"]').checked = true;
+        tipDegistir(); mahalleleriDoldur();
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Kayıt hatası: ' + error.message);
+    } finally {
+      kaydetBtn.disabled = false; kaydetBtn.textContent = duzenlenenId ? '💾 Güncelle' : '➕ Kaydet';
+    }
+  });
 
   function formTemizle() {
     if (duzenlenenId) duzenlemeyiIptalEt();
-    form.reset();
-    document.querySelector('input[name="tip"][value="konut"]').checked = true;
-    tipDegistir();
-    mahalleleriDoldur();
+    form.reset(); document.querySelector('input[name="tip"][value="konut"]').checked = true; tipDegistir(); mahalleleriDoldur();
   }
 
   function duzenle(id) {
@@ -956,59 +615,39 @@
     duzenlenenId = id;
     document.querySelector(`input[name="tip"][value="${m.tip}"]`).checked = true;
     tipDegistir();
-    document.getElementById('ad').value = m.ad;
-    document.getElementById('soyad').value = m.soyad || '';
-    document.getElementById('telefon').value = m.telefon;
-    document.getElementById('ilce').value = m.ilce;
-    mahalleleriDoldur(m.mahalle);
-    document.getElementById('sokak').value = m.sokak;
-    document.getElementById('binaNo').value = m.binaNo || '';
-    document.getElementById('daireNo').value = m.daireNo || '';
-    document.getElementById('hasere').value = m.hasere;
-    document.getElementById('fiyat').value = m.fiyat || '';
-    document.getElementById('saat').value = m.saat || '';
-    document.getElementById('islemTarihi').value = m.islemTarihi;
-    document.getElementById('sonrakiTarih').value = m.sonrakiTarih || '';
-    document.getElementById('notlar').value = m.notlar || '';
+    document.getElementById('ad').value = m.ad; document.getElementById('soyad').value = m.soyad || '';
+    document.getElementById('telefon').value = m.telefon; document.getElementById('ilce').value = m.ilce;
+    mahalleleriDoldur(m.mahalle); document.getElementById('sokak').value = m.sokak;
+    document.getElementById('binaNo').value = m.binaNo || ''; document.getElementById('daireNo').value = m.daireNo || '';
+    document.getElementById('hasere').value = m.hasere; document.getElementById('fiyat').value = m.fiyat || '';
+    document.getElementById('saat').value = m.saat || ''; document.getElementById('islemTarihi').value = m.islemTarihi;
+    document.getElementById('sonrakiTarih').value = m.sonrakiTarih || ''; document.getElementById('notlar').value = m.notlar || '';
     form.classList.add('duzenleme-modu');
-    kaydetBtn.textContent = '💾 Güncelle';
-    kaydetBtn.classList.add('btn-guncelle');
+    kaydetBtn.textContent = '💾 Güncelle'; kaydetBtn.classList.add('btn-guncelle');
     const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
     document.getElementById('duzenlenenIsim').textContent = isim;
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    listele(aramaKutusu.value);
   }
 
   function duzenlemeyiIptalEt() {
-    duzenlenenId = null;
-    form.classList.remove('duzenleme-modu');
-    kaydetBtn.textContent = '➕ Kaydet';
-    kaydetBtn.classList.remove('btn-guncelle');
-    form.reset();
-    document.querySelector('input[name="tip"][value="konut"]').checked = true;
-    tipDegistir();
-    mahalleleriDoldur();
-    listele(aramaKutusu.value);
+    duzenlenenId = null; form.classList.remove('duzenleme-modu');
+    kaydetBtn.textContent = '➕ Kaydet'; kaydetBtn.classList.remove('btn-guncelle');
+    form.reset(); document.querySelector('input[name="tip"][value="konut"]').checked = true; tipDegistir(); mahalleleriDoldur();
   }
 
-  function sil(id) {
-    if (confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
-      musteriler = musteriler.filter(m => m.id !== id);
-      if (duzenlenenId === id) duzenlemeyiIptalEt();
-      kaydet();
-      listele(aramaKutusu.value);
-      dashboardGuncelle();
-      aySecimGuncelle();
-      haftayiYenile();
+  // ⭐ FIREBASE'DEN SİL
+  async function sil(id) {
+    if (confirm('Bu kaydı silmek istediğinize emin misiniz?') && db) {
+      try {
+        await window.fbDeleteDoc(window.fbDoc(db, 'musteriler', id));
+        if (duzenlenenId === id) duzenlemeyiIptalEt();
+      } catch (e) { alert('Silme hatası: ' + e.message); }
     }
   }
 
   function telefonWhatsappFormat(tel) {
     let s = (tel || '').replace(/\D/g, '');
-    if (!s) return '';
-    if (s.startsWith('0')) s = s.substring(1);
-    if (!s.startsWith('90')) s = '90' + s;
-    return s;
+    if (!s) return ''; if (s.startsWith('0')) s = s.substring(1); if (!s.startsWith('90')) s = '90' + s; return s;
   }
 
   function gunHesapla(tarih) {
@@ -1019,20 +658,12 @@
   }
 
   function dashboardGuncelle() {
-    let toplam = musteriler.length;
-    let bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0;
-    let konutSayi = 0, isletmeSayi = 0;
-    let ciroToplam = 0;
-    let yapildiSayi = 0;
+    let toplam = musteriler.length, bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0, konutSayi = 0, isletmeSayi = 0, ciroToplam = 0, yapildiSayi = 0;
     musteriler.forEach(m => {
       if (m.tip === 'konut') konutSayi++; else isletmeSayi++;
       if (m.yapildi === true) yapildiSayi++;
       const fark = gunHesapla(m.sonrakiTarih);
-      if (fark !== null) {
-        if (fark === 0) bugunSayi++;
-        else if (fark > 0 && fark <= 3) yaklasanSayi++;
-        else if (fark < 0) gecmisSayi++;
-      }
+      if (fark !== null) { if (fark === 0) bugunSayi++; else if (fark > 0 && fark <= 3) yaklasanSayi++; else if (fark < 0) gecmisSayi++; }
       ciroToplam += Number(m.fiyat) || 0;
     });
     document.getElementById('kartToplam').textContent = toplam;
@@ -1045,103 +676,61 @@
     document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
   }
 
-  function tarihFiltrele() {
-    const t = document.getElementById('tarihFiltreInput').value;
-    aktifTarihFiltre = t;
-    if (t) {
-      document.getElementById('tarihFiltreBilgi').textContent = `Filtre: ${tarihFormat(t)} — sadece o gün`;
-    } else {
-      document.getElementById('tarihFiltreBilgi').textContent = '';
-    }
-    listele(aramaKutusu.value);
-  }
-
-  function bugunTarihSec() {
-    document.getElementById('tarihFiltreInput').value = bugunISO();
-    tarihFiltrele();
-  }
-
-  function tarihFiltreTemizle() {
-    document.getElementById('tarihFiltreInput').value = '';
-    aktifTarihFiltre = '';
-    document.getElementById('tarihFiltreBilgi').textContent = '';
-    listele(aramaKutusu.value);
-  }
+  function tarihFiltrele() { aktifTarihFiltre = document.getElementById('tarihFiltreInput').value; document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : ''; listele(aramaKutusu.value); }
+  function bugunTarihSec() { document.getElementById('tarihFiltreInput').value = bugunISO(); tarihFiltrele(); }
+  function tarihFiltreTemizle() { document.getElementById('tarihFiltreInput').value = ''; aktifTarihFiltre = ''; document.getElementById('tarihFiltreBilgi').textContent = ''; listele(aramaKutusu.value); }
 
   function excelAktar() {
     if (musteriler.length === 0) { alert('Aktarılacak kayıt yok!'); return; }
     const basliklar = ['Yapıldı','Tip','Ad/İşletme','Soyad','Telefon','İlçe','Mahalle','Sokak/Cadde','Bina No','Daire No','Haşere','Fiyat (₺)','İşlem Tarihi','Saat','Sonraki İşlem Tarihi','Notlar'];
-    const satirlar = musteriler.map(m => [
-      m.yapildi ? 'EVET' : 'HAYIR',
-      m.tip === 'isletme' ? 'İşletme' : 'Konut',
-      m.ad, m.soyad || '', m.telefon, m.ilce, m.mahalle, m.sokak,
-      m.binaNo || '', m.daireNo || '', m.hasere,
-      m.fiyat ? Number(m.fiyat).toLocaleString('tr-TR') : '',
-      tarihFormat(m.islemTarihi), m.saat || '',
-      m.sonrakiTarih ? tarihFormat(m.sonrakiTarih) : '',
-      m.notlar || ''
-    ]);
+    const satirlar = musteriler.map(m => [m.yapildi ? 'EVET' : 'HAYIR', m.tip === 'isletme' ? 'İşletme' : 'Konut', m.ad, m.soyad || '', m.telefon, m.ilce, m.mahalle, m.sokak, m.binaNo || '', m.daireNo || '', m.hasere, m.fiyat ? Number(m.fiyat).toLocaleString('tr-TR') : '', tarihFormat(m.islemTarihi), m.saat || '', m.sonrakiTarih ? tarihFormat(m.sonrakiTarih) : '', m.notlar || '']);
     const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
     const csv = [basliklar.map(escape).join(';'), ...satirlar.map(s => s.map(escape).join(';'))].join('\r\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const tarih = new Date().toISOString().split('T')[0];
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `musteriler_${tarih}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-    alert(`✅ ${musteriler.length} kayıt Excel'e aktarıldı!`);
+    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `musteriler_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
   }
 
-  function iceAktarmaAc() {
-    document.getElementById('iceAktarIcerik').value = '';
-    document.getElementById('iceAktarModal').classList.add('aktif');
-  }
+  function iceAktarmaAc() { document.getElementById('iceAktarIcerik').value = ''; document.getElementById('iceAktarModal').classList.add('aktif'); }
+  function modalKapat2() { document.getElementById('iceAktarModal').classList.remove('aktif'); }
 
-  function modalKapat2() {
-    document.getElementById('iceAktarModal').classList.remove('aktif');
-  }
-
-  function iceAktarCalistir() {
+  // ⭐ TOPLU İÇE AKTARMAYI BULUTA YAP (writeBatch ile hızlıca)
+  async function iceAktarCalistir() {
     const icerik = document.getElementById('iceAktarIcerik').value.trim();
     if (!icerik) { alert('Metin boş!'); return; }
+    if (!db) { alert('Veritabanı bağlantısı yok.'); return; }
+    
     const satirlar = icerik.split('\n').filter(s => s.trim());
     let basarili = 0, atlanan = 0;
+    const batch = window.fbWriteBatch(db);
+
     satirlar.forEach(satir => {
       const parcalar = satir.split('|').map(p => p.trim());
       if (parcalar.length < 7) { atlanan++; return; }
       const [adSoyad, telefon, ilce, mahalle, sokak, hasere, fiyatStr, tarihStr, saatStr, notStr] = parcalar;
       let islemTarihi = '';
-      if (tarihStr && tarihStr.includes('.')) {
-        const [g, a, y] = tarihStr.split('.').map(x => x.trim());
-        islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`;
-      }
+      if (tarihStr && tarihStr.includes('.')) { const [g, a, y] = tarihStr.split('.').map(x => x.trim()); islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`; }
       const adParcalari = adSoyad.split(' ');
-      const ad = adParcalari[0] || '';
-      const soyad = adParcalari.slice(1).join(' ') || '';
+      
       const musteri = {
-        id: Date.now() + Math.random(),
-        tip: 'konut', ad: ad, soyad: soyad,
+        tip: 'konut', ad: adParcalari[0] || '', soyad: adParcalari.slice(1).join(' ') || '',
         telefon: telefon || '', ilce: ilce || '', mahalle: mahalle || '', sokak: sokak || '',
-        binaNo: '', daireNo: '', hasere: hasere || 'Diğer',
-        fiyat: fiyatStr ? Number(fiyatStr.replace(/\D/g, '')) : 0,
-        saat: saatStr || '',
-        islemTarihi: islemTarihi || bugunISO(),
-        sonrakiTarih: '', notlar: notStr || '',
-        yapildi: false
+        binaNo: '', daireNo: '', hasere: hasere || 'Diğer', fiyat: fiyatStr ? Number(fiyatStr.replace(/\D/g, '')) : 0,
+        saat: saatStr || '', islemTarihi: islemTarihi || bugunISO(), sonrakiTarih: '', notlar: notStr || '', yapildi: false
       };
-      musteriler.push(musteri);
+      
+      const newDocRef = window.fbDoc(window.fbCollection(db, 'musteriler')); // Otomatik ID oluştur
+      batch.set(newDocRef, musteri);
       basarili++;
     });
-    kaydet();
-    listele(aramaKutusu.value);
-    dashboardGuncelle();
-    aySecimGuncelle();
-    haftayiYenile();
-    modalKapat2();
-    alert(`✅ ${basarili} kayıt eklendi!${atlanan ? '\n⚠️ ' + atlanan + ' satır atlandı.' : ''}`);
+
+    try {
+      await batch.commit();
+      modalKapat2();
+      alert(`✅ ${basarili} kayıt buluta eklendi!${atlanan ? '\n⚠️ ' + atlanan + ' satır atlandı.' : ''}`);
+    } catch (e) {
+      alert('İçe aktarma hatası: ' + e.message);
+    }
   }
 
   function whatsappAc(id) {
@@ -1151,10 +740,7 @@
     const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
     const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
     const gunFarki = gunHesapla(m.sonrakiTarih);
-    let zamanMetni = '';
-    if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`;
-    else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`;
-    else zamanMetni = `${gunFarki} gün sonra yapılacak`;
+    let zamanMetni = ''; if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`; else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`; else zamanMetni = `${gunFarki} gün sonra yapılacak`;
     const fiyatSatiri = m.fiyat ? `\n💰 Hizmet ücreti: ${paraFormat(m.fiyat)}` : '';
     const mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Son işlem tarihi: ${tarihFormat(m.islemTarihi)}\n🔔 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}${fiyatSatiri}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
     aktifTelefon = telefonWhatsappFormat(m.telefon);
@@ -1162,106 +748,70 @@
     document.getElementById('whatsappModal').classList.add('aktif');
   }
 
-  function modalKapat() {
-    document.getElementById('whatsappModal').classList.remove('aktif');
-  }
-
-  function whatsappGonder() {
-    const mesaj = document.getElementById('mesajIcerik').value;
-    const url = `https://wa.me/${aktifTelefon}?text=${encodeURIComponent(mesaj)}`;
-    window.open(url, '_blank');
-    modalKapat();
-  }
+  function modalKapat() { document.getElementById('whatsappModal').classList.remove('aktif'); }
+  function whatsappGonder() { window.open(`https://wa.me/${aktifTelefon}?text=${encodeURIComponent(document.getElementById('mesajIcerik').value)}`, '_blank'); modalKapat(); }
 
   function listele(filter = '') {
     tabloBody.innerHTML = '';
-    const f = filter.toLowerCase();
-    const bugun = bugunISO();
-    let gorunenAdet = 0, gorunenCiro = 0;
-    let gorunenYapildi = 0, gorunenYapilmadi = 0;
-
+    const f = filter.toLowerCase(); const bugun = bugunISO();
+    let gorunenAdet = 0, gorunenCiro = 0, gorunenYapildi = 0, gorunenYapilmadi = 0;
     let liste = [...musteriler];
-    if (aktifTarihFiltre) {
-      liste = liste.filter(m => m.islemTarihi === aktifTarihFiltre || m.sonrakiTarih === aktifTarihFiltre);
-    }
+    if (aktifTarihFiltre) liste = liste.filter(m => m.islemTarihi === aktifTarihFiltre || m.sonrakiTarih === aktifTarihFiltre);
 
-    liste
-      .filter(m => {
-        if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
-        if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
-        if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
-        if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
-        const fark = gunHesapla(m.sonrakiTarih);
-        if (aktifFiltre === 'bugun' && fark !== 0) return false;
-        if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
-        if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
-        const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
-        return metin.includes(f);
-      })
-      .sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'))
-      .forEach(m => {
-        gorunenAdet++;
-        gorunenCiro += Number(m.fiyat) || 0;
-        const yapildi = m.yapildi === true;
-        if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
+    liste.filter(m => {
+      if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
+      if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
+      if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
+      if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
+      const fark = gunHesapla(m.sonrakiTarih);
+      if (aktifFiltre === 'bugun' && fark !== 0) return false;
+      if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
+      if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
+      const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
+      return metin.includes(f);
+    }).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99')).forEach(m => {
+      gorunenAdet++; gorunenCiro += Number(m.fiyat) || 0;
+      const yapildi = m.yapildi === true;
+      if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
 
-        const farkGun = gunHesapla(m.sonrakiTarih);
-        let satirClass = '', uyari = '';
-        const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
+      const farkGun = gunHesapla(m.sonrakiTarih); let satirClass = '', uyari = '';
+      const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
+      if (yapildi) { satirClass = 'yapildi-satir'; if (bugunMu) satirClass += ' bugun-satir'; }
+      else if (bugunMu) { satirClass = 'bugun-satir'; uyari = ' 🎯 BUGÜN'; }
+      else if (farkGun !== null) {
+        if (farkGun < 0) { satirClass = 'gecmis'; uyari = ` (${Math.abs(farkGun)} gün gecikti!)`; }
+        else if (farkGun <= 3) { satirClass = 'yaklasan'; uyari = ` (${farkGun} gün kaldı)`; }
+      }
+      if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
 
-        if (yapildi) {
-          satirClass = 'yapildi-satir';
-          if (bugunMu) satirClass += ' bugun-satir';
-        } else if (bugunMu) {
-          satirClass = 'bugun-satir';
-          uyari = ' 🎯 BUGÜN';
-        } else if (farkGun !== null) {
-          if (farkGun < 0) { satirClass = 'gecmis'; uyari = ` (${Math.abs(farkGun)} gün gecikti!)`; }
-          else if (farkGun <= 3) { satirClass = 'yaklasan'; uyari = ` (${farkGun} gün kaldı)`; }
-        }
+      const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
+      const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
+      const sonrakiGosterim = m.sonrakiTarih ? `${tarihFormat(m.sonrakiTarih)}${uyari}` : '<em style="color:#95a5a6;">Belirtilmedi</em>';
+      const waDisabled = m.sonrakiTarih ? '' : 'disabled';
+      const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
+      const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
 
-        if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
-
-        const rozet = m.tip === 'isletme'
-          ? '<span class="rozet rozet-isletme">🏢 İşletme</span>'
-          : '<span class="rozet rozet-konut">🏠 Konut</span>';
-        const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
-        const sonrakiGosterim = m.sonrakiTarih
-          ? `${tarihFormat(m.sonrakiTarih)}${uyari}`
-          : '<em style="color:#95a5a6;">Belirtilmedi</em>';
-        const waDisabled = m.sonrakiTarih ? '' : 'disabled';
-        const notGosterim = m.notlar
-          ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>`
-          : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
-        const fiyatGosterim = m.fiyat
-          ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>`
-          : '<span class="fiyat-belirtilmedi">-</span>';
-
-        const tr = document.createElement('tr');
-        tr.className = satirClass;
-        tr.innerHTML = `
-          <td class="tik-hucre">
-            <input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''}
-                   onchange="tikDegistir(${m.id})" title="Yapıldı olarak işaretle">
-          </td>
-          <td><strong>${m.saat || '-'}</strong></td>
-          <td>${rozet}</td>
-          <td><strong>${isim}</strong></td>
-          <td>${m.telefon}</td>
-          <td>${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
-          <td>${m.hasere}</td>
-          <td>${fiyatGosterim}</td>
-          <td>${tarihFormat(m.islemTarihi)}</td>
-          <td>${sonrakiGosterim}</td>
-          <td>${notGosterim}</td>
-          <td>
-            <button class="duzenle" onclick="duzenle(${m.id})">✏️</button>
-            <button class="whatsapp-btn" onclick="whatsappAc(${m.id})" ${waDisabled}>📱</button>
-            <button class="sil" onclick="sil(${m.id})">Sil</button>
-          </td>
-        `;
-        tabloBody.appendChild(tr);
-      });
+      const tr = document.createElement('tr'); tr.className = satirClass;
+      tr.innerHTML = `
+        <td class="tik-hucre"><input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onchange="tikDegistir('${m.id}')" title="Yapıldı olarak işaretle"></td>
+        <td><strong>${m.saat || '-'}</strong></td>
+        <td>${rozet}</td>
+        <td><strong>${isim}</strong></td>
+        <td>${m.telefon}</td>
+        <td>${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
+        <td>${m.hasere}</td>
+        <td>${fiyatGosterim}</td>
+        <td>${tarihFormat(m.islemTarihi)}</td>
+        <td>${sonrakiGosterim}</td>
+        <td>${notGosterim}</td>
+        <td>
+          <button class="duzenle" onclick="duzenle('${m.id}')">✏️</button>
+          <button class="whatsapp-btn" onclick="whatsappAc('${m.id}')" ${waDisabled}>📱</button>
+          <button class="sil" onclick="sil('${m.id}')">Sil</button>
+        </td>
+      `;
+      tabloBody.appendChild(tr);
+    });
 
     document.getElementById('ozetAdet').textContent = gorunenAdet;
     document.getElementById('ozetYapildi').textContent = gorunenYapildi;
@@ -1270,23 +820,19 @@
   }
 
   aramaKutusu.addEventListener('input', e => listele(e.target.value));
-  document.getElementById('whatsappModal').addEventListener('click', function(e) {
-    if (e.target === this) modalKapat();
-  });
-  document.getElementById('iceAktarModal').addEventListener('click', function(e) {
-    if (e.target === this) modalKapat2();
-  });
+  document.getElementById('whatsappModal').addEventListener('click', function(e) { if (e.target === this) modalKapat(); });
+  document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
 
-  // Başlangıç
-  listele();
-  dashboardGuncelle();
-  aySecimGuncelle();
-  haftayiYenile();
+  // Firebase Auth ve Firestore Bağlantısı
+  window.initFirebase = function() {
+    window.fbAddDoc = window.fbAddDoc; // module import edilecek
+  };
 </script>
 
-<!-- FIREBASE AUTH -->
+<!-- FIREBASE MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -1298,51 +844,83 @@
     appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
   };
 
-  try {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
-      const gate = document.getElementById('auth-gate');
-      const mainContent = document.getElementById('main-content');
+  // Fonksiyonları global'e ata
+  window.fbAddDoc = addDoc;
+  window.fbUpdateDoc = updateDoc;
+  window.fbDeleteDoc = deleteDoc;
+  window.fbDoc = doc;
+  window.fbCollection = collection;
+  window.fbWriteBatch = writeBatch;
 
-      if (user) {
-        if (gate) gate.style.display = 'none';
-        if (mainContent) mainContent.style.visibility = 'visible';
-      } else {
-        if (gate) gate.style.display = 'flex';
-        if (mainContent) mainContent.style.visibility = 'hidden';
+  // Auth Dinleyici
+  onAuthStateChanged(auth, (user) => {
+    const gate = document.getElementById('auth-gate');
+    const mainContent = document.getElementById('main-content');
+    const loadingScreen = document.getElementById('loading-screen');
+
+    if (user) {
+      if (gate) gate.style.display = 'none';
+      if (loadingScreen) loadingScreen.style.display = 'flex'; // Veriler yüklenirken göster
+      
+      // Veritabanını Gerçek Zamanlı Dinle (Sadece 1 kez bağlanır)
+      if (!window.dbUnsubscribe) {
+        window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
+          let geciciMusteriler = [];
+          snapshot.forEach(docSnap => {
+            geciciMusteriler.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          
+          // Global array güncelle
+          musteriler.length = 0; 
+          musteriler.push(...geciciMusteriler);
+          
+          // Ekranı güncelle
+          listele(aramaKutusu.value);
+          dashboardGuncelle();
+          aySecimGuncelle();
+          haftayiYenile();
+          
+          if (loadingScreen) loadingScreen.style.display = 'none';
+          if (mainContent) mainContent.style.visibility = 'visible';
+        }, (error) => {
+          console.error("Veritabanı hatası:", error);
+          alert("Veriler okunamadı. Firebase kurallarını kontrol edin!");
+          if (loadingScreen) loadingScreen.style.display = 'none';
+          if (mainContent) mainContent.style.visibility = 'visible';
+        });
       }
-    });
+    } else {
+      if (gate) gate.style.display = 'flex';
+      if (mainContent) mainContent.style.visibility = 'hidden';
+      if (loadingScreen) loadingScreen.style.display = 'none';
+      if (window.dbUnsubscribe) { window.dbUnsubscribe(); window.dbUnsubscribe = null; }
+      musteriler.length = 0; // Çıkış yapınca listeyi temizle
+    }
+  });
 
-    window.adminLogin = async () => {
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value;
-      const err = document.getElementById('login-error');
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        if (err) err.style.display = 'none';
-      } catch (e) {
-        let msg = 'Giriş başarısız';
-        if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
-        else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
-        else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
-        else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
-        else msg = '❌ Hata: ' + e.code;
-        if (err) {
-          err.textContent = msg;
-          err.style.display = 'block';
-        }
-      }
-    };
+  window.adminLogin = async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const err = document.getElementById('login-error');
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      if (err) err.style.display = 'none';
+    } catch (e) {
+      let msg = 'Giriş başarısız';
+      if (e.code === 'auth/invalid-credential') msg = '❌ E-posta veya şifre hatalı';
+      else if (e.code === 'auth/invalid-email') msg = '❌ Geçersiz e-posta';
+      else if (e.code === 'auth/too-many-requests') msg = '⚠️ Çok fazla deneme. Bekleyin.';
+      else if (e.code === 'auth/configuration-not-found') msg = '❌ Firebase Auth yapılandırması eksik.';
+      else msg = '❌ Hata: ' + e.code;
+      if (err) { err.textContent = msg; err.style.display = 'block'; }
+    }
+  };
 
-    window.adminLogout = () => signOut(auth);
-
-    console.log('✅ Firebase Auth hazır');
-  } catch (error) {
-    console.error('Firebase başlatma hatası:', error);
-    alert('Firebase bağlantısı kurulamadı!');
-  }
+  window.adminLogout = () => signOut(auth);
 </script>
 
 </body>
