@@ -61,9 +61,7 @@
   .bugun-butonlar button { margin: 0; background: rgba(255,255,255,0.25); color: #fff; padding: 8px 16px; font-size: 13px; border: 2px solid rgba(255,255,255,0.4); font-weight: bold; }
   .bugun-butonlar button:hover { background: rgba(255,255,255,0.4); }
 
-  /* FORM */
-  form { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; transition: .3s; }
-  form.duzenleme-modu { border: 3px solid #f39c12; box-shadow: 0 4px 16px rgba(243,156,18,0.3); }
+  /* FORM (MODAL İÇİNDE) */
   .duzenleme-bilgi { display: none; background: #fff3cd; border-left: 4px solid #f39c12; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; color: #7d5a00; font-size: 14px; }
   form.duzenleme-modu .duzenleme-bilgi { display: block; }
 
@@ -79,17 +77,21 @@
   .tip-kutusu input[type="radio"] { width: auto; margin: 0; }
   .tip-kutusu label:has(input:checked) { border-color: #27ae60; background: #d5f4e6; }
 
-  button { margin-top: 15px; padding: 10px 20px; border: none; background: #27ae60; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; }
+  button { margin-top: 0; padding: 10px 20px; border: none; background: #27ae60; color: #fff; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; }
   button:hover { background: #219150; }
   .btn-guncelle { background: #f39c12 !important; }
   .btn-guncelle:hover { background: #e67e22 !important; }
-  .btn-iptal-duzenle { background: #e74c3c !important; display: none; }
-  form.duzenleme-modu .btn-iptal-duzenle { display: inline-block; }
 
-  /* ARAÇ ÇUBUĞU */
+  /* ARAÇ ÇUBUĞU & BUTONLAR */
+  .ust-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+  .ekle-btn { background: #3498db; font-size: 16px; padding: 12px 24px; box-shadow: 0 4px 10px rgba(52,152,219,0.3); }
+  .ekle-btn:hover { background: #2980b9; }
+  .cikis-btn { background: #e74c3c; padding: 8px 16px; font-size: 13px; }
+  .cikis-btn:hover { background: #c0392b; }
+
   .arac-cubugu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
   .filtre-bar { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
-  .filtre-bar button { margin: 0; background: #bdc3c7; color: #2c3e50; padding: 8px 14px; font-size: 13px; }
+  .filtre-bar button { margin: 0; background: #bdc3c7; color: #2c3e50; padding: 8px 14px; font-size: 13px; font-weight: normal; }
   .filtre-bar button:hover { background: #95a5a6; }
   .filtre-bar button.aktif { background: #2c3e50; color: #fff; }
   .filtre-bar button.aktif:hover { background: #1a252f; }
@@ -126,9 +128,9 @@
   .yapildi-satir td { color: #154360 !important; }
   .yapildi-satir td strong { color: #154360 !important; }
 
-  .sil { background: #e74c3c; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; }
+  .sil { background: #e74c3c; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; font-weight: normal; }
   .sil:hover { background: #c0392b; }
-  .duzenle { background: #f39c12; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; margin-right: 4px; }
+  .duzenle { background: #f39c12; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; margin-right: 4px; font-weight: normal; }
   .duzenle:hover { background: #e67e22; }
   .whatsapp-btn { background: #25D366; padding: 5px 10px; font-size: 12px; border-radius: 4px; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-right: 4px; }
   .whatsapp-btn:hover { background: #1ebe5b; }
@@ -144,7 +146,6 @@
   .rozet-isletme { background: #3498db; color: #fff; }
   .rozet-konut { background: #27ae60; color: #fff; }
 
-  .kucuk-not { font-size: 11px; color: #7f8c8d; margin-top: 4px; }
   .not-kutusu { background: #fffbea; border-left: 3px solid #f39c12; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: #7d5a00; margin-top: 4px; max-width: 200px; word-wrap: break-word; }
   .fiyat { font-weight: bold; color: #16a085; font-size: 15px; white-space: nowrap; }
   .fiyat-belirtilmedi { color: #bdc3c7; font-style: italic; font-size: 12px; }
@@ -155,10 +156,10 @@
   .ozet-bar .yapildi-span { color: #1a5276; }
   .ozet-bar .yapilmadi-span { color: #e67e22; }
 
-  /* MODAL */
-  .modal-arkaplan { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+  /* MODAL GENEL */
+  .modal-arkaplan { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
   .modal-arkaplan.aktif { display: flex; }
-  .modal { background: #fff; padding: 20px; border-radius: 10px; max-width: 520px; width: 92%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+  .modal { background: #fff; padding: 20px; border-radius: 10px; max-width: 520px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; margin: auto; }
   .modal h3 { margin-top: 0; color: #25D366; }
   .modal textarea { width: 100%; min-height: 180px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; resize: vertical; }
   .modal textarea.buyuk { min-height: 250px; font-family: monospace; font-size: 12px; }
@@ -178,7 +179,7 @@
 
   @media print {
     body { background: #fff; padding: 0; }
-    .dashboard, form, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
+    .dashboard, .ust-bar, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
     .bugun-panel { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 2px solid #000; padding: 15px !important; }
     .bugun-item { background: #f9f9f9 !important; color: #000 !important; border: 1px solid #ccc !important; backdrop-filter: none !important; }
     .bugun-item .saat .badge { background: #000 !important; color: #fff !important; }
@@ -214,10 +215,13 @@
 
 <!-- ANA İÇERİK -->
 <div id="main-content" class="container" style="visibility:hidden;">
-  <div style="text-align:right;margin-bottom:10px;">
-    <button onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()" style="background:#e74c3c;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;">🚪 Çıkış</button>
+  
+  <div class="ust-bar">
+    <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
+    <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış Yap</button>
   </div>
-  <h1>🐜 Müşteri Takip Sistemi <span style="font-size:14px;color:#27ae60;font-weight:normal;">(Bulut Bağlantısı Aktif)</span></h1>
+
+  <h1>🐜 Müşteri Takip Sistemi</h1>
 
   <div class="bugun-panel" id="bugunPanel">
     <h2>📅 Randevular <span class="tarih" id="bugunTarih"></span></h2>
@@ -251,39 +255,6 @@
       </div>
     </div>
   </div>
-
-  <form id="musteriForm">
-    <div class="duzenleme-bilgi">✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span></div>
-    <div class="tip-kutusu">
-      <strong>Müşteri Tipi:</strong>
-      <label><input type="radio" name="tip" value="konut" checked onchange="tipDegistir()"><span>🏠 Konut</span></label>
-      <label><input type="radio" name="tip" value="isletme" onchange="tipDegistir()"><span>🏢 İşletme</span></label>
-    </div>
-    <div class="grid">
-      <div><label id="adLabel">Ad</label><input type="text" id="ad" required></div>
-      <div id="soyadAlani"><label>Soyad</label><input type="text" id="soyad"></div>
-      <div><label>Telefon</label><input type="tel" id="telefon" placeholder="05XX XXX XX XX" required></div>
-      <div><label>İlçe</label><select id="ilce" required onchange="mahalleleriDoldur()"><option value="">İlçe Seçiniz</option></select></div>
-      <div><label>Mahalle</label><select id="mahalle" required disabled><option value="">Önce İlçe Seçiniz</option></select></div>
-      <div><label>Sokak / Cadde</label><input type="text" id="sokak" required></div>
-      <div><label>Bina No</label><input type="text" id="binaNo"></div>
-      <div><label>Daire No</label><input type="text" id="daireNo"></div>
-      <div>
-        <label>Haşere</label>
-        <select id="hasere" required>
-          <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Arı</option><option>Uyuz</option><option>Diğer</option>
-        </select>
-      </div>
-      <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
-      <div><label>🕐 Saat</label><input type="time" id="saat"></div>
-      <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
-      <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
-    </div>
-    <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
-    <button type="submit" id="kaydetBtn">➕ Kaydet</button>
-    <button type="button" class="btn-iptal-duzenle" onclick="duzenlemeyiIptalEt()">❌ Düzenlemeyi İptal Et</button>
-    <button type="button" onclick="formTemizle()" style="background:#7f8c8d;">🧹 Temizle</button>
-  </form>
 
   <div class="arac-cubugu">
     <div class="filtre-bar">
@@ -325,7 +296,51 @@
   </div>
 </div>
 
-<!-- MODALLAR -->
+<!-- MÜŞTERİ EKLEME/DÜZENLEME MODALI -->
+<div class="modal-arkaplan" id="musteriModal">
+  <div class="modal" style="max-width: 800px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+      <h3 id="modalBaslik" style="margin:0; color:#2c3e50; font-size:18px;">➕ Yeni Müşteri Ekle</h3>
+      <button type="button" onclick="modalKapat3()" style="margin:0; padding:5px 12px; background:#e74c3c; border-radius:50%; font-size:14px;">✖</button>
+    </div>
+    <form id="musteriForm">
+      <div class="duzenleme-bilgi">✏️ <strong>Düzenleme Modu:</strong> <span id="duzenlenenIsim"></span></div>
+      <div class="tip-kutusu">
+        <strong>Müşteri Tipi:</strong>
+        <label><input type="radio" name="tip" value="konut" checked onchange="tipDegistir()"><span>🏠 Konut</span></label>
+        <label><input type="radio" name="tip" value="isletme" onchange="tipDegistir()"><span>🏢 İşletme</span></label>
+      </div>
+      <div class="grid">
+        <div><label id="adLabel">Ad</label><input type="text" id="ad" required></div>
+        <div id="soyadAlani"><label>Soyad</label><input type="text" id="soyad"></div>
+        <div><label>Telefon</label><input type="tel" id="telefon" placeholder="05XX XXX XX XX" required></div>
+        <div><label>İlçe</label><select id="ilce" required onchange="mahalleleriDoldur()"><option value="">İlçe Seçiniz</option></select></div>
+        <div><label>Mahalle</label><select id="mahalle" required disabled><option value="">Önce İlçe Seçiniz</option></select></div>
+        <div><label>Sokak / Cadde</label><input type="text" id="sokak" required></div>
+        <div><label>Bina No</label><input type="text" id="binaNo"></div>
+        <div><label>Daire No</label><input type="text" id="daireNo"></div>
+        <div>
+          <label>Haşere</label>
+          <select id="hasere" required>
+            <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Arı</option><option>Uyuz</option><option>Diğer</option>
+          </select>
+        </div>
+        <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
+        <div><label>🕐 Saat</label><input type="time" id="saat"></div>
+        <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
+        <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
+      </div>
+      <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
+      
+      <div style="display:flex; gap:10px; margin-top:20px; border-top:1px solid #eee; padding-top:15px; justify-content:flex-end;">
+        <button type="button" onclick="modalKapat3()" style="background:#95a5a6;">İptal</button>
+        <button type="submit" id="kaydetBtn">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- WHATSAPP MODALI -->
 <div class="modal-arkaplan" id="whatsappModal">
   <div class="modal">
     <h3>📱 WhatsApp Hatırlatma Mesajı</h3>
@@ -337,6 +352,7 @@
   </div>
 </div>
 
+<!-- İÇE AKTARMA MODALI -->
 <div class="modal-arkaplan" id="iceAktarModal">
   <div class="modal">
     <h3>📤 Toplu İçe Aktar</h3>
@@ -383,6 +399,20 @@
   function bugunISO() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function yeniMusteriAc() {
+    formTemizle();
+    document.getElementById('modalBaslik').textContent = '➕ Yeni Müşteri Ekle';
+    kaydetBtn.textContent = '➕ Kaydet';
+    kaydetBtn.classList.remove('btn-guncelle');
+    form.classList.remove('duzenleme-modu');
+    document.getElementById('musteriModal').classList.add('aktif');
+  }
+
+  function modalKapat3() {
+    document.getElementById('musteriModal').classList.remove('aktif');
+    duzenlemeyiIptalEt();
   }
 
   async function tikDegistir(id) {
@@ -584,13 +614,12 @@
       if (duzenlenenId) {
         await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', duzenlenenId), veri);
         alert('✅ Kayıt güncellendi!');
-        duzenlemeyiIptalEt();
+        modalKapat3(); // İşlem bitince modalı kapat
       } else {
         veri.yapildi = false;
         await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), veri);
-        form.reset();
-        document.querySelector('input[name="tip"][value="konut"]').checked = true;
-        tipDegistir(); mahalleleriDoldur();
+        alert('✅ Yeni müşteri başarıyla eklendi!');
+        modalKapat3(); // İşlem bitince modalı kapat
       }
     } catch (error) {
       console.error(error);
@@ -601,7 +630,6 @@
   });
 
   function formTemizle() {
-    if (duzenlenenId) duzenlemeyiIptalEt();
     form.reset(); document.querySelector('input[name="tip"][value="konut"]').checked = true; tipDegistir(); mahalleleriDoldur();
   }
 
@@ -618,24 +646,27 @@
     document.getElementById('hasere').value = m.hasere; document.getElementById('fiyat').value = m.fiyat || '';
     document.getElementById('saat').value = m.saat || ''; document.getElementById('islemTarihi').value = m.islemTarihi;
     document.getElementById('sonrakiTarih').value = m.sonrakiTarih || ''; document.getElementById('notlar').value = m.notlar || '';
+    
     form.classList.add('duzenleme-modu');
+    document.getElementById('modalBaslik').textContent = '✏️ Müşteri Düzenle';
     kaydetBtn.textContent = '💾 Güncelle'; kaydetBtn.classList.add('btn-guncelle');
     const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
     document.getElementById('duzenlenenIsim').textContent = isim;
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    document.getElementById('musteriModal').classList.add('aktif');
   }
 
   function duzenlemeyiIptalEt() {
     duzenlenenId = null; form.classList.remove('duzenleme-modu');
     kaydetBtn.textContent = '➕ Kaydet'; kaydetBtn.classList.remove('btn-guncelle');
-    form.reset(); document.querySelector('input[name="tip"][value="konut"]').checked = true; tipDegistir(); mahalleleriDoldur();
+    formTemizle();
   }
 
   async function sil(id) {
     if (confirm('Bu kaydı silmek istediğinize emin misiniz?') && window.db) {
       try {
         await window.fbDeleteDoc(window.fbDoc(window.db, 'musteriler', id));
-        if (duzenlenenId === id) duzenlemeyiIptalEt();
+        if (duzenlenenId === id) modalKapat3();
       } catch (e) { alert('Silme hatası: ' + e.message); }
     }
   }
@@ -837,15 +868,14 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // ⭐ FONKSİYONLARI VE VERİTABANINI GLOBAL'E ATA (HATA BURADAYDI)
   window.fbAddDoc = addDoc;
   window.fbUpdateDoc = updateDoc;
   window.fbDeleteDoc = deleteDoc;
   window.fbDoc = doc;
   window.fbCollection = collection;
   window.fbWriteBatch = writeBatch;
-  window.db = db;         // Veritabanı bağlantısı artık global
-  window.auth = auth;     // Auth bağlantısı artık global
+  window.db = db;         
+  window.auth = auth;     
 
   onAuthStateChanged(auth, (user) => {
     const gate = document.getElementById('auth-gate');
