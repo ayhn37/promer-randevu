@@ -957,13 +957,27 @@
     // 2. Ay / Yıl filtresi (Aylık Ciro kutusundan gelen)
     const secilenAy = document.getElementById('aySecim').value;
     const secilenYil = document.getElementById('yilSecim').value;
+    
     if (secilenAy !== '') {
       const ayNum = Number(secilenAy);
       const yilNum = Number(secilenYil);
       liste = liste.filter(m => {
-        if (!m.islemTarihi) return false;
-        const [y, a, g] = m.islemTarihi.split('-').map(Number);
-        return y === yilNum && (a - 1) === ayNum;
+        let islemUygun = false;
+        let sonrakiUygun = false;
+        
+        // İşlem tarihi o aya uyuyor mu?
+        if (m.islemTarihi) {
+          const [y, a, g] = m.islemTarihi.split('-').map(Number);
+          if (y === yilNum && (a - 1) === ayNum) islemUygun = true;
+        }
+        
+        // Sonraki işlem tarihi o aya uyuyor mu?
+        if (m.sonrakiTarih) {
+          const [y, a, g] = m.sonrakiTarih.split('-').map(Number);
+          if (y === yilNum && (a - 1) === ayNum) sonrakiUygun = true;
+        }
+        
+        return islemUygun || sonrakiUygun;
       });
     }
 
