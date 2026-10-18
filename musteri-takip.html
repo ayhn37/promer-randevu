@@ -218,7 +218,10 @@
 <div id="main-content" class="container" style="visibility:hidden;">
   
   <div class="ust-bar">
-    <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
+      <button type="button" class="ekle-btn" style="background:#8e44ad;" onclick="apiKeyAyarla()">🧠 AI Ayarı</button>
+    </div>
     <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış Yap</button>
   </div>
 
@@ -330,6 +333,17 @@
         <div><label>🕐 Saat</label><input type="time" id="saat"></div>
         <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
         <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
+        <div>
+          <label>🔄 Tekrar Sıklığı</label>
+          <select id="tekrarSikligi">
+            <option value="0">Tek Seferlik</option>
+            <option value="30">Aylık (30 Gün)</option>
+            <option value="60">2 Aylık (60 Gün)</option>
+            <option value="90">3 Aylık (90 Gün)</option>
+            <option value="180">6 Aylık (180 Gün)</option>
+            <option value="365">Yıllık (365 Gün)</option>
+          </select>
+        </div>
       </div>
       <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
       
@@ -379,6 +393,25 @@
   let aktifTarihFiltre = '';
   let seciliGunIndex = -1;
 
+  // API Anahtarı Yönetimi
+  let GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || '';
+
+  function apiKeyAyarla() {
+    const mevcut = GEMINI_API_KEY ? 'Mevcut anahtarınız kayıtlı. Değiştirmek için yenisini girin.' : 'Lütfen Gemini API Anahtarınızı girin.';
+    const yeniKey = prompt('🧠 Yapay Zeka (Google Gemini) API Anahtarı\n\n' + mevcut + '\n\nÜcretsiz anahtar almak için: aistudio.google.com/app/apikey');
+    if (yeniKey !== null && yeniKey.trim() !== '') {
+      GEMINI_API_KEY = yeniKey.trim();
+      localStorage.setItem('gemini_api_key', GEMINI_API_KEY);
+      alert('✅ API Anahtarı kaydedildi! Yapay zeka artık aktif.');
+    }
+  }
+
+  function tarihEkle(gunSayisi) {
+    const d = new Date();
+    d.setDate(d.getDate() + gunSayisi);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
   const form = document.getElementById('musteriForm');
   const tabloBody = document.getElementById('tabloBody');
   const aramaKutusu = document.getElementById('aramaKutusu');
@@ -419,6 +452,28 @@
   async function tikDegistir(id) {
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
+    
+    // ⭐ PERİYODİK YENİLEME MANTIĞI
+    if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
+      const gun = parseInt(m.tekrarSikligi);
+      const yeniTarih = tarihEkle(gun);
+      
+      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Sonraki işlem tarihi otomatik olarak ${tarihFormat(yeniTarih)} olarak ayarlanacak. Onaylıyor musunuz?`)) {
+        try {
+          await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
+            yapildi: false, // Tiki anında kaldır ki yeni randevu olarak listeye düşsün
+            islemTarihi: bugunISO(),
+            sonrakiTarih: yeniTarih
+          });
+          alert('✅ İş tamamlandı ve yeni randevu tarihi başarıyla oluşturuldu!');
+        } catch (e) { alert('Hata: ' + e.message); }
+        return;
+      } else {
+        return; // Kullanıcı iptal ettiyse çık
+      }
+    }
+
+    // Standart işlem (Tek seferlikse veya tik geri alınıyorsa)
     try {
       await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: !m.yapildi });
     } catch (e) { alert('Hata: ' + e.message); }
@@ -605,7 +660,8 @@
       sokak: sokak.value.trim(), binaNo: binaNo.value.trim(), daireNo: daireNo.value.trim(),
       hasere: hasere.value, fiyat: fiyat.value ? Number(fiyat.value) : 0,
       saat: saat.value || '', islemTarihi: islemTarihi.value,
-      sonrakiTarih: sonrakiTarih.value || '', notlar: notlar.value.trim()
+      sonrakiTarih: sonrakiTarih.value || '', notlar: notlar.value.trim(),
+      tekrarSikligi: document.getElementById('tekrarSikligi').value
     };
     
     if (!window.db) { alert('Veritabanı bağlantısı yok. Lütfen sayfayı yenileyip tekrar deneyin.'); return; }
@@ -647,6 +703,7 @@
     document.getElementById('hasere').value = m.hasere; document.getElementById('fiyat').value = m.fiyat || '';
     document.getElementById('saat').value = m.saat || ''; document.getElementById('islemTarihi').value = m.islemTarihi;
     document.getElementById('sonrakiTarih').value = m.sonrakiTarih || ''; document.getElementById('notlar').value = m.notlar || '';
+    document.getElementById('tekrarSikligi').value = m.tekrarSikligi || '0';
     
     form.classList.add('duzenleme-modu');
     document.getElementById('modalBaslik').textContent = '✏️ Müşteri Düzenle';
@@ -721,7 +778,7 @@
   function iceAktarmaAc() { document.getElementById('iceAktarIcerik').value = ''; document.getElementById('iceAktarModal').classList.add('aktif'); }
   function modalKapat2() { document.getElementById('iceAktarModal').classList.remove('aktif'); }
 
-    async function iceAktarCalistir() {
+  async function iceAktarCalistir() {
     const icerik = document.getElementById('iceAktarIcerik').value.trim();
     if (!icerik) { alert('Metin boş!'); return; }
     if (!window.db) { alert('Veritabanı bağlantısı yok.'); return; }
@@ -772,7 +829,8 @@
         islemTarihi: islemTarihi, 
         sonrakiTarih: '', 
         notlar: notStr || '', 
-        yapildi: false
+        yapildi: false,
+        tekrarSikligi: '0'
       };
       
       const newDocRef = window.fbDoc(window.fbCollection(window.db, 'musteriler'));
@@ -794,19 +852,69 @@
     }
   }
 
-  function whatsappAc(id) {
+  async function whatsappAc(id) {
     const m = musteriler.find(x => x.id === id);
     if (!m) return;
+
     if (!m.sonrakiTarih) { alert('Sonraki işlem tarihi yok.'); return; }
+
     const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
-    const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}`;
+    const adres = `${m.ilce} / ${m.mahalle} Mah. ${m.sokak}`;
     const gunFarki = gunHesapla(m.sonrakiTarih);
-    let zamanMetni = ''; if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`; else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`; else zamanMetni = `${gunFarki} gün sonra yapılacak`;
-    const fiyatSatiri = m.fiyat ? `\n💰 Hizmet ücreti: ${paraFormat(m.fiyat)}` : '';
-    const mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Son işlem tarihi: ${tarihFormat(m.islemTarihi)}\n🔔 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}${fiyatSatiri}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
-    aktifTelefon = telefonWhatsappFormat(m.telefon);
-    document.getElementById('mesajIcerik').value = mesaj;
+    let zamanMetni = ''; 
+    if (gunFarki < 0) zamanMetni = `${Math.abs(gunFarki)} gün önce yapılması gerekiyordu`; 
+    else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`; 
+    else zamanMetni = `${gunFarki} gün sonra yapılacak`;
+
+    // WhatsApp Modalını Aç
+    document.getElementById('mesajIcerik').value = "⏳ Yapay zeka kişiye özel mesaj hazırlıyor... Lütfen bekleyin.";
     document.getElementById('whatsappModal').classList.add('aktif');
+    aktifTelefon = telefonWhatsappFormat(m.telefon);
+
+    let mesaj = "";
+
+    // YAPAY ZEKA (GEMINI) ENTEGRASYONU
+    if (GEMINI_API_KEY) {
+      try {
+        const prompt = `Sen bir ilaçlama şirketinin (Promer İlaçlama) profesyonel bir müşteri temsilcisisin. 
+        Aşağıdaki müşteriye WhatsApp üzerinden atılacak bir hatırlatma mesajı yaz.
+        Mesaj kısa, samimi, nazik ve profesyonel olmalı. Emoji kullanabilirsin.
+        Müşteriyi randevu almaya veya cevap vermeye teşvik et. 
+        Kurumsal bir imza atma, sadece mesaj metnini yaz.
+
+        Müşteri Bilgileri:
+        - İsim/İşletme: ${isim}
+        - Adres: ${adres}
+        - Uygulanan Haşere: ${m.hasere}
+        - Geçmiş Notlar: ${m.notlar || 'Yok'}
+        - Durum: İlaçlama hizmetinin üzerinden zaman geçti. Sonraki işlem tarihi ${tarihFormat(m.sonrakiTarih)} (${zamanMetni}).`;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          mesaj = data.candidates[0].content.parts[0].text;
+        } else {
+          throw new Error("AI yanıt veremedi.");
+        }
+      } catch (error) {
+        console.error("AI Hatası:", error);
+        // AI çalışmazsa eski sabit mesaja dön
+        mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilirsiniz.\n\nİyi günler dileriz. 🙏`;
+      }
+    } else {
+      // API Anahtarı yoksa eski sabit mesajı kullan
+      mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
+    }
+
+    // Mesajı textarea'ya yaz
+    document.getElementById('mesajIcerik').value = mesaj;
   }
 
   function modalKapat() { document.getElementById('whatsappModal').classList.remove('aktif'); }
@@ -886,10 +994,10 @@
   document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
 </script>
 
-<!-- FIREBASE MODULE (OTOMATİK AKTARIM BURADA) -->
+<!-- FIREBASE MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -924,7 +1032,7 @@
       if (loadingScreen) loadingScreen.style.display = 'flex';
       
       if (!window.dbUnsubscribe) {
-        // 1. MÜŞTERİLERİ DİNLE VE TABLOYA YAZ
+        // 1. MÜŞTERİLERİ DİNLE
         window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
           let geciciMusteriler = [];
           snapshot.forEach(docSnap => {
@@ -947,40 +1055,50 @@
           if (mainContent) mainContent.style.visibility = 'visible';
         });
 
-        // 2. YENİ GELEN RANDEVULARI (BOOKINGS) DİNLE VE OTOMATİK AKTAR
+        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (⭐ ÇİFT KAYIT KİLİDİ VE SETDOC İLE)
+        const islenenBookings = new Set(); // İşlenen randevuları tutan kilit mekanizması
+
         window.bookingsUnsubscribe = onSnapshot(collection(db, 'bookings'), (snapshot) => {
           snapshot.docChanges().forEach(async (change) => {
-            if (change.type === 'added') {
+            if (change.type === 'added' || change.type === 'modified') {
               const data = change.doc.data();
+              const bookingId = change.doc.id;
               
-              // Eğer bu randevu daha önce müşteri takip sistemine aktarılmadıysa
-              if (!data.aktarildi) {
-                // Admin panelinden gelen verileri eşleştir (farklı isimlendirmeleri yakalar)
-                const yeniMusteri = {
-                  tip: data.tip || 'konut',
-                  ad: data.ad || data.isim || data.name || 'İsimsiz',
-                  soyad: data.soyad || '',
-                  telefon: data.telefon || data.phone || data.tel || '',
-                  ilce: data.ilce || '',
-                  mahalle: data.mahalle || '',
-                  sokak: data.sokak || data.adres || '',
-                  binaNo: data.binaNo || '',
-                  daireNo: data.daireNo || '',
-                  hasere: data.hasere || 'Diğer',
-                  fiyat: Number(data.fiyat) || 0,
-                  saat: data.saat || data.slot || '',
-                  islemTarihi: data.tarih || data.islemTarihi || new Date().toISOString().split('T')[0],
-                  sonrakiTarih: '',
-                  notlar: data.notlar || data.not || 'Web sitesinden otomatik alındı.',
-                  yapildi: false,
-                  web: true // Web'den geldiğini işaretle
-                };
-
-                // Müşterilere ekle
-                await addDoc(collection(db, 'musteriler'), yeniMusteri);
+              // Eğer daha önce aktarılmadıysa VE şu an işlenmiyorsa
+              if (!data.aktarildi && !islenenBookings.has(bookingId)) {
+                islenenBookings.add(bookingId); // Kilidi koy
                 
-                // Randevuyu "aktarıldı" olarak işaretle ki bir daha eklenmesin
-                await updateDoc(doc(db, 'bookings', change.doc.id), { aktarildi: true });
+                try {
+                  const yeniMusteri = {
+                    tip: data.tip || 'konut',
+                    ad: data.ad || data.isim || data.name || 'İsimsiz',
+                    soyad: data.soyad || '',
+                    telefon: data.telefon || data.phone || data.tel || '',
+                    ilce: data.ilce || '',
+                    mahalle: data.mahalle || '',
+                    sokak: data.sokak || data.adres || '',
+                    binaNo: data.binaNo || '',
+                    daireNo: data.daireNo || '',
+                    hasere: data.hasere || 'Diğer',
+                    fiyat: Number(data.fiyat) || 0,
+                    saat: data.saat || data.slot || '',
+                    islemTarihi: data.tarih || data.islemTarihi || new Date().toISOString().split('T')[0],
+                    sonrakiTarih: '',
+                    notlar: data.notlar || data.not || 'Web sitesinden otomatik alındı.',
+                    yapildi: false,
+                    tekrarSikligi: '0',
+                    web: true
+                  };
+
+                  // ⭐ addDoc yerine setDoc kullanarak randevu ID'sini müşteri ID'si yapıyoruz.
+                  // Böylece aynı event iki kez gelse bile üzerine yazar, 2. bir kayıt oluşturmaz.
+                  await setDoc(doc(db, 'musteriler', bookingId), yeniMusteri);
+                  await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
+                  console.log("✅ Randevu başarıyla müşterilere aktarıldı:", bookingId);
+                } catch (error) {
+                  console.error("❌ Aktarım hatası:", error);
+                  islenenBookings.delete(bookingId); // Hata olursa kilidi aç
+                }
               }
             }
           });
