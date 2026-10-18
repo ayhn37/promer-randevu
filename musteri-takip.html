@@ -34,7 +34,6 @@
   .bugun-panel h2 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .bugun-panel h2 .tarih { font-size: 14px; font-weight: normal; opacity: 0.9; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
   .hafta-bar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-  /* ⭐ 14 GÜN İÇİN MIN-WIDTH 80PX YAPILDI */
   .hafta-bar button { margin: 0; flex: 1; min-width: 80px; background: rgba(255,255,255,0.15); color: #fff; padding: 10px 8px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); font-size: 12px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .hafta-bar button:hover { background: rgba(255,255,255,0.25); }
   .hafta-bar button.aktif { background: #fff; color: #27ae60; border-color: #fff; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
@@ -455,19 +454,16 @@
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
     
-    // ⭐ PERİYODİK YENİLEME MANTIĞI
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
       const yeniTarih = tarihEkle(gun);
       
       if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Eski kayıt geçmiş (ciro) olarak saklanacak ve ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecektir. Onaylıyor musunuz?`)) {
         try {
-          // 1. Mevcut (eski) kaydı "yapıldı" olarak işaretle
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
             yapildi: true 
           });
 
-          // 2. Yeni bir kayıt oluştur (Gelecek tarih için)
           const yeniMusteri = {
             tip: m.tip,
             ad: m.ad,
@@ -481,8 +477,8 @@
             hasere: m.hasere,
             fiyat: m.fiyat,
             saat: m.saat,
-            islemTarihi: yeniTarih, // ⭐ Yeni işlem tarihi, hesaplanan gelecek tarih
-            sonrakiTarih: '', // ⭐ Yeni kaydın sonraki tarihi boş (tekrar tiklendiğinde hesaplanacak)
+            islemTarihi: yeniTarih,
+            sonrakiTarih: '',
             notlar: m.notlar,
             yapildi: false,
             tekrarSikligi: m.tekrarSikligi,
@@ -499,13 +495,11 @@
       }
     }
 
-    // Standart işlem (Tek seferlikse veya tik geri alınıyorsa)
     try {
       await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: !m.yapildi });
     } catch (e) { alert('Hata: ' + e.message); }
   }
 
-  // ⭐ 14 GÜNLÜK DÖNGÜ
   function haftaGunleriniAl() {
     const bugun = new Date();
     const gun = bugun.getDay();
@@ -639,25 +633,44 @@
   }
   aySecimBaslat();
 
+  // ⭐ DÜZELTİLDİ: islemTarihi VEYA sonrakiTarih, tablodaki filtre ile aynı
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
-    if (ay === '') { 
-      document.getElementById('aySecimAdet').textContent = '0'; 
-      document.getElementById('aySecimCiro').textContent = '₺0'; 
-      listele(aramaKutusu.value); 
-      return; 
-    }
-    const ayNum = Number(ay), yilNum = Number(yil);
     let adet = 0, ciro = 0;
-    musteriler.forEach(m => {
-      if (!m.islemTarihi) return;
-      const [y, a, g] = m.islemTarihi.split('-').map(Number);
-      if (y === yilNum && (a - 1) === ayNum) { adet++; ciro += Number(m.fiyat) || 0; }
-    });
+
+    if (ay === '') {
+      // Tüm Zamanlar - tüm kayıtları say
+      musteriler.forEach(m => {
+        adet++;
+        ciro += Number(m.fiyat) || 0;
+      });
+    } else {
+      const ayNum = Number(ay), yilNum = Number(yil);
+      musteriler.forEach(m => {
+        let islemUygun = false;
+        let sonrakiUygun = false;
+
+        if (m.islemTarihi) {
+          const [y, a] = m.islemTarihi.split('-').map(Number);
+          if (y === yilNum && (a - 1) === ayNum) islemUygun = true;
+        }
+        if (m.sonrakiTarih) {
+          const [y, a] = m.sonrakiTarih.split('-').map(Number);
+          if (y === yilNum && (a - 1) === ayNum) sonrakiUygun = true;
+        }
+
+        // Tablodaki filtre ile aynı mantık: islemTarihi VEYA sonrakiTarih
+        if (islemUygun || sonrakiUygun) {
+          adet++;
+          ciro += Number(m.fiyat) || 0;
+        }
+      });
+    }
+
     document.getElementById('aySecimAdet').textContent = adet;
     document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
-    
+
     listele(aramaKutusu.value);
   }
 
