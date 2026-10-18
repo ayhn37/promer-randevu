@@ -721,28 +721,58 @@
   function iceAktarmaAc() { document.getElementById('iceAktarIcerik').value = ''; document.getElementById('iceAktarModal').classList.add('aktif'); }
   function modalKapat2() { document.getElementById('iceAktarModal').classList.remove('aktif'); }
 
-  async function iceAktarCalistir() {
+    async function iceAktarCalistir() {
     const icerik = document.getElementById('iceAktarIcerik').value.trim();
     if (!icerik) { alert('Metin boş!'); return; }
     if (!window.db) { alert('Veritabanı bağlantısı yok.'); return; }
     
     const satirlar = icerik.split('\n').filter(s => s.trim());
-    let basarili = 0, atlanan = 0;
+    let basarili = 0;
+    let hatalar = [];
     const batch = window.fbWriteBatch(window.db);
 
-    satirlar.forEach(satir => {
-      const parcalar = satir.split('|').map(p => p.trim());
-      if (parcalar.length < 7) { atlanan++; return; }
+    satirlar.forEach((satir, index) => {
+      // Hem | hem de TAB (\t) karakterini ayraç olarak kabul et
+      const parcalar = satir.split(/[|\t]/).map(p => p.trim());
+      
+      // En az 5 sütun (Ad Soyad, Telefon, İlçe, Mahalle, Sokak) zorunlu
+      if (parcalar.length < 5) { 
+        hatalar.push(`Satır ${index + 1}: Eksik sütun.`); 
+        return; 
+      }
+
       const [adSoyad, telefon, ilce, mahalle, sokak, hasere, fiyatStr, tarihStr, saatStr, notStr] = parcalar;
+      
       let islemTarihi = '';
-      if (tarihStr && tarihStr.includes('.')) { const [g, a, y] = tarihStr.split('.').map(x => x.trim()); islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`; }
-      const adParcalari = adSoyad.split(' ');
+      // Tarih formatını otomatik algıla (GG.AA.YYYY veya YYYY-MM-DD)
+      if (tarihStr && tarihStr.includes('.')) { 
+        const [g, a, y] = tarihStr.split('.').map(x => x.trim()); 
+        islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`; 
+      } else if (tarihStr && tarihStr.includes('-')) {
+        islemTarihi = tarihStr; 
+      } else {
+        islemTarihi = bugunISO();
+      }
+      
+      const adParcalari = adSoyad ? adSoyad.split(' ') : ['İsimsiz'];
       
       const musteri = {
-        tip: 'konut', ad: adParcalari[0] || '', soyad: adParcalari.slice(1).join(' ') || '',
-        telefon: telefon || '', ilce: ilce || '', mahalle: mahalle || '', sokak: sokak || '',
-        binaNo: '', daireNo: '', hasere: hasere || 'Diğer', fiyat: fiyatStr ? Number(fiyatStr.replace(/\D/g, '')) : 0,
-        saat: saatStr || '', islemTarihi: islemTarihi || bugunISO(), sonrakiTarih: '', notlar: notStr || '', yapildi: false
+        tip: 'konut', 
+        ad: adParcalari[0] || '', 
+        soyad: adParcalari.slice(1).join(' ') || '',
+        telefon: telefon || '', 
+        ilce: ilce || '', 
+        mahalle: mahalle || '', 
+        sokak: sokak || '',
+        binaNo: '', 
+        daireNo: '', 
+        hasere: hasere || 'Diğer', 
+        fiyat: fiyatStr ? Number(fiyatStr.replace(/\D/g, '')) : 0,
+        saat: saatStr || '', 
+        islemTarihi: islemTarihi, 
+        sonrakiTarih: '', 
+        notlar: notStr || '', 
+        yapildi: false
       };
       
       const newDocRef = window.fbDoc(window.fbCollection(window.db, 'musteriler'));
@@ -750,10 +780,15 @@
       basarili++;
     });
 
+    if (basarili === 0) {
+      alert('❌ Hiçbir kayıt eklenemedi. Lütfen veri formatını kontrol edin.\n\n' + hatalar.join('\n'));
+      return;
+    }
+
     try {
       await batch.commit();
       modalKapat2();
-      alert(`✅ ${basarili} kayıt buluta eklendi!${atlanan ? '\n⚠️ ' + atlanan + ' satır atlandı.' : ''}`);
+      alert(`✅ ${basarili} kayıt buluta eklendi!${hatalar.length ? '\n\n⚠️ Atlanan satırlar:\n' + hatalar.join('\n') : ''}`);
     } catch (e) {
       alert('İçe aktarma hatası: ' + e.message);
     }
