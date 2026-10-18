@@ -245,10 +245,10 @@
     <div class="kart kart-gecmis"><div class="baslik">⚠️ Gecikmiş</div><div class="sayi" id="kartGecmis">0</div><div class="alt">İşlem tarihi geçti</div></div>
     <div class="kart kart-ciro-toplam"><div class="baslik">💵 Toplam Ciro</div><div class="sayi" id="kartCiroToplam">₺0</div><div class="alt">Tüm zamanlar</div></div>
     <div class="kart kart-ay-secim">
-      <div class="baslik">📅 Aylık Ciro</div>
+      <div class="baslik">📅 Aylık Ciro & Filtre</div>
       <div class="ay-secim-kutu">
         <select id="aySecim" onchange="aySecimGuncelle()">
-          <option value="">Ay Seçiniz</option>
+          <option value="">Tüm Zamanlar</option>
           <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option><option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option><option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option><option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
         </select>
         <select id="yilSecim" onchange="aySecimGuncelle()"></select>
@@ -635,7 +635,12 @@
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
-    if (ay === '') { document.getElementById('aySecimAdet').textContent = '0'; document.getElementById('aySecimCiro').textContent = '₺0'; return; }
+    if (ay === '') { 
+      document.getElementById('aySecimAdet').textContent = '0'; 
+      document.getElementById('aySecimCiro').textContent = '₺0'; 
+      listele(aramaKutusu.value); // Filtreyi kaldır ve listeyi güncelle
+      return; 
+    }
     const ayNum = Number(ay), yilNum = Number(yil);
     let adet = 0, ciro = 0;
     musteriler.forEach(m => {
@@ -645,6 +650,9 @@
     });
     document.getElementById('aySecimAdet').textContent = adet;
     document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
+    
+    // Tabloyu da aya göre filtrele
+    listele(aramaKutusu.value);
   }
 
   function mahalleleriDoldur(secilenMahalle = '') {
@@ -942,7 +950,22 @@
     const f = filter.toLowerCase(); const bugun = bugunISO();
     let gorunenAdet = 0, gorunenCiro = 0, gorunenYapildi = 0, gorunenYapilmadi = 0;
     let liste = [...musteriler];
+
+    // 1. Gün filtresi (Tarih Filtre kutusundan gelen)
     if (aktifTarihFiltre) liste = liste.filter(m => m.islemTarihi === aktifTarihFiltre || m.sonrakiTarih === aktifTarihFiltre);
+
+    // 2. Ay / Yıl filtresi (Aylık Ciro kutusundan gelen)
+    const secilenAy = document.getElementById('aySecim').value;
+    const secilenYil = document.getElementById('yilSecim').value;
+    if (secilenAy !== '') {
+      const ayNum = Number(secilenAy);
+      const yilNum = Number(secilenYil);
+      liste = liste.filter(m => {
+        if (!m.islemTarihi) return false;
+        const [y, a, g] = m.islemTarihi.split('-').map(Number);
+        return y === yilNum && (a - 1) === ayNum;
+      });
+    }
 
     liste.filter(m => {
       if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
