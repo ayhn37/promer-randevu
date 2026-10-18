@@ -337,11 +337,12 @@
           <label>🔄 Tekrar Sıklığı</label>
           <select id="tekrarSikligi">
             <option value="0">Tek Seferlik</option>
-            <option value="30">Aylık (30 Gün)</option>
-            <option value="60">2 Aylık (60 Gün)</option>
-            <option value="90">3 Aylık (90 Gün)</option>
-            <option value="180">6 Aylık (180 Gün)</option>
-            <option value="365">Yıllık (365 Gün)</option>
+            <option value="30">30 Günde 1</option>
+            <option value="40">40 Günde 1</option>
+            <option value="45">45 Günde 1</option>
+            <option value="60">60 Günde 1</option>
+            <option value="90">90 Günde 1</option>
+            <option value="180">6 Ayda 1 (180 Gün)</option>
           </select>
         </div>
       </div>
@@ -453,19 +454,43 @@
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
     
-    // ⭐ PERİYODİK YENİLEME MANTIĞI
+    // ⭐ PERİYODİK YENİLEME MANTIĞI (Geçmişi silmeden yeni kayıt oluşturur)
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
       const yeniTarih = tarihEkle(gun);
       
-      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Sonraki işlem tarihi otomatik olarak ${tarihFormat(yeniTarih)} olarak ayarlanacak. Onaylıyor musunuz?`)) {
+      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Eski kayıt geçmiş (ciro) olarak saklanacak ve sonraki işlem tarihi ${tarihFormat(yeniTarih)} olarak yeni bir randevu oluşturulacak. Onaylıyor musunuz?`)) {
         try {
+          // 1. Mevcut (eski) kaydı "yapıldı" olarak işaretle. Böylece geçmiş aydaki cirosu silinmez.
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
-            yapildi: false, // Tiki anında kaldır ki yeni randevu olarak listeye düşsün
-            islemTarihi: bugunISO(),
-            sonrakiTarih: yeniTarih
+            yapildi: true 
           });
-          alert('✅ İş tamamlandı ve yeni randevu tarihi başarıyla oluşturuldu!');
+
+          // 2. Yeni bir kayıt oluştur (Kopyala ve tarihleri güncelle)
+          const yeniMusteri = {
+            tip: m.tip,
+            ad: m.ad,
+            soyad: m.soyad,
+            telefon: m.telefon,
+            ilce: m.ilce,
+            mahalle: m.mahalle,
+            sokak: m.sokak,
+            binaNo: m.binaNo,
+            daireNo: m.daireNo,
+            hasere: m.hasere,
+            fiyat: m.fiyat,
+            saat: m.saat,
+            islemTarihi: bugunISO(), // Yeni işlem tarihi bugün
+            sonrakiTarih: yeniTarih, // Sonraki işlem tarihi hesaplanan tarih
+            notlar: m.notlar,
+            yapildi: false, // Yeni kayıt yapılmadı olarak listeye düşer
+            tekrarSikligi: m.tekrarSikligi,
+            web: m.web || false
+          };
+          
+          await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), yeniMusteri);
+          
+          alert('✅ İş tamamlandı, geçmiş kayıt korundu ve yeni randevu oluşturuldu!');
         } catch (e) { alert('Hata: ' + e.message); }
         return;
       } else {
@@ -789,10 +814,8 @@
     const batch = window.fbWriteBatch(window.db);
 
     satirlar.forEach((satir, index) => {
-      // Hem | hem de TAB (\t) karakterini ayraç olarak kabul et
       const parcalar = satir.split(/[|\t]/).map(p => p.trim());
       
-      // En az 5 sütun (Ad Soyad, Telefon, İlçe, Mahalle, Sokak) zorunlu
       if (parcalar.length < 5) { 
         hatalar.push(`Satır ${index + 1}: Eksik sütun.`); 
         return; 
@@ -801,7 +824,6 @@
       const [adSoyad, telefon, ilce, mahalle, sokak, hasere, fiyatStr, tarihStr, saatStr, notStr] = parcalar;
       
       let islemTarihi = '';
-      // Tarih formatını otomatik algıla (GG.AA.YYYY veya YYYY-MM-DD)
       if (tarihStr && tarihStr.includes('.')) { 
         const [g, a, y] = tarihStr.split('.').map(x => x.trim()); 
         islemTarihi = `${y}-${a.padStart(2,'0')}-${g.padStart(2,'0')}`; 
@@ -866,14 +888,12 @@
     else if (gunFarki === 0) zamanMetni = `bugün yapılması gerekiyor`; 
     else zamanMetni = `${gunFarki} gün sonra yapılacak`;
 
-    // WhatsApp Modalını Aç
     document.getElementById('mesajIcerik').value = "⏳ Yapay zeka kişiye özel mesaj hazırlıyor... Lütfen bekleyin.";
     document.getElementById('whatsappModal').classList.add('aktif');
     aktifTelefon = telefonWhatsappFormat(m.telefon);
 
     let mesaj = "";
 
-    // YAPAY ZEKA (GEMINI) ENTEGRASYONU
     if (GEMINI_API_KEY) {
       try {
         const prompt = `Sen bir ilaçlama şirketinin (Promer İlaçlama) profesyonel bir müşteri temsilcisisin. 
@@ -905,15 +925,12 @@
         }
       } catch (error) {
         console.error("AI Hatası:", error);
-        // AI çalışmazsa eski sabit mesaja dön
         mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilirsiniz.\n\nİyi günler dileriz. 🙏`;
       }
     } else {
-      // API Anahtarı yoksa eski sabit mesajı kullan
       mesaj = `Sayın ${isim},\n\nİlaçlama hizmetinizin yenileme zamanı yaklaşıyor. 🐜\n\n📅 Sonraki işlem tarihi: ${tarihFormat(m.sonrakiTarih)} (${zamanMetni})\n🐛 Uygulanan haşere: ${m.hasere}\n📍 Adres: ${adres}\n\nRandevu oluşturmak için bu mesaja cevap verebilir veya bizi arayabilirsiniz.\n\nİyi günler dileriz. 🙏`;
     }
 
-    // Mesajı textarea'ya yaz
     document.getElementById('mesajIcerik').value = mesaj;
   }
 
@@ -1032,7 +1049,6 @@
       if (loadingScreen) loadingScreen.style.display = 'flex';
       
       if (!window.dbUnsubscribe) {
-        // 1. MÜŞTERİLERİ DİNLE
         window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
           let geciciMusteriler = [];
           snapshot.forEach(docSnap => {
@@ -1055,18 +1071,15 @@
           if (mainContent) mainContent.style.visibility = 'visible';
         });
 
-        // 2. YENİ GELEN RANDEVULARI DİNLE VE AKTAR (⭐ ÇİFT KAYIT KİLİDİ VE SETDOC İLE)
-        const islenenBookings = new Set(); // İşlenen randevuları tutan kilit mekanizması
-
+        const islenenBookings = new Set(); 
         window.bookingsUnsubscribe = onSnapshot(collection(db, 'bookings'), (snapshot) => {
           snapshot.docChanges().forEach(async (change) => {
             if (change.type === 'added' || change.type === 'modified') {
               const data = change.doc.data();
               const bookingId = change.doc.id;
               
-              // Eğer daha önce aktarılmadıysa VE şu an işlenmiyorsa
               if (!data.aktarildi && !islenenBookings.has(bookingId)) {
-                islenenBookings.add(bookingId); // Kilidi koy
+                islenenBookings.add(bookingId); 
                 
                 try {
                   const yeniMusteri = {
@@ -1090,14 +1103,12 @@
                     web: true
                   };
 
-                  // ⭐ addDoc yerine setDoc kullanarak randevu ID'sini müşteri ID'si yapıyoruz.
-                  // Böylece aynı event iki kez gelse bile üzerine yazar, 2. bir kayıt oluşturmaz.
                   await setDoc(doc(db, 'musteriler', bookingId), yeniMusteri);
                   await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
                   console.log("✅ Randevu başarıyla müşterilere aktarıldı:", bookingId);
                 } catch (error) {
                   console.error("❌ Aktarım hatası:", error);
-                  islenenBookings.delete(bookingId); // Hata olursa kilidi aç
+                  islenenBookings.delete(bookingId); 
                 }
               }
             }
