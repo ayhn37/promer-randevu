@@ -34,7 +34,8 @@
   .bugun-panel h2 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .bugun-panel h2 .tarih { font-size: 14px; font-weight: normal; opacity: 0.9; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
   .hafta-bar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-  .hafta-bar button { margin: 0; flex: 1; min-width: 100px; background: rgba(255,255,255,0.15); color: #fff; padding: 10px 8px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); font-size: 12px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  /* ⭐ 14 GÜN İÇİN MIN-WIDTH 80PX YAPILDI */
+  .hafta-bar button { margin: 0; flex: 1; min-width: 80px; background: rgba(255,255,255,0.15); color: #fff; padding: 10px 8px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); font-size: 12px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .hafta-bar button:hover { background: rgba(255,255,255,0.25); }
   .hafta-bar button.aktif { background: #fff; color: #27ae60; border-color: #fff; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
   .hafta-bar button .gun-isim { font-weight: bold; font-size: 13px; }
@@ -504,6 +505,7 @@
     } catch (e) { alert('Hata: ' + e.message); }
   }
 
+  // ⭐ 14 GÜNLÜK DÖNGÜ
   function haftaGunleriniAl() {
     const bugun = new Date();
     const gun = bugun.getDay();
@@ -513,12 +515,17 @@
     const isimler = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
     const bugunISOStr = bugunISO();
     const gunler = [];
-    for (let i = 0; i < 7; i++) {
+    
+    for (let i = 0; i < 14; i++) {
       const d = new Date(pazartesi);
       d.setDate(pazartesi.getDate() + i);
       const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       const adet = musteriler.filter(m => m.sonrakiTarih === iso || m.islemTarihi === iso).length;
-      gunler.push({ isim: isimler[i], iso: iso, bugunMu: iso === bugunISOStr, adet: adet });
+      
+      const gunIndex = d.getDay() === 0 ? 6 : d.getDay() - 1;
+      const gunIsim = isimler[gunIndex];
+      
+      gunler.push({ isim: gunIsim, iso: iso, bugunMu: iso === bugunISOStr, adet: adet });
     }
     return gunler;
   }
