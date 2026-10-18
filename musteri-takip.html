@@ -326,7 +326,7 @@
         <div>
           <label>Haşere</label>
           <select id="hasere" required>
-            <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Arı</option><option>Uyuz</option><option>Diğer</option>
+            <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Sarıca</option><option>Uyuz</option><option>Diğer</option>
           </select>
         </div>
         <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
@@ -454,19 +454,19 @@
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
     
-    // ⭐ PERİYODİK YENİLEME MANTIĞI (Geçmişi silmeden yeni kayıt oluşturur)
+    // ⭐ PERİYODİK YENİLEME MANTIĞI
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
       const yeniTarih = tarihEkle(gun);
       
-      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Eski kayıt geçmiş (ciro) olarak saklanacak ve sonraki işlem tarihi ${tarihFormat(yeniTarih)} olarak yeni bir randevu oluşturulacak. Onaylıyor musunuz?`)) {
+      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Eski kayıt geçmiş (ciro) olarak saklanacak ve ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecektir. Onaylıyor musunuz?`)) {
         try {
-          // 1. Mevcut (eski) kaydı "yapıldı" olarak işaretle. Böylece geçmiş aydaki cirosu silinmez.
+          // 1. Mevcut (eski) kaydı "yapıldı" olarak işaretle
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
             yapildi: true 
           });
 
-          // 2. Yeni bir kayıt oluştur (Kopyala ve tarihleri güncelle)
+          // 2. Yeni bir kayıt oluştur (Gelecek tarih için)
           const yeniMusteri = {
             tip: m.tip,
             ad: m.ad,
@@ -480,21 +480,21 @@
             hasere: m.hasere,
             fiyat: m.fiyat,
             saat: m.saat,
-            islemTarihi: bugunISO(), // Yeni işlem tarihi bugün
-            sonrakiTarih: yeniTarih, // Sonraki işlem tarihi hesaplanan tarih
+            islemTarihi: yeniTarih, // ⭐ Yeni işlem tarihi, hesaplanan gelecek tarih
+            sonrakiTarih: '', // ⭐ Yeni kaydın sonraki tarihi boş (tekrar tiklendiğinde hesaplanacak)
             notlar: m.notlar,
-            yapildi: false, // Yeni kayıt yapılmadı olarak listeye düşer
+            yapildi: false,
             tekrarSikligi: m.tekrarSikligi,
             web: m.web || false
           };
           
           await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), yeniMusteri);
           
-          alert('✅ İş tamamlandı, geçmiş kayıt korundu ve yeni randevu oluşturuldu!');
+          alert(`✅ İş tamamlandı. Yeni randevu ${tarihFormat(yeniTarih)} tarihine eklendi!`);
         } catch (e) { alert('Hata: ' + e.message); }
         return;
       } else {
-        return; // Kullanıcı iptal ettiyse çık
+        return;
       }
     }
 
@@ -638,7 +638,7 @@
     if (ay === '') { 
       document.getElementById('aySecimAdet').textContent = '0'; 
       document.getElementById('aySecimCiro').textContent = '₺0'; 
-      listele(aramaKutusu.value); // Filtreyi kaldır ve listeyi güncelle
+      listele(aramaKutusu.value); 
       return; 
     }
     const ayNum = Number(ay), yilNum = Number(yil);
@@ -651,7 +651,6 @@
     document.getElementById('aySecimAdet').textContent = adet;
     document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
     
-    // Tabloyu da aya göre filtrele
     listele(aramaKutusu.value);
   }
 
@@ -965,13 +964,11 @@
         let islemUygun = false;
         let sonrakiUygun = false;
         
-        // İşlem tarihi o aya uyuyor mu?
         if (m.islemTarihi) {
           const [y, a, g] = m.islemTarihi.split('-').map(Number);
           if (y === yilNum && (a - 1) === ayNum) islemUygun = true;
         }
         
-        // Sonraki işlem tarihi o aya uyuyor mu?
         if (m.sonrakiTarih) {
           const [y, a, g] = m.sonrakiTarih.split('-').map(Number);
           if (y === yilNum && (a - 1) === ayNum) sonrakiUygun = true;
