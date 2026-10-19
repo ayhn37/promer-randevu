@@ -2,8 +2,18 @@
 <html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+
+    <!-- ⭐ GOOGLE ANALYTICS 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F79XHKNN0K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F79XHKNN0K');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
     
     <!-- ⭐ FAVICON -->
@@ -84,7 +94,7 @@
                 <a href="#hakkimizda" class="hover:text-promer-blue transition-colors">Hakkımızda</a>
             </nav>
             <div class="hidden sm:flex items-center gap-3">
-                <a href="https://wa.me/908504660022" target="_blank" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
+                <a href="https://wa.me/908504660022" target="_blank" onclick="gtag('event','click_whatsapp',{location:'header_desktop'})" class="flex items-center gap-2.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-4 py-2.5 rounded-xl font-extrabold hover:bg-emerald-100 transition-all text-sm shadow-sm">
                     <i class="fa-brands fa-whatsapp text-xl text-emerald-600"></i>
                     <div class="text-left leading-tight">
                         <span class="block text-[10px] text-emerald-600 font-bold uppercase">7/24 Destek Hattı</span>
@@ -101,7 +111,7 @@
             <a href="#tarife-tablosu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Tarife Cetveli</a>
             <a href="#randevu" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Randevu Al</a>
             <a href="#hakkimizda" class="block text-slate-700 font-semibold py-2 border-b border-slate-100">Promer Hakkında</a>
-            <a href="https://wa.me/908504660022" target="_blank" class="flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-xl mt-2">
+            <a href="https://wa.me/908504660022" target="_blank" onclick="gtag('event','click_whatsapp',{location:'header_mobile'})" class="flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-xl mt-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i>
                 <span>0850 466 00 22 WhatsApp</span>
             </a>
@@ -1435,6 +1445,19 @@
                 }
             }
 
+            // ⭐ GA4 DÖNÜŞÜM ETKİNLİĞİ (Randevu formu başarıyla gönderildi)
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_lead', {
+                    form_name: 'randevu_formu',
+                    value: 0,
+                    currency: 'TRY',
+                    pest_type: state.pestType,
+                    place_type: PLACE_LABELS[state.placeType],
+                    area_m2: state.m2
+                });
+                console.log("✅ GA4 generate_lead etkinliği gönderildi.");
+            }
+
             // ⭐ 2. WHATSAPP MESAJINI HAZIRLA
             const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
 ----------------------------------
@@ -1451,7 +1474,15 @@
             document.getElementById('sms-summary-text').innerText = summaryText;
 
             const waMsg = encodeURIComponent(summaryText);
-            document.getElementById('whatsapp-btn').href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            whatsappBtn.href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
+
+            // ⭐ WhatsApp gönderim tıklamasını GA4'te takip et (tek seferlik)
+            if (typeof gtag === 'function') {
+                whatsappBtn.onclick = function() {
+                    gtag('event', 'click_whatsapp', { location: 'booking_confirmation' });
+                };
+            }
 
             // ⭐ 3. ONAY EKRANINI GÖSTER
             document.getElementById('confirmation-card').classList.remove('hidden');
@@ -1501,7 +1532,7 @@
             window.firebaseDB = db;
             window.firebaseGetDocs = getDocs;
             window.firebaseCollection = collection;
-            window.firebaseAddDoc = addDoc; // ⭐ Firebase'e veri ekleme fonksiyonu eklendi
+            window.firebaseAddDoc = addDoc;
             
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
