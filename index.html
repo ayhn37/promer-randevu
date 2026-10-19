@@ -1409,17 +1409,14 @@
             const isToday = (dateInput === todayStr);
             
             const availableSlots = allSlots.filter(slot => {
-                // Firebase'te bloke edilmiş mi?
                 if (blockedSlots[slot]) return false;
                 
-                // Bugünse, başlangıç saati geçmişse filtrele
                 if (isToday) {
                     const startTimeStr = slot.match(/^(\d{1,2}:\d{2})/)?.[1];
                     if (startTimeStr) {
                         const [h, m] = startTimeStr.split(':').map(Number);
                         const slotStart = new Date(now);
                         slotStart.setHours(h, m, 0, 0);
-                        // Başlangıç saati geçmişse veya şu anki saate eşitse gizle
                         if (slotStart <= now) return false;
                     }
                 }
@@ -1440,12 +1437,12 @@
             document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // ⭐⭐⭐ DÜZELTİLMİŞ submitBooking - ADRES SATIRLARI KALDIRILDI ⭐⭐⭐
         async function submitBooking(e) {
             e.preventDefault();
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const ilce = document.getElementById('cust-ilce').value;
-            const address = document.getElementById('cust-address').value || "Belirtilmedi";
             const date = document.getElementById('cust-date').value;
             const saat = document.getElementById('cust-saat').value;
             const grandTotal = document.getElementById('grand-total-display').innerText;
@@ -1454,12 +1451,24 @@
             if (window.firebaseAddDoc && window.firebaseDB) {
                 try {
                     await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'bookings'), {
-                        adSoyad: name, telefon: phone, ilce: ilce, adres: address, tarih: date, slot: saat,
-                        mekanTipi: PLACE_LABELS[state.placeType], m2: state.m2, hasere: state.pestType,
-                        toplamTutar: grandTotal, olusturmaTarihi: new Date().toISOString(), aktarildi: false
+                        adSoyad: name,
+                        telefon: phone,
+                        ilce: ilce,
+                        adres: "WhatsApp üzerinden talep edilecek",
+                        tarih: date,
+                        slot: saat,
+                        mekanTipi: PLACE_LABELS[state.placeType],
+                        m2: state.m2,
+                        hasere: state.pestType,
+                        toplamTutar: grandTotal,
+                        olusturmaTarihi: new Date().toISOString(),
+                        aktarildi: false
                     });
                     await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'blocked_slots'), {
-                        date: date, slot: saat, blocked: true, createdAt: new Date().toISOString()
+                        date: date,
+                        slot: saat,
+                        blocked: true,
+                        createdAt: new Date().toISOString()
                     });
                     console.log("✅ Randevu buluta kaydedildi.");
                 } catch (error) {
@@ -1467,7 +1476,7 @@
                 }
             }
 
-            // ⭐ GA4 DÖNÜŞÜM ETKİNLİĞİ (Randevu formu başarıyla gönderildi)
+            // ⭐ GA4 DÖNÜŞÜM ETKİNLİĞİ
             if (typeof gtag === 'function') {
                 gtag('event', 'generate_lead', {
                     form_name: 'randevu_formu',
@@ -1480,18 +1489,19 @@
                 console.log("✅ GA4 generate_lead etkinliği gönderildi.");
             }
 
-            // ⭐ 2. WHATSAPP MESAJINI HAZIRLA
+            // ⭐ 2. WHATSAPP MESAJINI HAZIRLA (adres satırı YOK)
             const summaryText = `PROMER İLAÇLAMA - YENİ RANDEVU TALEBİ
 ----------------------------------
 • Ad Soyad   : ${name}
 • Telefon    : ${phone}
 • İlçe       : ${ilce}
-• Adres      : ${address}
 • Tarih / Saat: ${date} - ${saat}
 • Mekan      : ${PLACE_LABELS[state.placeType]} (${state.m2} m²)
 • Haşere Türü: ${state.pestType}
 ----------------------------------
-• Toplam Tutar: ${grandTotal}`;
+• Toplam Tutar: ${grandTotal}
+
+NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
 
             document.getElementById('sms-summary-text').innerText = summaryText;
 
@@ -1499,7 +1509,6 @@
             const whatsappBtn = document.getElementById('whatsapp-btn');
             whatsappBtn.href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
 
-            // ⭐ WhatsApp gönderim tıklamasını GA4'te takip et (tek seferlik)
             if (typeof gtag === 'function') {
                 whatsappBtn.onclick = function() {
                     gtag('event', 'click_whatsapp', { location: 'booking_confirmation' });
@@ -1511,7 +1520,7 @@
             document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-                window.onload = function() {
+        window.onload = function() {
             const ilceSelect = document.getElementById('cust-ilce');
             ilceSelect.innerHTML = '<option value="">İlçe Seçin</option>' + ILCELER.map(i => `<option value="${i}">${i}</option>`).join('');
 
