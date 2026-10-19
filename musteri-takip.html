@@ -29,6 +29,21 @@
   .ay-secim-kutu .sonuc div { text-align: right; font-size: 12px; color: #7f8c8d; }
   .ay-secim-kutu .sonuc div strong { display: block; font-size: 22px; color: #16a085; font-weight: bold; margin-top: 2px; }
 
+  /* ⭐ SEÇİLİ AY ÖZET PANELİ */
+  .ay-ozet-panel { background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(22,160,133,0.35); animation: ayPanelIn 0.35s ease; }
+  @keyframes ayPanelIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+  .ay-ozet-baslik { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+  .ay-ozet-baslik .baslik-metin { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+  .ay-ozet-baslik .baslik-metin .ay-adi { background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 16px; }
+  .ay-ozet-kapat { background: rgba(255,255,255,0.2); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; padding: 0; margin: 0; transition: .2s; }
+  .ay-ozet-kapat:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
+  .ay-ozet-icerik { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .ay-ozet-kart { background: rgba(255,255,255,0.15); padding: 12px 15px; border-radius: 8px; backdrop-filter: blur(10px); transition: .2s; }
+  .ay-ozet-kart:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+  .ay-ozet-kart.vurgu { background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.5); }
+  .ay-ozet-label { font-size: 11px; text-transform: uppercase; opacity: 0.9; margin-bottom: 4px; letter-spacing: 0.5px; font-weight: bold; }
+  .ay-ozet-deger { font-size: 22px; font-weight: bold; line-height: 1; }
+
   /* BUGÜN PANELİ */
   .bugun-panel { background: linear-gradient(135deg, #27ae60 0%, #16a085 100%); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(39,174,96,0.3); }
   .bugun-panel h2 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
@@ -180,7 +195,7 @@
 
   @media print {
     body { background: #fff; padding: 0; }
-    .dashboard, .ust-bar, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre { display: none !important; }
+    .dashboard, .ust-bar, .arac-cubugu, .arama, .ozet-bar, .bugun-panel h2 .tarih, .bugun-butonlar, .hafta-bar, button, .filtre-bar, .excel-btn, .ice-aktar-btn, .tarih-filtre, .ay-ozet-panel { display: none !important; }
     .bugun-panel { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 2px solid #000; padding: 15px !important; }
     .bugun-item { background: #f9f9f9 !important; color: #000 !important; border: 1px solid #ccc !important; backdrop-filter: none !important; }
     .bugun-item .saat .badge { background: #000 !important; color: #fff !important; }
@@ -226,6 +241,39 @@
   </div>
 
   <h1>🐜 Müşteri Takip Sistemi</h1>
+
+  <!-- ⭐ SEÇİLİ AY ÖZET PANELİ (Ay seçildiğinde otomatik görünür) -->
+  <div class="ay-ozet-panel" id="ayOzetPanel" style="display:none;">
+    <div class="ay-ozet-baslik">
+      <div class="baslik-metin">
+        📅 Seçili Ay Özeti
+        <span class="ay-adi" id="ayOzetBaslik">-</span>
+      </div>
+      <button type="button" class="ay-ozet-kapat" onclick="ayOzetKapat()" title="Filtreyi temizle">✖</button>
+    </div>
+    <div class="ay-ozet-icerik">
+      <div class="ay-ozet-kart">
+        <div class="ay-ozet-label">📋 Toplam İş</div>
+        <div class="ay-ozet-deger" id="ayOzetAdet">0</div>
+      </div>
+      <div class="ay-ozet-kart vurgu">
+        <div class="ay-ozet-label">💵 Toplam Ciro</div>
+        <div class="ay-ozet-deger" id="ayOzetCiro">₺0</div>
+      </div>
+      <div class="ay-ozet-kart">
+        <div class="ay-ozet-label">✅ Yapıldı</div>
+        <div class="ay-ozet-deger" id="ayOzetYapildi">0</div>
+      </div>
+      <div class="ay-ozet-kart">
+        <div class="ay-ozet-label">⏳ Yapılmadı</div>
+        <div class="ay-ozet-deger" id="ayOzetYapilmadi">0</div>
+      </div>
+      <div class="ay-ozet-kart">
+        <div class="ay-ozet-label">📊 Ortalama İş</div>
+        <div class="ay-ozet-deger" id="ayOzetOrtalama">₺0</div>
+      </div>
+    </div>
+  </div>
 
   <div class="bugun-panel" id="bugunPanel">
     <h2>📅 Randevular <span class="tarih" id="bugunTarih"></span></h2>
@@ -633,18 +681,22 @@
   }
   aySecimBaslat();
 
-  // ⭐ DÜZELTİLDİ: islemTarihi VEYA sonrakiTarih, tablodaki filtre ile aynı
+  // ⭐ GÜNCELLENDİ: Seçili ay için panel göster ve detaylı özet ver
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
-    let adet = 0, ciro = 0;
+    let adet = 0, ciro = 0, yapildi = 0, yapilmadi = 0;
 
     if (ay === '') {
       // Tüm Zamanlar - tüm kayıtları say
       musteriler.forEach(m => {
         adet++;
         ciro += Number(m.fiyat) || 0;
+        if (m.yapildi === true) yapildi++; else yapilmadi++;
       });
+      // ⭐ Tüm Zamanlar seçiliyse paneli gizle
+      const panel = document.getElementById('ayOzetPanel');
+      if (panel) panel.style.display = 'none';
     } else {
       const ayNum = Number(ay), yilNum = Number(yil);
       musteriler.forEach(m => {
@@ -664,14 +716,34 @@
         if (islemUygun || sonrakiUygun) {
           adet++;
           ciro += Number(m.fiyat) || 0;
+          if (m.yapildi === true) yapildi++; else yapilmadi++;
         }
       });
+
+      // ⭐ Panel güncelle ve göster
+      const ayAdlari = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+      const panel = document.getElementById('ayOzetPanel');
+      if (panel) {
+        document.getElementById('ayOzetBaslik').textContent = `${ayAdlari[Number(ay)]} ${yil}`;
+        document.getElementById('ayOzetAdet').textContent = adet;
+        document.getElementById('ayOzetCiro').textContent = paraFormat(ciro);
+        document.getElementById('ayOzetYapildi').textContent = yapildi;
+        document.getElementById('ayOzetYapilmadi').textContent = yapilmadi;
+        document.getElementById('ayOzetOrtalama').textContent = adet > 0 ? paraFormat(Math.round(ciro / adet)) : paraFormat(0);
+        panel.style.display = 'block';
+      }
     }
 
     document.getElementById('aySecimAdet').textContent = adet;
     document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
 
     listele(aramaKutusu.value);
+  }
+
+  // ⭐ Ay özet panelini kapat (Tüm Zamanlar'a dön)
+  function ayOzetKapat() {
+    document.getElementById('aySecim').value = '';
+    aySecimGuncelle();
   }
 
   function mahalleleriDoldur(secilenMahalle = '') {
