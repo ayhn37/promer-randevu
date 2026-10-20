@@ -13,6 +13,24 @@
       gtag('config', 'G-F79XHKNN0K');
     </script>
 
+    <!-- ⭐ META PIXEL KODU BAŞLANGICI -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '249823248754834');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=249823248754834&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- META PIXEL KODU BİTİŞİ -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promer İlaçlama | Online Fiyat Hesaplama ve Randevu Portalı</title>
     
@@ -1437,7 +1455,6 @@
             document.getElementById('randevu').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ⭐⭐⭐ DÜZELTİLMİŞ submitBooking - ADRES SATIRLARI KALDIRILDI ⭐⭐⭐
         async function submitBooking(e) {
             e.preventDefault();
             const name = document.getElementById('cust-name').value;
@@ -1487,6 +1504,18 @@
                     area_m2: state.m2
                 });
                 console.log("✅ GA4 generate_lead etkinliği gönderildi.");
+            }
+
+            // ⭐ YENİ EKLENEN: META PIXEL DÖNÜŞÜM ETKİNLİĞİ (LEAD)
+            if (typeof fbq === 'function') {
+                // Fiyat metnini (örn: "3.000 TL (KDV Dahil)") sadece sayıya çeviriyoruz
+                const numericValue = parseInt(grandTotal.replace(/[^0-9]/g, '')) || 0;
+                
+                fbq('track', 'Lead', {
+                    value: numericValue,
+                    currency: 'TRY'
+                });
+                console.log("✅ Meta Pixel Lead etkinliği gönderildi.");
             }
 
             // ⭐ 2. WHATSAPP MESAJINI HAZIRLA (adres satırı YOK)
