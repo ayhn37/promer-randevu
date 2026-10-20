@@ -1545,9 +1545,12 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                 };
             }
 
-            // ⭐ 3. ONAY EKRANINI GÖSTER
+            // ⭐ 3. ONAY EKRANINI GÖSTER (Arka planda kalması için)
             document.getElementById('confirmation-card').classList.remove('hidden');
-            document.getElementById('confirmation-card').scrollIntoView({ behavior: 'smooth' });
+            
+            // ⭐ 4. TEK TIKLA WHATSAPP'A YÖNLENDİR
+            // Aynı sekmede açarak pop-up engelleyicilerine takılmasını önleriz.
+            window.location.href = `https://wa.me/${PROMER_WA_NO}?text=${waMsg}`;
         }
 
         window.onload = function() {
