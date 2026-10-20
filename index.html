@@ -1506,16 +1506,17 @@
                 console.log("✅ GA4 generate_lead etkinliği gönderildi.");
             }
 
-            // ⭐ YENİ EKLENEN: META PIXEL DÖNÜŞÜM ETKİNLİĞİ (LEAD)
+            // ⭐ META PIXEL DÖNÜŞÜM ETKİNLİĞİ (LEAD) - ÖZEL DÖNÜŞÜM İÇİN GÜNCELLENDİ
             if (typeof fbq === 'function') {
                 // Fiyat metnini (örn: "3.000 TL (KDV Dahil)") sadece sayıya çeviriyoruz
                 const numericValue = parseInt(grandTotal.replace(/[^0-9]/g, '')) || 0;
                 
                 fbq('track', 'Lead', {
                     value: numericValue,
-                    currency: 'TRY'
+                    currency: 'TRY',
+                    content_name: state.pestType // ⭐ EKLENEN SATIR: Haşere türünü Meta'ya bildirir
                 });
-                console.log("✅ Meta Pixel Lead etkinliği gönderildi.");
+                console.log("✅ Meta Pixel Lead etkinliği gönderildi. (content_name: " + state.pestType + ")");
             }
 
             // ⭐ 2. WHATSAPP MESAJINI HAZIRLA (adres satırı YOK)
