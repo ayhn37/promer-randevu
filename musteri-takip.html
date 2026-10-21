@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Müşteri Takip Sistemi</title>
 <style>
   * { box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -200,6 +201,163 @@
     .bugun-item { background: #f9f9f9 !important; color: #000 !important; border: 1px solid #ccc !important; backdrop-filter: none !important; }
     .bugun-item .saat .badge { background: #000 !important; color: #fff !important; }
     .bugun-panel h2 { color: #000 !important; }
+  }
+
+  /* ========== 📱 MOBİL UYUMLULUK ========== */
+  @media screen and (max-width: 900px) {
+    body { padding: 8px; }
+    .container { padding: 0 4px; }
+    h1 { font-size: 20px; margin: 10px 0; }
+
+    /* GİRİŞ EKRANI */
+    #auth-gate > div { padding: 24px 20px !important; }
+
+    /* DASHBOARD */
+    .dashboard { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .kart { padding: 12px; }
+    .kart .sayi { font-size: 24px; }
+    .kart .baslik { font-size: 10px; }
+    .kart .alt { font-size: 10px; }
+    .kart-ay-secim { grid-column: span 2; }
+    .ay-secim-kutu { gap: 6px; }
+    .ay-secim-kutu select { flex: 1; min-width: 0; padding: 6px; font-size: 13px; }
+    .ay-secim-kutu .sonuc { margin-left: 0; width: 100%; justify-content: space-around; padding-top: 8px; border-top: 1px solid #eee; }
+    .ay-secim-kutu .sonuc div strong { font-size: 18px; }
+
+    /* AY ÖZET PANELİ */
+    .ay-ozet-panel { padding: 14px; }
+    .ay-ozet-baslik .baslik-metin { font-size: 16px; }
+    .ay-ozet-icerik { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .ay-ozet-deger { font-size: 18px; }
+
+    /* BUGÜN PANELİ */
+    .bugun-panel { padding: 14px; }
+    .bugun-panel h2 { font-size: 16px; }
+    .hafta-bar { -webkit-overflow-scrolling: touch; }
+    .hafta-bar button { min-width: 70px; }
+    .bugun-liste { grid-template-columns: 1fr; gap: 8px; }
+    .bugun-butonlar { flex-direction: column; }
+    .bugun-butonlar button { width: 100%; }
+
+    /* ÜST ARAÇ ÇUBUĞU */
+    .ust-bar { gap: 8px; }
+    .ust-bar > div { width: 100%; }
+    .ekle-btn { flex: 1; font-size: 13px; padding: 10px; }
+    .cikis-btn { width: 100%; }
+
+    /* FİLTRE ÇUBUĞU */
+    .filtre-bar { gap: 4px; }
+    .filtre-bar button { font-size: 11px; padding: 6px 10px; flex: 1 1 auto; }
+
+    /* ARAÇ ÇUBUĞU */
+    .arac-cubugu { flex-direction: column; align-items: stretch; gap: 8px; }
+    .arac-cubugu > button { width: 100%; }
+
+    /* TARİH FİLTRE */
+    .tarih-filtre { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+    .tarih-filtre input[type="date"] { width: 100%; }
+    .tarih-filtre button { width: 100%; }
+    .tarih-filtre #tarihFiltreBilgi { margin-left: 0 !important; text-align: center; }
+
+    /* FORM */
+    .grid { grid-template-columns: 1fr; gap: 10px; }
+    .tip-kutusu { flex-wrap: wrap; padding: 8px; }
+    .tip-kutusu label { padding: 6px 10px; font-size: 13px; }
+
+    /* MODAL */
+    .modal-arkaplan { padding: 8px; }
+    .modal { padding: 16px; max-height: 95vh; margin: 8px; }
+    .modal h3 { font-size: 16px; }
+    .modal-butonlar button { flex: 1; }
+
+    /* BUTONLAR */
+    button { padding: 10px 16px; font-size: 13px; }
+
+    /* ===== TABLO → KART DÖNÜŞÜMÜ ===== */
+    table { display: block; background: transparent; box-shadow: none; border-radius: 0; overflow: visible; }
+    table thead { display: none; }
+    tbody { display: block; }
+    tbody tr {
+      display: block;
+      margin-bottom: 12px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: relative;
+      border-left: 4px solid #3498db;
+    }
+    tbody tr:hover { background: #fff; }
+    tbody tr.yapildi-satir { background: #d6eaf8 !important; border-left-color: #1a5276; }
+    tbody tr.yapildi-satir:hover { background: #c3e0f5 !important; }
+    tbody tr.gecmis { background: #f8d7da !important; border-left-color: #e74c3c; }
+    tbody tr.yaklasan { background: #fff3cd !important; border-left-color: #f39c12; }
+    tbody tr.bugun-satir { background: linear-gradient(90deg,#d4edda 0%,#c3e6cb 100%) !important; border-left-color: #27ae60 !important; }
+    tbody tr.yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
+    tbody tr.duzenlenen-satir { outline: 3px solid #f39c12; outline-offset: 2px; }
+
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+      text-align: right;
+    }
+    tbody td:last-child { border-bottom: none; }
+    tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #7f8c8d;
+      font-size: 11px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      text-align: left;
+    }
+
+    /* Checkbox özel konum */
+    tbody td.tik-hucre {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 0;
+      border: none;
+      display: block;
+      width: auto;
+      z-index: 2;
+    }
+    tbody td.tik-hucre::before { display: none; }
+    tbody td.tik-hucre .tik-kutu { width: 26px; height: 26px; }
+
+    /* Aksiyon satırı */
+    tbody td:last-child {
+      padding-top: 10px;
+      border-top: 1px solid #f0f0f0;
+      justify-content: center;
+      gap: 6px;
+    }
+    tbody td:last-child::before { display: none; }
+    tbody td:last-child button { flex: 1; margin: 0; padding: 8px; }
+
+    /* İsim satırı (checkbox sağ üstte olduğu için sağ boşluk) */
+    tbody td[data-label="Ad / İşletme"] { padding-right: 35px; }
+
+    /* ÖZET BAR */
+    .ozet-bar { flex-direction: column; gap: 6px; padding: 12px 16px; }
+    .ozet-bar div { text-align: center; font-size: 13px; }
+    .ozet-bar span { font-size: 16px; }
+  }
+
+  @media screen and (max-width: 480px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .kart-ay-secim { grid-column: span 1; }
+    .ay-ozet-icerik { grid-template-columns: 1fr; }
+    .filtre-bar button { font-size: 10px; padding: 5px 8px; }
+    .modal { padding: 14px; }
+    tbody td { font-size: 12px; padding: 5px 0; }
+    tbody td::before { font-size: 10px; }
   }
 </style>
 </head>
@@ -681,20 +839,17 @@
   }
   aySecimBaslat();
 
-  // ⭐ GÜNCELLENDİ: Seçili ay için panel göster ve detaylı özet ver
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
     let adet = 0, ciro = 0, yapildi = 0, yapilmadi = 0;
 
     if (ay === '') {
-      // Tüm Zamanlar - tüm kayıtları say
       musteriler.forEach(m => {
         adet++;
         ciro += Number(m.fiyat) || 0;
         if (m.yapildi === true) yapildi++; else yapilmadi++;
       });
-      // ⭐ Tüm Zamanlar seçiliyse paneli gizle
       const panel = document.getElementById('ayOzetPanel');
       if (panel) panel.style.display = 'none';
     } else {
@@ -712,7 +867,6 @@
           if (y === yilNum && (a - 1) === ayNum) sonrakiUygun = true;
         }
 
-        // Tablodaki filtre ile aynı mantık: islemTarihi VEYA sonrakiTarih
         if (islemUygun || sonrakiUygun) {
           adet++;
           ciro += Number(m.fiyat) || 0;
@@ -720,7 +874,6 @@
         }
       });
 
-      // ⭐ Panel güncelle ve göster
       const ayAdlari = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
       const panel = document.getElementById('ayOzetPanel');
       if (panel) {
@@ -740,7 +893,6 @@
     listele(aramaKutusu.value);
   }
 
-  // ⭐ Ay özet panelini kapat (Tüm Zamanlar'a dön)
   function ayOzetKapat() {
     document.getElementById('aySecim').value = '';
     aySecimGuncelle();
@@ -1042,10 +1194,8 @@
     let gorunenAdet = 0, gorunenCiro = 0, gorunenYapildi = 0, gorunenYapilmadi = 0;
     let liste = [...musteriler];
 
-    // 1. Gün filtresi (Tarih Filtre kutusundan gelen)
     if (aktifTarihFiltre) liste = liste.filter(m => m.islemTarihi === aktifTarihFiltre || m.sonrakiTarih === aktifTarihFiltre);
 
-    // 2. Ay / Yıl filtresi (Aylık Ciro kutusundan gelen)
     const secilenAy = document.getElementById('aySecim').value;
     const secilenYil = document.getElementById('yilSecim').value;
     
@@ -1106,18 +1256,18 @@
 
       const tr = document.createElement('tr'); tr.className = satirClass;
       tr.innerHTML = `
-        <td class="tik-hucre"><input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onchange="tikDegistir('${m.id}')" title="Yapıldı olarak işaretle"></td>
-        <td><strong>${m.saat || '-'}</strong></td>
-        <td>${rozet}${webRozet}</td>
-        <td><strong>${isim}</strong></td>
-        <td>${m.telefon}</td>
-        <td>${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
-        <td>${m.hasere}</td>
-        <td>${fiyatGosterim}</td>
-        <td>${tarihFormat(m.islemTarihi)}</td>
-        <td>${sonrakiGosterim}</td>
-        <td>${notGosterim}</td>
-        <td>
+        <td class="tik-hucre" data-label="✅"><input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onchange="tikDegistir('${m.id}')" title="Yapıldı olarak işaretle"></td>
+        <td data-label="🕐 Saat"><strong>${m.saat || '-'}</strong></td>
+        <td data-label="Tip">${rozet}${webRozet}</td>
+        <td data-label="Ad / İşletme"><strong>${isim}</strong></td>
+        <td data-label="Telefon">${m.telefon}</td>
+        <td data-label="Adres">${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
+        <td data-label="Haşere">${m.hasere}</td>
+        <td data-label="Fiyat">${fiyatGosterim}</td>
+        <td data-label="İşlem Tarihi">${tarihFormat(m.islemTarihi)}</td>
+        <td data-label="Sonraki İşlem">${sonrakiGosterim}</td>
+        <td data-label="Not">${notGosterim}</td>
+        <td data-label="İşlem">
           <button class="duzenle" onclick="duzenle('${m.id}')">✏️</button>
           <button class="whatsapp-btn" onclick="whatsappAc('${m.id}')" ${waDisabled}>📱</button>
           <button class="sil" onclick="sil('${m.id}')">Sil</button>
