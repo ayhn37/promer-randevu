@@ -1246,7 +1246,15 @@
       if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
       const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
       return metin.includes(f);
-    }).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99')).forEach(m => {
+    }).sort((a, b) => {
+  // 👇 Önce işlem tarihine göre (eskiden yeniye), tarihi olmayanlar en sona
+  const ta = a.islemTarihi || '9999-12-31';
+  const tb = b.islemTarihi || '9999-12-31';
+  if (ta !== tb) return ta.localeCompare(tb);
+
+  // 👇 Aynı tarihteyse saate göre sırala
+  return (a.saat || '99:99').localeCompare(b.saat || '99:99');
+}).forEach(m => {
       gorunenAdet++; gorunenCiro += Number(m.fiyat) || 0;
       const yapildi = m.yapildi === true;
       if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
