@@ -1259,14 +1259,28 @@
       const yapildi = m.yapildi === true;
       if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
 
-      const farkGun = gunHesapla(m.sonrakiTarih); let satirClass = '', uyari = '';
-      const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
-      if (yapildi) { satirClass = 'yapildi-satir'; if (bugunMu) satirClass += ' bugun-satir'; }
-      else if (bugunMu) { satirClass = 'bugun-satir'; uyari = ' 🎯 BUGÜN'; }
-      else if (farkGun !== null) {
-        if (farkGun < 0) { satirClass = 'gecmis'; uyari = ` (${Math.abs(farkGun)} gün gecikti!)`; }
-        else if (farkGun <= 3) { satirClass = 'yaklasan'; uyari = ` (${farkGun} gün kaldı)`; }
-      }
+     // 👇 sonrakiTarih yoksa islemTarihi'ni baz al
+const hedefTarih = m.sonrakiTarih || m.islemTarihi;
+const farkGun = gunHesapla(hedefTarih);
+let satirClass = '', uyari = '';
+
+const bugunMu = (m.sonrakiTarihi === bugun || m.islemTarihi === bugun);
+
+if (yapildi) {
+  satirClass = 'yapildi-satir';
+  if (bugunMu) satirClass += ' bugun-satir';
+} else if (bugunMu) {
+  satirClass = 'bugun-satir';
+  uyari = ' 🎯 BUGÜN';
+} else if (farkGun !== null) {
+  if (farkGun < 0) {
+    satirClass = 'gecmis';
+    uyari = ` ⚠️ ${Math.abs(farkGun)} gün gecikti!`;
+  } else if (farkGun <= 3) {
+    satirClass = 'yaklasan';
+    uyari = ` (${farkGun} gün kaldı)`;
+  }
+}
       if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
 
       const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
