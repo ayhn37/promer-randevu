@@ -920,12 +920,22 @@
   }
   tipDegistir();
 
-  function filtreSec(btn) {
-    document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
-    btn.classList.add('aktif');
-    aktifFiltre = btn.dataset.filtre;
-    listele(aramaKutusu.value);
+ function filtreSec(btn) {
+  document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
+  btn.classList.add('aktif');
+  aktifFiltre = btn.dataset.filtre;
+
+  // 👇 YENİ: İşletmeler veya Konutlar seçildiğinde ay filtresini sıfırla
+  // Böylece tüm işletmeler/konutlar (ay bağımsız) listelenir
+  if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut')
+      && document.getElementById('aySecim').value !== '') {
+    document.getElementById('aySecim').value = '';
+    aySecimGuncelle();   // içinde listele() da çağrılıyor
+    return;
   }
+
+  listele(aramaKutusu.value);
+}
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
