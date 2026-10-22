@@ -1230,11 +1230,16 @@
       });
     }
 
-    liste.filter(m => {
-      if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
-      if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
-      if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
-      if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
+   liste.filter(m => {
+  if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
+  if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
+
+  // 👇 YENİ: İşletmeler / Konutlar sekmesinde yapılmış kayıtları gizle
+  if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut') && m.yapildi === true) return false;
+
+  if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
+  if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
+  // ...
       const fark = gunHesapla(m.sonrakiTarih);
       if (aktifFiltre === 'bugun' && fark !== 0) return false;
       if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
