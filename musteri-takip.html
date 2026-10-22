@@ -30,7 +30,7 @@
   .ay-secim-kutu .sonuc div { text-align: right; font-size: 12px; color: #7f8c8d; }
   .ay-secim-kutu .sonuc div strong { display: block; font-size: 22px; color: #16a085; font-weight: bold; margin-top: 2px; }
 
-  /* ⭐ SEÇİLİ AY ÖZET PANELİ */
+  /* SEÇİLİ AY ÖZET PANELİ */
   .ay-ozet-panel { background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(22,160,133,0.35); animation: ayPanelIn 0.35s ease; }
   @keyframes ayPanelIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
   .ay-ozet-baslik { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
@@ -152,16 +152,15 @@
   .whatsapp-btn:hover { background: #1ebe5b; }
   .whatsapp-btn:disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
 
-  .yaklasan { background: #fff3cd !important; }
+  /* 🔴 SÜRESİ GEÇENLER — CANLI KIRMIZI + BEYAZ YAZI */
   .gecmis {
-  background: #e74c3c !important;
-  border-left: 6px solid #922b21 !important;
-}
-.gecmis:hover { background: #d63031 !important; }
-.gecmis td,
-.gecmis td strong {
-  color: #fff !important;
-}
+    background: #e74c3c !important;
+    border-left: 6px solid #922b21 !important;
+  }
+  .gecmis:hover { background: #d63031 !important; }
+  .gecmis td, .gecmis td strong { color: #fff !important; }
+
+  .yaklasan { background: #fff3cd !important; }
   .bugun-satir { background: linear-gradient(90deg, #d4edda 0%, #c3e6cb 100%) !important; border-left: 5px solid #27ae60 !important; font-weight: 500; }
   .bugun-satir:hover { background: linear-gradient(90deg, #c3e6cb 0%, #b1dfbb 100%) !important; }
   .yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
@@ -180,6 +179,18 @@
   .ozet-bar span { font-weight: bold; color: #16a085; font-size: 18px; }
   .ozet-bar .yapildi-span { color: #1a5276; }
   .ozet-bar .yapilmadi-span { color: #e67e22; }
+
+  /* 🔴 GECİKTİ ROZETİ PULSE ANİMASYONU */
+  @keyframes geciktiPulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
+    50% { opacity: 0.9; transform: scale(1.05); box-shadow: 0 0 0 6px rgba(231,76,60,0); }
+  }
+
+  /* 🔔 TOAST ANİMASYONU */
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(80px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
 
   /* MODAL GENEL */
   .modal-arkaplan { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
@@ -217,10 +228,8 @@
     .container { padding: 0 4px; }
     h1 { font-size: 20px; margin: 10px 0; }
 
-    /* GİRİŞ EKRANI */
     #auth-gate > div { padding: 24px 20px !important; }
 
-    /* DASHBOARD */
     .dashboard { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .kart { padding: 12px; }
     .kart .sayi { font-size: 24px; }
@@ -232,13 +241,11 @@
     .ay-secim-kutu .sonuc { margin-left: 0; width: 100%; justify-content: space-around; padding-top: 8px; border-top: 1px solid #eee; }
     .ay-secim-kutu .sonuc div strong { font-size: 18px; }
 
-    /* AY ÖZET PANELİ */
     .ay-ozet-panel { padding: 14px; }
     .ay-ozet-baslik .baslik-metin { font-size: 16px; }
     .ay-ozet-icerik { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .ay-ozet-deger { font-size: 18px; }
 
-    /* BUGÜN PANELİ */
     .bugun-panel { padding: 14px; }
     .bugun-panel h2 { font-size: 16px; }
     .hafta-bar { -webkit-overflow-scrolling: touch; }
@@ -247,41 +254,33 @@
     .bugun-butonlar { flex-direction: column; }
     .bugun-butonlar button { width: 100%; }
 
-    /* ÜST ARAÇ ÇUBUĞU */
     .ust-bar { gap: 8px; }
     .ust-bar > div { width: 100%; }
     .ekle-btn { flex: 1; font-size: 13px; padding: 10px; }
     .cikis-btn { width: 100%; }
 
-    /* FİLTRE ÇUBUĞU */
     .filtre-bar { gap: 4px; }
     .filtre-bar button { font-size: 11px; padding: 6px 10px; flex: 1 1 auto; }
 
-    /* ARAÇ ÇUBUĞU */
     .arac-cubugu { flex-direction: column; align-items: stretch; gap: 8px; }
     .arac-cubugu > button { width: 100%; }
 
-    /* TARİH FİLTRE */
     .tarih-filtre { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
     .tarih-filtre input[type="date"] { width: 100%; }
     .tarih-filtre button { width: 100%; }
     .tarih-filtre #tarihFiltreBilgi { margin-left: 0 !important; text-align: center; }
 
-    /* FORM */
     .grid { grid-template-columns: 1fr; gap: 10px; }
     .tip-kutusu { flex-wrap: wrap; padding: 8px; }
     .tip-kutusu label { padding: 6px 10px; font-size: 13px; }
 
-    /* MODAL */
     .modal-arkaplan { padding: 8px; }
     .modal { padding: 16px; max-height: 95vh; margin: 8px; }
     .modal h3 { font-size: 16px; }
     .modal-butonlar button { flex: 1; }
 
-    /* BUTONLAR */
     button { padding: 10px 16px; font-size: 13px; }
 
-    /* ===== TABLO → KART DÖNÜŞÜMÜ ===== */
     table { display: block; background: transparent; box-shadow: none; border-radius: 0; overflow: visible; }
     table thead { display: none; }
     tbody { display: block; }
@@ -298,7 +297,17 @@
     tbody tr:hover { background: #fff; }
     tbody tr.yapildi-satir { background: #d6eaf8 !important; border-left-color: #1a5276; }
     tbody tr.yapildi-satir:hover { background: #c3e0f5 !important; }
-    tbody tr.gecmis { background: #f8d7da !important; border-left-color: #e74c3c; }
+
+    /* 🔴 MOBİL GECİKMİŞ */
+    tbody tr.gecmis {
+      background: #e74c3c !important;
+      border-left: 6px solid #922b21 !important;
+    }
+    tbody tr.gecmis:hover { background: #d63031 !important; }
+    tbody tr.gecmis td { color: #fff !important; }
+    tbody tr.gecmis td::before { color: #ffe0e0 !important; }
+    tbody tr.gecmis td strong { color: #fff !important; }
+
     tbody tr.yaklasan { background: #fff3cd !important; border-left-color: #f39c12; }
     tbody tr.bugun-satir { background: linear-gradient(90deg,#d4edda 0%,#c3e6cb 100%) !important; border-left-color: #27ae60 !important; }
     tbody tr.yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
@@ -325,7 +334,6 @@
       text-align: left;
     }
 
-    /* Checkbox özel konum */
     tbody td.tik-hucre {
       position: absolute;
       top: 10px;
@@ -339,7 +347,6 @@
     tbody td.tik-hucre::before { display: none; }
     tbody td.tik-hucre .tik-kutu { width: 26px; height: 26px; }
 
-    /* Aksiyon satırı */
     tbody td:last-child {
       padding-top: 10px;
       border-top: 1px solid #f0f0f0;
@@ -349,10 +356,8 @@
     tbody td:last-child::before { display: none; }
     tbody td:last-child button { flex: 1; margin: 0; padding: 8px; }
 
-    /* İsim satırı (checkbox sağ üstte olduğu için sağ boşluk) */
     tbody td[data-label="Ad / İşletme"] { padding-right: 35px; }
 
-    /* ÖZET BAR */
     .ozet-bar { flex-direction: column; gap: 6px; padding: 12px 16px; }
     .ozet-bar div { text-align: center; font-size: 13px; }
     .ozet-bar span { font-size: 16px; }
@@ -408,7 +413,7 @@
 
   <h1>🐜 Müşteri Takip Sistemi</h1>
 
-  <!-- ⭐ SEÇİLİ AY ÖZET PANELİ (Ay seçildiğinde otomatik görünür) -->
+  <!-- SEÇİLİ AY ÖZET PANELİ -->
   <div class="ay-ozet-panel" id="ayOzetPanel" style="display:none;">
     <div class="ay-ozet-baslik">
       <div class="baslik-metin">
@@ -664,15 +669,31 @@
     duzenlemeyiIptalEt();
   }
 
+  // ⭐ TEKRAR TARİHİ: İŞİN KENDİ TARİHİNDEN HESAPLANIR
   async function tikDegistir(id) {
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
     
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
-      const yeniTarih = tarihEkle(gun);
+
+      // Yeni tarih = işin planlanan tarihi + tekrar sıklığı
+      // Öncelik: sonrakiTarih → islemTarihi → bugün
+      const bazTarihStr = m.sonrakiTarih || m.islemTarihi || bugunISO();
+      const baz = new Date(bazTarihStr + 'T00:00:00');
+      baz.setDate(baz.getDate() + gun);
+
+      // Güvenlik: Hesaplanan tarih bugünden geride kalırsa bugünden itibaren hesapla
+      const bugunTarih = new Date();
+      bugunTarih.setHours(0, 0, 0, 0);
+      if (baz < bugunTarih) {
+        baz.setTime(bugunTarih.getTime());
+        baz.setDate(baz.getDate() + gun);
+      }
+
+      const yeniTarih = `${baz.getFullYear()}-${String(baz.getMonth()+1).padStart(2,'0')}-${String(baz.getDate()).padStart(2,'0')}`;
       
-      if(confirm(`Bu iş tamamlandı olarak işaretlenecek. Bu müşteri ${gun} günde bir tekrar ediyor. Eski kayıt geçmiş (ciro) olarak saklanacak ve ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecektir. Onaylıyor musunuz?`)) {
+      if(confirm(`✅ İş tamamlandı olarak işaretlenecek.\n\n📅 Bu müşteri ${gun} günde bir tekrar ediyor.\n\nPlanlanan tarih: ${tarihFormat(bazTarihStr)}\n+ ${gun} gün\n= Yeni randevu: ${tarihFormat(yeniTarih)}\n\nEski kayıt ciro olarak saklanacak, ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecek. Onaylıyor musunuz?`)) {
         try {
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
             yapildi: true 
@@ -928,22 +949,22 @@
   }
   tipDegistir();
 
- function filtreSec(btn) {
-  document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
-  btn.classList.add('aktif');
-  aktifFiltre = btn.dataset.filtre;
+  // ⭐ İŞLETMELER/KONUTLAR SEÇİLİNCE AY FİLTRESİNİ SIFIRLA
+  function filtreSec(btn) {
+    document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
+    btn.classList.add('aktif');
+    aktifFiltre = btn.dataset.filtre;
 
-  // 👇 YENİ: İşletmeler veya Konutlar seçildiğinde ay filtresini sıfırla
-  // Böylece tüm işletmeler/konutlar (ay bağımsız) listelenir
-  if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut')
-      && document.getElementById('aySecim').value !== '') {
-    document.getElementById('aySecim').value = '';
-    aySecimGuncelle();   // içinde listele() da çağrılıyor
-    return;
+    // İşletmeler / Konutlar tıklanınca ay filtresi "Tüm Zamanlar"a döner
+    if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut')
+        && document.getElementById('aySecim').value !== '') {
+      document.getElementById('aySecim').value = '';
+      aySecimGuncelle(); // içinde listele() çağrılıyor
+      return;
+    }
+
+    listele(aramaKutusu.value);
   }
-
-  listele(aramaKutusu.value);
-}
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -1035,13 +1056,21 @@
     return Math.ceil((hedef - bugun) / (1000*60*60*24));
   }
 
+  // ⭐ DASHBOARD: Yapılanlar gecikmiş sayılmaz + Gecikmiş kartı yanıp söner
   function dashboardGuncelle() {
     let toplam = musteriler.length, bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0, konutSayi = 0, isletmeSayi = 0, ciroToplam = 0, yapildiSayi = 0;
     musteriler.forEach(m => {
       if (m.tip === 'konut') konutSayi++; else isletmeSayi++;
-      if (m.yapildi === true) yapildiSayi++;
-      const fark = gunHesapla(m.sonrakiTarih);
-      if (fark !== null) { if (fark === 0) bugunSayi++; else if (fark > 0 && fark <= 3) yaklasanSayi++; else if (fark < 0) gecmisSayi++; }
+      if (m.yapildi === true) {
+        yapildiSayi++;
+      } else {
+        const fark = gunHesapla(m.sonrakiTarih || m.islemTarihi);
+        if (fark !== null) {
+          if (fark === 0) bugunSayi++;
+          else if (fark > 0 && fark <= 3) yaklasanSayi++;
+          else if (fark < 0) gecmisSayi++;
+        }
+      }
       ciroToplam += Number(m.fiyat) || 0;
     });
     document.getElementById('kartToplam').textContent = toplam;
@@ -1052,6 +1081,75 @@
     document.getElementById('kartYaklasan').textContent = yaklasanSayi;
     document.getElementById('kartGecmis').textContent = gecmisSayi;
     document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
+
+    // 🔴 Gecikmiş kartı yanıp sönsün
+    const gecmisKart = document.querySelector('.kart-gecmis');
+    if (gecmisKart) {
+      if (gecmisSayi > 0) {
+        gecmisKart.style.animation = 'geciktiPulse 1.5s infinite';
+        gecmisKart.style.boxShadow = '0 0 20px rgba(231,76,60,0.6)';
+      } else {
+        gecmisKart.style.animation = '';
+        gecmisKart.style.boxShadow = '';
+      }
+    }
+  }
+
+  // 🔔 SAYFA AÇILIŞINDA TOAST UYARISI
+  function gecikmisUyariGoster() {
+    const eski = document.getElementById('gecikmisToast');
+    if (eski) eski.remove();
+
+    const gecikmisler = musteriler.filter(m => {
+      if (m.yapildi === true) return false;
+      const hedef = m.sonrakiTarih || m.islemTarihi;
+      const fark = gunHesapla(hedef);
+      return fark !== null && fark < 0;
+    });
+
+    if (gecikmisler.length === 0) return;
+
+    const toast = document.createElement('div');
+    toast.id = 'gecikmisToast';
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: #fff;
+      padding: 16px 22px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+      z-index: 99999;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: toastIn 0.4s ease;
+      max-width: 340px;
+    `;
+    toast.innerHTML = `
+      <span style="font-size:24px;">⚠️</span>
+      <div>
+        <div style="font-size:15px;margin-bottom:2px;">${gecikmisler.length} ADET GECİKMİŞ İŞ!</div>
+        <div style="font-size:11px;font-weight:normal;opacity:0.9;">Detay için tıklayın →</div>
+      </div>
+      <span style="font-size:18px;margin-left:auto;opacity:0.7;" onclick="event.stopPropagation();this.parentElement.remove();">✖</span>
+    `;
+    toast.onclick = () => {
+      document.querySelectorAll('.filtre-bar button').forEach(b => b.classList.remove('aktif'));
+      const gecmisBtn = document.querySelector('.filtre-bar button[data-filtre="gecmis"]');
+      if (gecmisBtn) gecmisBtn.classList.add('aktif');
+      aktifFiltre = 'gecmis';
+      listele(aramaKutusu.value);
+      toast.remove();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    document.body.appendChild(toast);
+
+    setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
   }
 
   function tarihFiltrele() { aktifTarihFiltre = document.getElementById('tarihFiltreInput').value; document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : ''; listele(aramaKutusu.value); }
@@ -1206,6 +1304,7 @@
   function modalKapat() { document.getElementById('whatsappModal').classList.remove('aktif'); }
   function whatsappGonder() { window.open(`https://wa.me/${aktifTelefon}?text=${encodeURIComponent(document.getElementById('mesajIcerik').value)}`, '_blank'); modalKapat(); }
 
+  // ⭐ LISTELE: İşletmeler'de yapıldılar gizlenir, tarihe göre sıralanır, gecikmişler KIRMIZI + ROZET
   function listele(filter = '') {
     tabloBody.innerHTML = '';
     const f = filter.toLowerCase(); const bugun = bugunISO();
@@ -1238,88 +1337,98 @@
       });
     }
 
-   liste.filter(m => {
-  if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
-  if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
+    liste.filter(m => {
+      if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
+      if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
 
-  // 👇 YENİ: İşletmeler / Konutlar sekmesinde yapılmış kayıtları gizle
-  if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut') && m.yapildi === true) return false;
+      // İşletmeler/Konutlar sekmesinde yapılmışları gizle
+      if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut') && m.yapildi === true) return false;
 
-  if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
-  if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
-  // ...
-      const fark = gunHesapla(m.sonrakiTarih);
+      if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
+      if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
+
+      // Filtrelerde yapılanlar gecikmiş/yaklaşan'a sayılmaz
+      const fark = gunHesapla(m.sonrakiTarih || m.islemTarihi);
       if (aktifFiltre === 'bugun' && fark !== 0) return false;
-      if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0)) return false;
-      if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3)) return false;
+      if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0 || m.yapildi === true)) return false;
+      if (aktifFiltre === 'yaklasan' && (fark === null || fark <= 0 || fark > 3 || m.yapildi === true)) return false;
+
       const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
       return metin.includes(f);
-    }).sort((a, b) => {
-  // 👇 Önce işlem tarihine göre (eskiden yeniye), tarihi olmayanlar en sona
-  const ta = a.islemTarihi || '9999-12-31';
-  const tb = b.islemTarihi || '9999-12-31';
-  if (ta !== tb) return ta.localeCompare(tb);
-
-  // 👇 Aynı tarihteyse saate göre sırala
-  return (a.saat || '99:99').localeCompare(b.saat || '99:99');
-}).forEach(m => {
+    })
+    // ⭐ İŞLEM TARİHİNE GÖRE SIRALA (eskiden yeniye), aynı gün içinde saate göre
+    .sort((a, b) => {
+      const ta = a.islemTarihi || '9999-12-31';
+      const tb = b.islemTarihi || '9999-12-31';
+      if (ta !== tb) return ta.localeCompare(tb);
+      return (a.saat || '99:99').localeCompare(b.saat || '99:99');
+    })
+    .forEach(m => {
       gorunenAdet++; gorunenCiro += Number(m.fiyat) || 0;
       const yapildi = m.yapildi === true;
       if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
 
-     // 👇 sonrakiTarih yoksa islemTarihi'ni baz al
-const hedefTarih = m.sonrakiTarih || m.islemTarihi;
-const farkGun = gunHesapla(hedefTarih);
-let satirClass = '', uyari = '';
+      // ⭐ GECİKME HESABI: sonrakiTarih yoksa islemTarihi'ni baz al
+      const farkGun = gunHesapla(m.sonrakiTarih || m.islemTarihi);
+      let satirClass = '', uyari = '';
+      const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
 
-const bugunMu = (m.sonrakiTarihi === bugun || m.islemTarihi === bugun);
-
-if (yapildi) {
-  satirClass = 'yapildi-satir';
-  if (bugunMu) satirClass += ' bugun-satir';
-} else if (bugunMu) {
-  satirClass = 'bugun-satir';
-  uyari = ' 🎯 BUGÜN';
-} else if (farkGun !== null) {
-  if (farkGun < 0) {
-    satirClass = 'gecmis';
-    uyari = ` ⚠️ ${Math.abs(farkGun)} gün gecikti!`;
-  } else if (farkGun <= 3) {
-    satirClass = 'yaklasan';
-    uyari = ` (${farkGun} gün kaldı)`;
-  }
-}
+      if (yapildi) {
+        satirClass = 'yapildi-satir';
+        if (bugunMu) satirClass += ' bugun-satir';
+      } else if (bugunMu) {
+        satirClass = 'bugun-satir';
+        uyari = ' 🎯 BUGÜN';
+      } else if (farkGun !== null) {
+        if (farkGun < 0) {
+          satirClass = 'gecmis';
+          uyari = ` ⚠️ ${Math.abs(farkGun)} gün gecikti!`;
+        } else if (farkGun <= 3) {
+          satirClass = 'yaklasan';
+          uyari = ` (${farkGun} gün kaldı)`;
+        }
+      }
       if (duzenlenenId === m.id) satirClass += ' duzenlenen-satir';
 
       const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
       const webRozet = m.web ? ' <span class="rozet rozet-web">🌐 Web</span>' : '';
       const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
-     let sonrakiGosterim;
-if (m.sonrakiTarih) {
-  if (!m.yapildi && farkGun !== null && farkGun < 0) {
-    // ⚠️ GECİKTİ rozeti
-    sonrakiGosterim = `
-      <span style="display:inline-block;background:#e74c3c;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
-        ⚠️ ${Math.abs(farkGun)} GÜN GECİKTİ
-      </span>
-      <br><small style="color:#922b21;font-weight:bold;">${tarihFormat(m.sonrakiTarih)}</small>
-    `;
-  } else {
-    sonrakiGosterim = `${tarihFormat(m.sonrakiTarih)}${uyari}`;
-  }
-} else {
-  // sonrakiTarih yok ama islemTarihi geçmişse de uyar
-  const islemFark = gunHesapla(m.islemTarihi);
-  if (!m.yapildi && islemFark !== null && islemFark < 0) {
-    sonrakiGosterim = `
-      <span style="display:inline-block;background:#e74c3c;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
-        ⚠️ ${Math.abs(islemFark)} GÜN GECİKTİ
-      </span>
-    `;
-  } else {
-    sonrakiGosterim = '<em style="color:#95a5a6;">Belirtilmedi</em>';
-  }
-}
+
+      // ⭐ SONRAKİ İŞLEM: gecikmişse "X GÜN GECİKTİ" rozeti
+      let sonrakiGosterim;
+      if (m.sonrakiTarih) {
+        if (!m.yapildi && farkGun !== null && farkGun < 0) {
+          sonrakiGosterim = `
+            <span style="display:inline-block;background:#fff;color:#e74c3c;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
+              ⚠️ ${Math.abs(farkGun)} GÜN GECİKTİ
+            </span>
+            <br><small style="font-weight:bold;">${tarihFormat(m.sonrakiTarih)}</small>
+          `;
+        } else {
+          sonrakiGosterim = `${tarihFormat(m.sonrakiTarih)}${uyari}`;
+        }
+      } else {
+        const islemFark = gunHesapla(m.islemTarihi);
+        if (!m.yapildi && islemFark !== null && islemFark < 0) {
+          sonrakiGosterim = `
+            <span style="display:inline-block;background:#fff;color:#e74c3c;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
+              ⚠️ ${Math.abs(islemFark)} GÜN GECİKTİ
+            </span>
+          `;
+        } else {
+          sonrakiGosterim = '<em style="color:#95a5a6;">Belirtilmedi</em>';
+        }
+      }
+
+      // ⭐ İŞLEM TARİHİ SÜTUNU: geçmişse kırmızı
+      let islemGosterim;
+      const islemFark = gunHesapla(m.islemTarihi);
+      if (!m.yapildi && islemFark !== null && islemFark < 0) {
+        islemGosterim = `<span style="font-weight:bold;">${tarihFormat(m.islemTarihi)}<br><small>⚠️ ${Math.abs(islemFark)} gün geçti</small></span>`;
+      } else {
+        islemGosterim = tarihFormat(m.islemTarihi);
+      }
+
       const waDisabled = m.sonrakiTarih ? '' : 'disabled';
       const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
       const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
@@ -1334,7 +1443,7 @@ if (m.sonrakiTarih) {
         <td data-label="Adres">${m.ilce} / ${m.mahalle} Mah. <br>${m.sokak} No:${m.binaNo || '-'} D:${m.daireNo || '-'}</td>
         <td data-label="Haşere">${m.hasere}</td>
         <td data-label="Fiyat">${fiyatGosterim}</td>
-        <td data-label="İşlem Tarihi">${tarihFormat(m.islemTarihi)}</td>
+        <td data-label="İşlem Tarihi">${islemGosterim}</td>
         <td data-label="Sonraki İşlem">${sonrakiGosterim}</td>
         <td data-label="Not">${notGosterim}</td>
         <td data-label="İşlem">
@@ -1408,6 +1517,7 @@ if (m.sonrakiTarih) {
           dashboardGuncelle();
           aySecimGuncelle();
           haftayiYenile();
+          gecikmisUyariGoster(); // 🔔 Toast uyarı
           
           if (loadingScreen) loadingScreen.style.display = 'none';
           if (mainContent) mainContent.style.visibility = 'visible';
