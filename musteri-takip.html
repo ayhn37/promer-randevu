@@ -1294,7 +1294,32 @@ if (yapildi) {
       const rozet = m.tip === 'isletme' ? '<span class="rozet rozet-isletme">🏢 İşletme</span>' : '<span class="rozet rozet-konut">🏠 Konut</span>';
       const webRozet = m.web ? ' <span class="rozet rozet-web">🌐 Web</span>' : '';
       const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
-      const sonrakiGosterim = m.sonrakiTarih ? `${tarihFormat(m.sonrakiTarih)}${uyari}` : '<em style="color:#95a5a6;">Belirtilmedi</em>';
+     let sonrakiGosterim;
+if (m.sonrakiTarih) {
+  if (!m.yapildi && farkGun !== null && farkGun < 0) {
+    // ⚠️ GECİKTİ rozeti
+    sonrakiGosterim = `
+      <span style="display:inline-block;background:#e74c3c;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
+        ⚠️ ${Math.abs(farkGun)} GÜN GECİKTİ
+      </span>
+      <br><small style="color:#922b21;font-weight:bold;">${tarihFormat(m.sonrakiTarih)}</small>
+    `;
+  } else {
+    sonrakiGosterim = `${tarihFormat(m.sonrakiTarih)}${uyari}`;
+  }
+} else {
+  // sonrakiTarih yok ama islemTarihi geçmişse de uyar
+  const islemFark = gunHesapla(m.islemTarihi);
+  if (!m.yapildi && islemFark !== null && islemFark < 0) {
+    sonrakiGosterim = `
+      <span style="display:inline-block;background:#e74c3c;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;animation:geciktiPulse 1.5s infinite;">
+        ⚠️ ${Math.abs(islemFark)} GÜN GECİKTİ
+      </span>
+    `;
+  } else {
+    sonrakiGosterim = '<em style="color:#95a5a6;">Belirtilmedi</em>';
+  }
+}
       const waDisabled = m.sonrakiTarih ? '' : 'disabled';
       const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
       const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
