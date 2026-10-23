@@ -298,7 +298,6 @@
     tbody tr.yapildi-satir { background: #d6eaf8 !important; border-left-color: #1a5276; }
     tbody tr.yapildi-satir:hover { background: #c3e0f5 !important; }
 
-    /* 🔴 MOBİL GECİKMİŞ */
     tbody tr.gecmis {
       background: #e74c3c !important;
       border-left: 6px solid #922b21 !important;
@@ -545,7 +544,14 @@
         <div>
           <label>Haşere</label>
           <select id="hasere" required>
-            <option value="">Seçiniz</option><option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Sarıca</option><option>Uyuz</option><option>Diğer</option>
+            <option value="">Seçiniz</option>
+            <optgroup label="📋 Genel Hizmet">
+              <option>Periyodik</option>
+              <option>Genel</option>
+            </optgroup>
+            <optgroup label="🐜 Haşere Türleri">
+              <option>Hamam Böceği</option><option>Kalorifer Böceği</option><option>Karınca</option><option>Pire</option><option>Tahta Kurusu</option><option>Sinek</option><option>Sivrisinek</option><option>Fare</option><option>Sıçan</option><option>Akrep</option><option>Örümcek</option><option>Kuş Biti</option><option>Güve</option><option>Gümüş Böceği</option><option>Kene</option><option>Kertenkele</option><option>Sarıca</option><option>Uyuz</option><option>Diğer</option>
+            </optgroup>
           </select>
         </div>
         <div><label>💰 Fiyat (₺)</label><input type="number" id="fiyat" placeholder="Örn: 2500" min="0" step="1"></div>
@@ -677,13 +683,10 @@
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
 
-      // Yeni tarih = işin planlanan tarihi + tekrar sıklığı
-      // Öncelik: sonrakiTarih → islemTarihi → bugün
       const bazTarihStr = m.sonrakiTarih || m.islemTarihi || bugunISO();
       const baz = new Date(bazTarihStr + 'T00:00:00');
       baz.setDate(baz.getDate() + gun);
 
-      // Güvenlik: Hesaplanan tarih bugünden geride kalırsa bugünden itibaren hesapla
       const bugunTarih = new Date();
       bugunTarih.setHours(0, 0, 0, 0);
       if (baz < bugunTarih) {
@@ -955,11 +958,10 @@
     btn.classList.add('aktif');
     aktifFiltre = btn.dataset.filtre;
 
-    // İşletmeler / Konutlar tıklanınca ay filtresi "Tüm Zamanlar"a döner
     if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut')
         && document.getElementById('aySecim').value !== '') {
       document.getElementById('aySecim').value = '';
-      aySecimGuncelle(); // içinde listele() çağrılıyor
+      aySecimGuncelle();
       return;
     }
 
@@ -1056,7 +1058,7 @@
     return Math.ceil((hedef - bugun) / (1000*60*60*24));
   }
 
-  // ⭐ DASHBOARD: Yapılanlar gecikmiş sayılmaz + Gecikmiş kartı yanıp söner
+  // ⭐ DASHBOARD
   function dashboardGuncelle() {
     let toplam = musteriler.length, bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0, konutSayi = 0, isletmeSayi = 0, ciroToplam = 0, yapildiSayi = 0;
     musteriler.forEach(m => {
@@ -1082,7 +1084,6 @@
     document.getElementById('kartGecmis').textContent = gecmisSayi;
     document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
 
-    // 🔴 Gecikmiş kartı yanıp sönsün
     const gecmisKart = document.querySelector('.kart-gecmis');
     if (gecmisKart) {
       if (gecmisSayi > 0) {
@@ -1095,7 +1096,7 @@
     }
   }
 
-  // 🔔 SAYFA AÇILIŞINDA TOAST UYARISI
+  // 🔔 TOAST UYARISI
   function gecikmisUyariGoster() {
     const eski = document.getElementById('gecikmisToast');
     if (eski) eski.remove();
@@ -1304,7 +1305,7 @@
   function modalKapat() { document.getElementById('whatsappModal').classList.remove('aktif'); }
   function whatsappGonder() { window.open(`https://wa.me/${aktifTelefon}?text=${encodeURIComponent(document.getElementById('mesajIcerik').value)}`, '_blank'); modalKapat(); }
 
-  // ⭐ LISTELE: İşletmeler'de yapıldılar gizlenir, tarihe göre sıralanır, gecikmişler KIRMIZI + ROZET
+  // ⭐ LISTELE
   function listele(filter = '') {
     tabloBody.innerHTML = '';
     const f = filter.toLowerCase(); const bugun = bugunISO();
@@ -1341,13 +1342,11 @@
       if (aktifFiltre === 'konut' && m.tip !== 'konut') return false;
       if (aktifFiltre === 'isletme' && m.tip !== 'isletme') return false;
 
-      // İşletmeler/Konutlar sekmesinde yapılmışları gizle
       if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut') && m.yapildi === true) return false;
 
       if (aktifFiltre === 'yapildi' && m.yapildi !== true) return false;
       if (aktifFiltre === 'yapilmadi' && m.yapildi === true) return false;
 
-      // Filtrelerde yapılanlar gecikmiş/yaklaşan'a sayılmaz
       const fark = gunHesapla(m.sonrakiTarih || m.islemTarihi);
       if (aktifFiltre === 'bugun' && fark !== 0) return false;
       if (aktifFiltre === 'gecmis' && (fark === null || fark >= 0 || m.yapildi === true)) return false;
@@ -1356,7 +1355,6 @@
       const metin = `${m.ad} ${m.soyad} ${m.telefon} ${m.ilce} ${m.mahalle} ${m.sokak} ${m.hasere} ${m.notlar || ''} ${m.fiyat || ''}`.toLowerCase();
       return metin.includes(f);
     })
-    // ⭐ İŞLEM TARİHİNE GÖRE SIRALA (eskiden yeniye), aynı gün içinde saate göre
     .sort((a, b) => {
       const ta = a.islemTarihi || '9999-12-31';
       const tb = b.islemTarihi || '9999-12-31';
@@ -1368,7 +1366,6 @@
       const yapildi = m.yapildi === true;
       if (yapildi) gorunenYapildi++; else gorunenYapilmadi++;
 
-      // ⭐ GECİKME HESABI: sonrakiTarih yoksa islemTarihi'ni baz al
       const farkGun = gunHesapla(m.sonrakiTarih || m.islemTarihi);
       let satirClass = '', uyari = '';
       const bugunMu = (m.sonrakiTarih === bugun || m.islemTarihi === bugun);
@@ -1394,7 +1391,6 @@
       const webRozet = m.web ? ' <span class="rozet rozet-web">🌐 Web</span>' : '';
       const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad}`;
 
-      // ⭐ SONRAKİ İŞLEM: gecikmişse "X GÜN GECİKTİ" rozeti
       let sonrakiGosterim;
       if (m.sonrakiTarih) {
         if (!m.yapildi && farkGun !== null && farkGun < 0) {
@@ -1420,7 +1416,6 @@
         }
       }
 
-      // ⭐ İŞLEM TARİHİ SÜTUNU: geçmişse kırmızı
       let islemGosterim;
       const islemFark = gunHesapla(m.islemTarihi);
       if (!m.yapildi && islemFark !== null && islemFark < 0) {
@@ -1517,7 +1512,7 @@
           dashboardGuncelle();
           aySecimGuncelle();
           haftayiYenile();
-          gecikmisUyariGoster(); // 🔔 Toast uyarı
+          gecikmisUyariGoster();
           
           if (loadingScreen) loadingScreen.style.display = 'none';
           if (mainContent) mainContent.style.visibility = 'visible';
