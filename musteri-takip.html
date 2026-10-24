@@ -559,17 +559,20 @@
         <div><label>İşlem Tarihi</label><input type="date" id="islemTarihi" required></div>
         <div><label>Sonraki İşlem <span style="color:#7f8c8d;font-weight:normal;">(isteğe bağlı)</span></label><input type="date" id="sonrakiTarih"></div>
         <div>
-          <label>🔄 Tekrar Sıklığı</label>
-          <select id="tekrarSikligi">
-            <option value="0">Tek Seferlik</option>
-            <option value="30">30 Günde 1</option>
-            <option value="40">40 Günde 1</option>
-            <option value="45">45 Günde 1</option>
-            <option value="60">60 Günde 1</option>
-            <option value="90">90 Günde 1</option>
-            <option value="180">6 Ayda 1 (180 Gün)</option>
-          </select>
-        </div>
+  <label>🔄 Tekrar Sıklığı</label>
+  <select id="tekrarSikligi">
+    <option value="0">Tek Seferlik</option>
+    <option value="30">30 Günde 1 (Ayda 1)</option>
+    <option value="40">40 Günde 1</option>
+    <option value="45">45 Günde 1</option>
+    <option value="60">60 Günde 1 (2 Ayda 1)</option>
+    <option value="90">90 Günde 1 (3 Ayda 1)</option>
+    <option value="120">120 Günde 1 (4 Ayda 1)</option>
+    <option value="150">150 Günde 1 (5 Ayda 1)</option>
+    <option value="180">180 Günde 1 (6 Ayda 1)</option>
+    <option value="365">365 Günde 1 (Yılda 1)</option>
+  </select>
+</div>
       </div>
       <div style="margin-top: 12px;"><label>📝 Notlar</label><textarea id="notlar" placeholder="Örn: Kedi var, kapıyı çalma." maxlength="500"></textarea></div>
       
