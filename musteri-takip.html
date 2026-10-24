@@ -2,13 +2,13 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Müşteri Takip Sistemi</title>
 <style>
   * { box-sizing: border-box; font-family: Arial, sans-serif; }
   body { background: #f4f6f9; margin: 0; padding: 20px; }
 
-  /* 🆕 SOL SIDEBAR LAYOUT */
+  /* SOL SIDEBAR LAYOUT */
   .sayfa-layout { display: flex; gap: 20px; align-items: flex-start; max-width: 1500px; margin: 0 auto; }
   .ana-icerik { flex: 1; min-width: 0; }
   .filtre-sidebar {
@@ -32,6 +32,7 @@
     padding: 11px 14px; font-size: 13px; font-weight: 600;
     text-align: left; border-radius: 8px; border: 2px solid transparent;
     transition: .2s; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; font-family: inherit;
   }
   .filtre-sidebar .filtre-bar button:hover { background: #e2e8f0; transform: translateX(2px); }
   .filtre-sidebar .filtre-bar button.aktif {
@@ -47,9 +48,12 @@
   .filtre-sidebar .filtre-bar button[data-filtre="yapilmadi"].aktif { background: #e67e22; border-color: #e67e22; }
   .filtre-sidebar .excel-btn, .filtre-sidebar .ice-aktar-btn {
     width: 100%; margin: 0; padding: 10px 12px; font-size: 12px; font-weight: bold;
+    border-radius: 6px; cursor: pointer; border: none; color: #fff;
   }
-  .filtre-sidebar .excel-btn { background: #1d6f42; color: #fff; }
-  .filtre-sidebar .ice-aktar-btn { background: #8e44ad; color: #fff; }
+  .filtre-sidebar .excel-btn { background: #1d6f42; }
+  .filtre-sidebar .excel-btn:hover { background: #145a32; }
+  .filtre-sidebar .ice-aktar-btn { background: #8e44ad; }
+  .filtre-sidebar .ice-aktar-btn:hover { background: #6c3483; }
 
   /* DASHBOARD */
   .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -239,7 +243,7 @@
     .sayfa-layout { display: block; }
   }
 
-  /* ========== 📱 MOBİL ========== */
+  /* ========== 📱 MOBİL UYUMLULUK ========== */
   @media screen and (max-width: 1100px) {
     .sayfa-layout { flex-direction: column; }
     .filtre-sidebar {
@@ -283,7 +287,6 @@
     .tarih-filtre { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
     .tarih-filtre input[type="date"] { width: 100%; }
     .tarih-filtre button { width: 100%; }
-    .tarih-filtre #tarihFiltreBilgi { margin-left: 0 !important; text-align: center; }
     .grid { grid-template-columns: 1fr; gap: 10px; }
     .tip-kutusu { flex-wrap: wrap; padding: 8px; }
     .tip-kutusu label { padding: 6px 10px; font-size: 13px; }
@@ -298,15 +301,11 @@
     tbody tr { display: block; margin-bottom: 12px; background: #fff; border-radius: 10px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative; border-left: 4px solid #3498db; }
     tbody tr:hover { background: #fff; }
     tbody tr.yapildi-satir { background: #d6eaf8 !important; border-left-color: #1a5276; }
-    tbody tr.yapildi-satir:hover { background: #c3e0f5 !important; }
     tbody tr.gecmis { background: #e74c3c !important; border-left: 6px solid #922b21 !important; }
-    tbody tr.gecmis:hover { background: #d63031 !important; }
     tbody tr.gecmis td { color: #fff !important; }
     tbody tr.gecmis td::before { color: #ffe0e0 !important; }
-    tbody tr.gecmis td strong { color: #fff !important; }
     tbody tr.yaklasan { background: #fff3cd !important; border-left-color: #f39c12; }
     tbody tr.bugun-satir { background: linear-gradient(90deg,#d4edda 0%,#c3e6cb 100%) !important; border-left-color: #27ae60 !important; }
-    tbody tr.yapildi-satir.bugun-satir { background: #5dade2 !important; border-left-color: #154360 !important; }
     tbody tr.duzenlenen-satir { outline: 3px solid #f39c12; outline-offset: 2px; }
     tbody td { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; text-align: right; }
     tbody td:last-child { border-bottom: none; }
@@ -333,6 +332,98 @@
     .modal { padding: 14px; }
     tbody td { font-size: 12px; padding: 5px 0; }
     tbody td::before { font-size: 10px; }
+  }
+
+  /* ========== 🚨 MOBİL TAŞMA DÜZELTMESİ (EN SON KURAL) ========== */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  .sayfa-layout, .ana-icerik, .filtre-sidebar, .dashboard, .kart,
+  .bugun-liste, .bugun-item, .ay-ozet-icerik, .ay-ozet-kart,
+  .grid, .ay-secim-kutu, .tarih-filtre, .ust-bar, .modal-arkaplan, .modal {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  body, td, th, p, div, span, .bugun-item, .not-kutusu, .kart .alt,
+  .adres-tikla, .modal textarea, .modal input, .arama, a {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+  input, select, textarea, button {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  @media screen and (max-width: 1100px) {
+    body { padding: 8px !important; }
+    .sayfa-layout { flex-direction: column !important; width: 100% !important; max-width: 100% !important; gap: 10px !important; }
+    .filtre-sidebar { width: 100% !important; max-width: 100% !important; min-width: 0 !important; position: static !important; padding: 10px !important; box-sizing: border-box !important; }
+    .filtre-sidebar .filtre-bar { flex-direction: row !important; flex-wrap: wrap !important; width: 100% !important; }
+    .filtre-sidebar .filtre-bar button,
+    .filtre-sidebar .excel-btn,
+    .filtre-sidebar .ice-aktar-btn {
+      flex: 1 1 calc(50% - 4px) !important;
+      max-width: calc(50% - 4px) !important;
+      min-width: 0 !important;
+      white-space: normal !important;
+      word-break: break-word !important;
+      font-size: 11px !important;
+      padding: 9px 6px !important;
+      text-align: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+    }
+    .ana-icerik { width: 100% !important; max-width: 100% !important; }
+    table { width: 100% !important; max-width: 100% !important; display: block !important; box-sizing: border-box !important; }
+    tbody, thead { width: 100% !important; max-width: 100% !important; display: block !important; }
+    tbody tr { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+    tbody td { max-width: 100% !important; overflow-wrap: anywhere !important; word-break: break-word !important; box-sizing: border-box !important; }
+    .hafta-bar { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; flex-wrap: nowrap !important; box-sizing: border-box !important; }
+    .hafta-bar button { flex: 0 0 auto !important; min-width: 70px !important; }
+    .bugun-panel { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+    .bugun-liste { grid-template-columns: 1fr !important; width: 100% !important; }
+    .bugun-item { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+    .bugun-item .bilgi, .bugun-item .isim, .bugun-item .saat { overflow-wrap: anywhere !important; word-break: break-word !important; }
+    .modal-arkaplan { padding: 8px !important; width: 100vw !important; max-width: 100vw !important; box-sizing: border-box !important; }
+    .modal { width: calc(100vw - 16px) !important; max-width: calc(100vw - 16px) !important; padding: 14px !important; box-sizing: border-box !important; }
+    .modal .grid { grid-template-columns: 1fr !important; width: 100% !important; }
+    .modal .grid > div { min-width: 0 !important; width: 100% !important; }
+    .tarih-filtre { flex-direction: column !important; align-items: stretch !important; width: 100% !important; box-sizing: border-box !important; }
+    .tarih-filtre input, .tarih-filtre button { width: 100% !important; box-sizing: border-box !important; }
+    .ust-bar > div { display: flex !important; flex-wrap: wrap !important; width: 100% !important; gap: 8px !important; }
+    .ust-bar > div button { flex: 1 1 calc(50% - 4px) !important; min-width: 0 !important; font-size: 12px !important; padding: 10px 8px !important; }
+    .ay-secim-kutu { flex-direction: row !important; flex-wrap: wrap !important; width: 100% !important; }
+    .ay-secim-kutu select { flex: 1 1 calc(50% - 4px) !important; max-width: calc(50% - 4px) !important; min-width: 0 !important; box-sizing: border-box !important; }
+    .ay-secim-kutu .sonuc { width: 100% !important; justify-content: space-around !important; margin-left: 0 !important; }
+    #gecikmisToast { max-width: calc(100vw - 20px) !important; left: 10px !important; right: 10px !important; top: 10px !important; box-sizing: border-box !important; }
+    .dashboard { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; width: 100% !important; }
+    .kart { width: 100% !important; min-width: 0 !important; padding: 10px !important; }
+    .kart .sayi { font-size: 22px !important; }
+    .kart .baslik { font-size: 9px !important; }
+    .kart .alt { font-size: 9px !important; }
+    .ay-ozet-baslik { flex-wrap: wrap !important; gap: 6px !important; }
+    .ay-ozet-baslik .baslik-metin { flex-wrap: wrap !important; font-size: 14px !important; }
+    .ay-ozet-icerik { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+    h1 { font-size: 18px !important; }
+  }
+
+  @media screen and (max-width: 480px) {
+    .filtre-sidebar .filtre-bar button,
+    .filtre-sidebar .excel-btn,
+    .filtre-sidebar .ice-aktar-btn {
+      font-size: 10px !important;
+      padding: 8px 4px !important;
+    }
+    .ust-bar > div button { font-size: 11px !important; padding: 9px 6px !important; }
+    .rozet { font-size: 9px !important; padding: 1px 6px !important; }
+    .ay-ozet-icerik { grid-template-columns: 1fr !important; }
+    tbody td { font-size: 12px !important; padding: 5px 0 !important; }
+    tbody td::before { font-size: 10px !important; }
+    .dashboard { grid-template-columns: repeat(2, 1fr) !important; }
   }
 </style>
 </head>
@@ -365,40 +456,30 @@
 <!-- ANA LAYOUT: SOL SIDEBAR + ANA İÇERİK -->
 <div id="main-content" class="sayfa-layout" style="visibility:hidden;">
 
-  <!-- ⬅️ SOL SIDEBAR — FİLTRELER -->
   <aside class="filtre-sidebar">
     <div class="sidebar-baslik">🔍 Filtreler</div>
-
     <div class="filtre-bar">
       <button type="button" class="aktif" data-filtre="hepsi" onclick="filtreSec(this)">📋 Hepsi</button>
       <button type="button" data-filtre="konut" onclick="filtreSec(this)">🏠 Konutlar</button>
       <button type="button" data-filtre="isletme" onclick="filtreSec(this)">🏢 İşletmeler</button>
     </div>
-
     <hr class="sidebar-ayrac">
-
     <div class="filtre-bar">
       <button type="button" data-filtre="bugun" onclick="filtreSec(this)">📅 Bugün</button>
       <button type="button" data-filtre="yaklasan" onclick="filtreSec(this)">🔔 Yaklaşan</button>
       <button type="button" data-filtre="gecmis" onclick="filtreSec(this)">⚠️ Gecikmiş</button>
     </div>
-
     <hr class="sidebar-ayrac">
-
     <div class="filtre-bar">
       <button type="button" data-filtre="yapildi" onclick="filtreSec(this)">✅ Yapıldı</button>
       <button type="button" data-filtre="yapilmadi" onclick="filtreSec(this)">⏳ Yapılmadı</button>
     </div>
-
     <hr class="sidebar-ayrac">
-
     <button type="button" class="excel-btn" onclick="excelAktar()">📥 Excel'e Aktar</button>
     <button type="button" class="ice-aktar-btn" onclick="iceAktarmaAc()">📤 Toplu İçe Aktar</button>
   </aside>
 
-  <!-- ➡️ ANA İÇERİK -->
   <div class="ana-icerik">
-
     <div class="ust-bar">
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
@@ -409,7 +490,6 @@
 
     <h1>🐜 Müşteri Takip Sistemi</h1>
 
-    <!-- AY ÖZET PANEL -->
     <div class="ay-ozet-panel" id="ayOzetPanel" style="display:none;">
       <div class="ay-ozet-baslik">
         <div class="baslik-metin">📅 Seçili Ay Özeti <span class="ay-adi" id="ayOzetBaslik">-</span></div>
@@ -480,7 +560,6 @@
       <div>⏳ <b>Yapılmadı:</b> <span class="yapilmadi-span" id="ozetYapilmadi">0</span></div>
       <div>💰 <b>Görünen ciro:</b> <span id="ozetCiro">₺0</span></div>
     </div>
-
   </div>
 </div>
 
@@ -574,7 +653,6 @@
   </div>
 </div>
 
-<!-- ANA SCRIPT -->
 <script>
   const MAHALLELER = {
     "Adalar": ["Büyükada","Heybeliada","Burgazada","Kınalıada"], "Arnavutköy": ["Anadolu","Arnavutköy Merkez","Bolluca","Haraççı","Hadımköy","Taşoluk"], "Ataşehir": ["Atatürk","Barbaros","Esatpaşa","Fetih","İçerenköy","Kayışdağı","Küçükbakkalköy","Mevlana","Mimar Sinan","Mustafa Kemal","Örnek","Yeni Çamlıca","Yenisahra"], "Avcılar": ["Ambarlı","Cihangir","Denizköşkler","Firuzköy","Gümüşpala","Merkez","Mustafa Kemal Paşa","Tahtakale","Üniversite","Yeşilkent"], "Bağcılar": ["Bağlar","Barbaros","Çınar","Demirkapı","Evren","Fatih","Fevzi Çakmak","Göztepe","Güneşli","Hürriyet","İnönü","Kâzım Karabekir","Kemalpaşa","Kirazlı","Mahmutbey","Merkez","Sancaktepe","Yavuz Selim","Yenigün","Yenimahalle","Yıldıztepe","100. Yıl"], "Bahçelievler": ["Bahçelievler Merkez","Cumhuriyet","Çobançeşme","Fevzi Çakmak","Hürriyet","Kocasinan","Siyavuşpaşa","Soğanlı","Şirinevler","Yenibosna","Zafer"], "Bakırköy": ["Ataköy 1. Kısım","Ataköy 2-5-6. Kısım","Ataköy 3-4-11. Kısım","Ataköy 7-8-9-10. Kısım","Basınköy","Cevizlik","Kartaltepe","Osmaniye","Sakızağacı","Şenlikköy","Yenimahalle","Yeşilköy","Yeşilyurt","Zeytinlik","Zuhuratbaba"], "Başakşehir": ["Altınşehir","Bahçeşehir 1. Kısım","Bahçeşehir 2. Kısım","Başak","Başakşehir","Güvercintepe","İkitelli OSB","Kayabaşı","Şahintepe","Şamlar","Ziya Gökalp"], "Bayrampaşa": ["Altıntepsi","Cevatpaşa","İsmetpaşa","Kartaltepe","Kocatepe","Muratpaşa","Orta","Terazidere","Vatan","Yenidoğan","Yıldırım"], "Beşiktaş": ["Abbasağa","Akat","Arnavutköy","Balmumcu","Bebek","Cihannüma","Dikilitaş","Etiler","Gayrettepe","Konaklar","Kültür","Kuruçeşme","Levazım","Levent","Mecidiye","Muradiye","Nisbetiye","Ortaköy","Sinanpaşa","Türkali","Ulus","Vişnezade","Yıldız"], "Beykoz": ["Acarlar","Anadolu Hisarı","Anadolufeneri","Baklacı","Cumhuriyet","Çamlıbahçe","Çengeldere","Çubuklu","Göllü","Göksu","Gümüşsuyu","İncirköy","Kanlıca","Kavacık","Merkez","Ortaçeşme","Paşabahçe","Rüzgarlıbahçe","Soğuksu","Tokatköy","Yalıköy","Yenimahalle"], "Beylikdüzü": ["Adnan Kahveci","Barış","Büyükşehir","Cumhuriyet","Dereağzı","Gürpınar","Kavaklı","Marmara","Sahil","Yakuplu"], "Beyoğlu": ["Arap Cami","Asmalı Mescit","Bedrettin","Bereketzade","Bostan","Bülbül","Camiikebir","Cihangir","Çatma Mescit","Çukur","Emekyemez","Evliya Çelebi","Fetihtepe","Firuzağa","Gümüşsuyu","Hacıahmet","Hacımimi","Halıcıoğlu","Hüseyinağa","İstiklal","Kadımehmet Efendi","Kaptanpaşa","Karaköy","Kasımpaşa","Katip Mustafa Çelebi","Keçeci Piri","Kemankeş Karamustafa Paşa","Kılıçali Paşa","Kocatepe","Kulaksız","Kuloğlu","Küçük Piyale","Müeyyedzade","Örnektepe","Piri Paşa","Piyalepaşa","Şahkulu","Şehit Muhtar","Sütlüce","Taksim","Tomtom","Yahya Kahya","Yenişehir"], "Büyükçekmece": ["19 Mayıs","Alkent 2000","Atatürk","Bahçelievler","Celaliye","Cumhuriyet","Çakmaklı","Dizdariye","Ekinoba","Fatih","Güzelce","Hürriyet","Kamiloba","Karaağaç","Kumburgaz","Mimaroba","Mimarsinan","Muratçeşme","Pınartepe","Sinanoba","Türkoba","Ulus","Yenimahalle"], "Çatalca": ["Binkılıç","Çakıl","Çanakça","Dağyenice","Elbasan","Ferhatpaşa","Gökçeali","Hallaçlı","Hisarbeyli","İnceğiz","İzzettin","Kaleiçi","Karacaköy","Kestanelik","Muratbey","Ormanlı","Ovayenice","Subaşı","Yalıköy"], "Çekmeköy": ["Aydınlar","Cumhuriyet","Çamlık","Çatalmeşe","Ekşioğlu","Güngören","Hamidiye","Kirazlıdere","Mehmet Akif","Mimar Sinan","Nişantepe","Ömerli","Soğukpınar","Sultançiftliği","Taşdelen","Alemdağ","Reşadiye"], "Esenler": ["Birlik","Çiftehavuzlar","Davutpaşa","Fatih","Fevzi Çakmak","Havaalanı","Kâzım Karabekir","Kemer","Menderes","Mimar Sinan","Namık Kemal","Nene Hatun","Oruçreis","Tuna","Turgutreis","Yavuz Selim","Yüzyıl"], "Esenyurt": ["Akçaburgaz","Ardıçlı","Aşık Veysel","Atatürk","Bağlarçeşme","Balıkyolu","Barbaros Hayrettin Paşa","Battalgazi","Cumhuriyet","Çınar","Esenkent","Fatih","Gökevler","Güzelyurt","Hürriyet","İncirtepe","İnönü","İstiklal","Koza","Mehmet Akif Ersoy","Mehterçeşme","Mevlana","Namık Kemal","Necip Fazıl Kısakürek","Orhan Gazi","Osmangazi","Pınar","Piri Reis","Saadetdere","Selahaddin Eyyubi","Sultaniye","Şehitler","Talatpaşa","Turgut Özal","Üçevler","Yenikent","Yeşilkent","Zafer"], "Eyüpsultan": ["Akşemsettin","Alibeyköy","Çırçır","Defterdar","Düğmeciler","Emniyettepe","Esentepe","Göktürk","Güzeltepe","İslambey","Karadolap","Kemerburgaz","Mimar Sinan","Nişanca","Rami Cuma","Rami Yeni","Sakarya","Silahtarağa","Topçular","Yeşilpınar"], "Fatih": ["Aksaray","Akşemsettin","Atikali","Ayvansaray","Balat","Beyazıt","Cerrahpaşa","Cibali","Demirtaş","Haseki Sultan","Hırkai Şerif","Hobyar","İskenderpaşa","Karagümrük","Koca Mustafapaşa","Mevlanakapı","Mimar Hayrettin","Mimar Kemalettin","Molla Fenari","Molla Gürani","Şehremini","Sultan Ahmet","Süleymaniye","Topkapı","Yedikule","Zeyrek"], "Gaziosmanpaşa": ["Bağlarbaşı","Barbaros Hayrettin Paşa","Fevzi Çakmak","Hürriyet","Karadeniz","Karayolları","Karlıtepe","Kâzım Karabekir","Merkez","Mevlana","Pazariçi","Sarıgöl","Şemsipaşa","Yeni Mahalle","Yenidoğan","Yıldıztabya"], "Güngören": ["Abdurrahman Nafiz Gürman","Akıncılar","Gençosman","Güneştepe","Güven","Haznedar","Mareşal Çakmak","Mehmet Nesih Özmen","Merkez","Sanayi","Tozkoparan"], "Kadıköy": ["19 Mayıs","Acıbadem","Bostancı","Caddebostan","Caferağa","Dumlupınar","Eğitim","Erenköy","Fenerbahçe","Feneryolu","Fikirtepe","Göztepe","Hasanpaşa","Koşuyolu","Kozyatağı","Merdivenköy","Osmanağa","Rasimpaşa","Sahrayıcedit","Suadiye","Zühtüpaşa"], "Kağıthane": ["Çağlayan","Çeliktepe","Emniyet Evleri","Gültepe","Gürsel","Hamidiye","Harmantepe","Hürriyet","Mehmet Akif Ersoy","Merkez","Nurtepe","Orta","Sanayi","Seyrantepe","Şirintepe","Talatpaşa","Telsizler","Yahya Kemal","Yeşilce"], "Kartal": ["Atalar","Cevizli","Cumhuriyet","Çavuşoğlu","Esentepe","Gümüşpınar","Hürriyet","Karlıktepe","Kordonboyu","Orhantepe","Orta","Petrol İş","Soğanlık Yeni","Topselvi","Uğur Mumcu","Yakacık Çarşı","Yakacık Yeni","Yalı","Yukarı"], "Küçükçekmece": ["Atakent","Atatürk","Beşyol","Cennet","Cumhuriyet","Fatih","Fevzi Çakmak","Gültepe","Halkalı Merkez","İnönü","İstasyon","Kanarya","Kartaltepe","Kemalpaşa","Mehmet Akif","Söğütlü Çeşme","Sultan Murat","Tevfikbey","Yarımburgaz","Yeni Mahalle","Yeşilova"], "Maltepe": ["Altayçeşme","Altıntepe","Aydınevler","Bağlarbaşı","Başıbüyük","Büyükbakkalköy","Cevizli","Çınar","Esenkent","Feyzullah","Fındıklı","Girne","Gülensu","Gülsuyu","İdealtepe","Küçükyalı","Yalı","Zümrütevler"], "Pendik": ["Ahmet Yesevi","Bahçelievler","Batı","Çamçeşme","Çınardere","Doğu","Dumlupınar","Ertuğrul Gazi","Esenler","Esenyalı","Fatih","Fevzi Çakmak","Güllübağlar","Güzelyalı","Harmandere","Kavakpınar","Kaynarca","Kurtköy","Orhangazi","Orta","Ramazanoğlu","Sanayi","Sapanbağları","Sülüntepe","Şeyhli","Velibaba","Yayalar","Yeni","Yenişehir","Yeşilbağlar"], "Sancaktepe": ["Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","Hilal","İnönü","Kemal Türkler","Meclis","Merve","Mevlana","Osmangazi","Paşaköy","Safa","Sarıgazi","Veysel Karani","Yenidoğan","Yunus Emre"], "Sarıyer": ["Ayazağa","Bahçeköy","Baltalimanı","Büyükdere","Cumhuriyet","Çayırbaşı","Darüşşafaka","Emirgan","Ferahevler","Fatih Sultan Mehmet","Gümüşdere","Huzur","İstinye","Kâzım Karabekir","Kireçburnu","Kocataş","Maden","Maslak","PTT Evleri","Pınar","Poligon","Reşitpaşa","Rumeli Hisarı","Rumeli Kavağı","Sarıyer Merkez","Tarabya","Uskumruköy","Yeniköy","Zekeriyaköy"], "Silivri": ["Alibey","Alipaşa","Büyükçavuşlu","Cumhuriyet","Çanta Balaban","Çanta Sancaktepe","Değirmenköy","Fatih","Gümüşyaka","Kadıköy","Kavaklı","Mimarsinan","Ortaköy","Piri Mehmet Paşa","Semizkumlar","Selimpaşa","Sinanoba","Yeni","Yolçatı"], "Sultanbeyli": ["Abdurrahmangazi","Adil","Ahmet Yesevi","Akşemsettin","Battalgazi","Fatih","Hamidiye","Hasanpaşa","Mecidiye","Mehmet Akif","Mimar Sinan","Necip Fazıl","Orhangazi","Turgut Reis","Yavuz Selim"], "Sultangazi": ["50. Yıl","75. Yıl","Cebeci","Cumhuriyet","Esentepe","Eski Habipler","Gazi","Habibler","İsmetpaşa","Malkoçoğlu","Sultançiftliği","Uğur Mumcu","Yayla","Yunus Emre","Zübeyde Hanım"], "Şile": ["Ağva","Balibey","Çavuş","Hacıkasım","Kumbaba","Meşrutiyet","Yeniköy"], "Şişli": ["19 Mayıs","Bozkurt","Cumhuriyet","Duatepe","Ergenekon","Esentepe","Eskişehir","Feriköy","Fulya","Gülbahar","Halaskargazi","Halide Edip Adıvar","Harbiye","İnönü","İzzetpaşa","Kaptanpaşa","Kuştepe","Mahmut Şevket Paşa","Mecidiyeköy","Merkez","Meşrutiyet","Nişantaşı","Okmeydanı","Paşa","Pangaltı","Teşvikiye","Yayla"], "Tuzla": ["Anadolu","Aydınlı","Aydıntepe","Cami","Evliya Çelebi","Fatih","İçmeler","İstasyon","Mescit","Mimar Sinan","Orhanlı","Orta","Postane","Şifa","Tepeören","Yayla"], "Ümraniye": ["Adem Yavuz","Altınşehir","Armağanevler","Aşağı Dudullu","Atakent","Atatürk","Cemil Meriç","Çakmak","Çamlık","Dumlupınar","Elmalıkent","Esenevler","Fatih Sultan Mehmet","Hekimbaşı","Huzur","Ihlamurkuyu","İnkılap","İstiklal","Kâzım Karabekir","Madenler","Mehmet Akif","Namık Kemal","Necip Fazıl","Parseller","Saray","Site","Şerifali","Tantavi","Tatlısu","Tepeüstü","Yamanevler","Yukarı Dudullu"], "Üsküdar": ["Acıbadem","Ahmediye","Altunizade","Aziz Mahmut Hüdayi","Bahçelievler","Barbaros","Beylerbeyi","Bulgurlu","Burhaniye","Cumhuriyet","Çengelköy","Ferah","Güzeltepe","İcadiye","Kandilli","Kirazlıtepe","Kısıklı","Küçük Çamlıca","Küçüksu","Kuzguncuk","Mehmet Akif Ersoy","Mimar Sinan","Murat Reis","Salacak","Selami Ali","Selimiye","Sultantepe","Ünalan","Valide-i Atik","Yavuztürk","Zeynep Kamil"], "Zeytinburnu": ["Beştelsiz","Çırpıcı","Gökalp","Kazlıçeşme","Maltepe","Merkezefendi","Nuripaşa","Seyitnizam","Sümer","Telsiz","Veliefendi","Yenidoğan","Yeşiltepe"]
@@ -610,13 +688,11 @@
     if (!sayi && sayi !== 0) return '-';
     return '₺' + Number(sayi).toLocaleString('tr-TR');
   }
-
   function tarihFormat(t) {
     if (!t) return '-';
     const [y, m, g] = t.split('-');
     return `${g}.${m}.${y}`;
   }
-
   function bugunISO() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -626,10 +702,7 @@
     if (event) { event.stopPropagation(); event.preventDefault(); }
     const m = musteriler.find(x => x.id === musteriId);
     if (!m) return;
-    const adresParcalari = [
-      m.sokak, m.binaNo ? `No:${m.binaNo}` : null, m.daireNo ? `Daire:${m.daireNo}` : null,
-      m.mahalle, m.ilce, 'İstanbul'
-    ].filter(Boolean);
+    const adresParcalari = [m.sokak, m.binaNo ? `No:${m.binaNo}` : null, m.daireNo ? `Daire:${m.daireNo}` : null, m.mahalle, m.ilce, 'İstanbul'].filter(Boolean);
     if (adresParcalari.length < 2) { alert('Adres bilgisi eksik.'); return; }
     const tamAdres = adresParcalari.join(', ');
     window.open(`https://yandex.com.tr/maps/?rtext=~${encodeURIComponent(tamAdres)}&rtt=auto`, '_blank');
@@ -643,7 +716,6 @@
     form.classList.remove('duzenleme-modu');
     document.getElementById('musteriModal').classList.add('aktif');
   }
-
   function modalKapat3() {
     document.getElementById('musteriModal').classList.remove('aktif');
     duzenlemeyiIptalEt();
@@ -660,7 +732,7 @@
       const bugunTarih = new Date(); bugunTarih.setHours(0,0,0,0);
       if (baz < bugunTarih) { baz.setTime(bugunTarih.getTime()); baz.setDate(baz.getDate() + gun); }
       const yeniTarih = `${baz.getFullYear()}-${String(baz.getMonth()+1).padStart(2,'0')}-${String(baz.getDate()).padStart(2,'0')}`;
-      if(confirm(`✅ İş tamamlandı olarak işaretlenecek.\n\n📅 Bu müşteri ${gun} günde bir tekrar ediyor.\n\nPlanlanan tarih: ${tarihFormat(bazTarihStr)}\n+ ${gun} gün\n= Yeni randevu: ${tarihFormat(yeniTarih)}\n\nEski kayıt ciro olarak saklanacak, ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecek. Onaylıyor musunuz?`)) {
+      if (confirm(`✅ İş tamamlandı olarak işaretlenecek.\n\n📅 Bu müşteri ${gun} günde bir tekrar ediyor.\n\nPlanlanan tarih: ${tarihFormat(bazTarihStr)}\n+ ${gun} gün\n= Yeni randevu: ${tarihFormat(yeniTarih)}\n\nEski kayıt ciro olarak saklanacak, ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecek. Onaylıyor musunuz?`)) {
         try {
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: true });
           const yeniMusteri = {
@@ -746,7 +818,7 @@
         <div class="saat">🕐 ${saatMetni} ${m.sonrakiTarih === gun.iso && m.islemTarihi !== gun.iso ? '<span class="badge">RANDEVU</span>' : ''} ${m.islemTarihi === gun.iso ? '<span class="badge" style="background:#f39c12;">BUGÜN</span>' : ''}</div>
         <div class="isim">${isim} ${m.web ? '<span class="rozet rozet-web">🌐 Web</span>' : ''}</div>
         <div class="bilgi">📍 ${m.ilce} / ${m.mahalle}<br>🐜 ${m.hasere} ${fiyatMetni ? ' • ' + fiyatMetni : ''}<br>📞 ${m.telefon}</div>
-        <button type="button" onclick="event.stopPropagation(); yandexMapsAc('${m.id}', event)" style="margin-top:8px; background:rgba(255,255,255,0.25); padding:6px 12px; font-size:12px; border:2px solid rgba(255,255,255,0.4);">🗺️ Yol Tarifi Al</button>
+        <button type="button" onclick="event.stopPropagation(); yandexMapsAc('${m.id}', event)" style="margin-top:8px; background:rgba(255,255,255,0.25); padding:6px 12px; font-size:12px; border:2px solid rgba(255,255,255,0.4); color:#fff; border-radius:6px; font-weight:bold; cursor:pointer;">🗺️ Yol Tarifi Al</button>
       `;
       div.onclick = (e) => { if (e.target.type !== 'checkbox' && e.target.tagName !== 'BUTTON') duzenle(m.id); };
       liste.appendChild(div);
@@ -1211,7 +1283,6 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
   document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
 </script>
 
-<!-- FIREBASE MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
