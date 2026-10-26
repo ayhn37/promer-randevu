@@ -1719,8 +1719,8 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
       if (aktifFiltre === 'konut') return m.tip === 'konut' && !yapildi;
       if (aktifFiltre === 'isletme') return m.tip === 'isletme' && !yapildi;
       
-      // Periyodik: Tekrar sıklığı 0'dan farklı olan TÜM kayıtlar (yapıldı + yapılmadı)
-      if (aktifFiltre === 'periyodik') return String(m.tekrarSikligi || '0') !== '0';
+      // Periyodik: Sadece tekrar sıklığı olan ve HENÜZ YAPILMAMIŞ (aktif) kayıtlar
+      if (aktifFiltre === 'periyodik') return String(m.tekrarSikligi || '0') !== '0' && !yapildi;
 
       if (aktifFiltre === 'yapildi') return yapildi;
       if (aktifFiltre === 'hepsi') return true;
