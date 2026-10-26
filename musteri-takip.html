@@ -360,6 +360,19 @@
     .ozet-bar { flex-direction: column !important; gap: 6px !important; padding: 12px 16px !important; }
     .ozet-bar div { text-align: center !important; font-size: 13px !important; }
     .ozet-bar span { font-size: 16px !important; }
+
+    /* 🔒 Ciro kilit ikonu mobilde daha büyük */
+    #ciroToggleBtn {
+      font-size: 22px !important;
+      padding: 4px 8px !important;
+      display: inline-block !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+      line-height: 1 !important;
+      text-align: center !important;
+      background: rgba(0,0,0,0.05) !important;
+      border-radius: 6px !important;
+    }
   }
 
   @media screen and (max-width: 400px) {
@@ -429,6 +442,7 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
         <button type="button" class="ekle-btn" style="background:#8e44ad;" onclick="apiKeyAyarla()">🧠 AI Ayarı</button>
+        <button type="button" class="ekle-btn" style="background:#c0392b;" onclick="ciroSifreDegistir()">🔐 Ciro Şifresi</button>
       </div>
       <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış Yap</button>
     </div>
@@ -442,10 +456,10 @@
       </div>
       <div class="ay-ozet-icerik">
         <div class="ay-ozet-kart"><div class="ay-ozet-label">📋 Toplam İş</div><div class="ay-ozet-deger" id="ayOzetAdet">0</div></div>
-        <div class="ay-ozet-kart vurgu"><div class="ay-ozet-label">💵 Toplam Ciro</div><div class="ay-ozet-deger" id="ayOzetCiro">₺0</div></div>
+        <div class="ay-ozet-kart vurgu"><div class="ay-ozet-label">💵 Toplam Ciro</div><div class="ay-ozet-deger" id="ayOzetCiro">₺••••</div></div>
         <div class="ay-ozet-kart"><div class="ay-ozet-label">✅ Yapıldı</div><div class="ay-ozet-deger" id="ayOzetYapildi">0</div></div>
         <div class="ay-ozet-kart"><div class="ay-ozet-label">⏳ Yapılmadı</div><div class="ay-ozet-deger" id="ayOzetYapilmadi">0</div></div>
-        <div class="ay-ozet-kart"><div class="ay-ozet-label">📊 Ortalama İş</div><div class="ay-ozet-deger" id="ayOzetOrtalama">₺0</div></div>
+        <div class="ay-ozet-kart"><div class="ay-ozet-label">📊 Ortalama İş</div><div class="ay-ozet-deger" id="ayOzetOrtalama">₺••••</div></div>
       </div>
     </div>
 
@@ -465,7 +479,11 @@
       <div class="kart kart-bugun"><div class="baslik">📅 Bugün</div><div class="sayi" id="kartBugun">0</div><div class="alt">Bugün işlem günü</div></div>
       <div class="kart kart-yaklasan"><div class="baslik">🔔 Yaklaşan</div><div class="sayi" id="kartYaklasan">0</div><div class="alt">3 gün içinde</div></div>
       <div class="kart kart-gecmis"><div class="baslik">⚠️ Gecikmiş</div><div class="sayi" id="kartGecmis">0</div><div class="alt">İşlem tarihi geçti</div></div>
-      <div class="kart kart-ciro-toplam"><div class="baslik">💵 Toplam Ciro</div><div class="sayi" id="kartCiroToplam">₺0</div><div class="alt">Tüm zamanlar</div></div>
+      <div class="kart kart-ciro-toplam">
+        <div class="baslik">💵 Toplam Ciro <span id="ciroToggleBtn" onclick="ciroToggle()" style="cursor:pointer;margin-left:6px;font-size:16px;user-select:none;" title="Göster / Gizle">🔒</span></div>
+        <div class="sayi" id="kartCiroToplam">₺••••</div>
+        <div class="alt">Tüm zamanlar</div>
+      </div>
       <div class="kart kart-ay-secim">
         <div class="baslik">📅 Aylık Ciro & Filtre</div>
         <div class="ay-secim-kutu">
@@ -476,7 +494,7 @@
           <select id="yilSecim" onchange="aySecimGuncelle()"></select>
           <div class="sonuc">
             <div>İşlem<strong id="aySecimAdet">0</strong></div>
-            <div>Ciro<strong id="aySecimCiro">₺0</strong></div>
+            <div>Ciro<strong id="aySecimCiro">₺••••</strong></div>
           </div>
         </div>
       </div>
@@ -503,7 +521,7 @@
       <div>📋 <b>Görünen kayıt:</b> <span id="ozetAdet">0</span></div>
       <div>✅ <b>Yapıldı:</b> <span class="yapildi-span" id="ozetYapildi">0</span></div>
       <div>⏳ <b>Yapılmadı:</b> <span class="yapilmadi-span" id="ozetYapilmadi">0</span></div>
-      <div>💰 <b>Görünen ciro:</b> <span id="ozetCiro">₺0</span></div>
+      <div>💰 <b>Görünen ciro:</b> <span id="ozetCiro">₺••••</span></div>
     </div>
   </div>
 </div>
@@ -609,6 +627,11 @@
 
   let GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || '';
 
+  // 🔒 CİRO ŞİFRE SİSTEMİ
+  let CIRO_SIFRE = localStorage.getItem('ciro_sifre') || 'promer2025';
+  let ciroGizli = true; // Sayfa yenilemesinde otomatik gizli başlar
+  const CIRO_OTO_GIZLE_MS = 120000; // 2 dakika sonra otomatik gizle
+
   function apiKeyAyarla() {
     const mevcut = GEMINI_API_KEY ? 'Mevcut anahtarınız kayıtlı. Değiştirmek için yenisini girin.' : 'Lütfen Gemini API Anahtarınızı girin.';
     const yeniKey = prompt('🧠 Yapay Zeka (Google Gemini) API Anahtarı\n\n' + mevcut + '\n\nÜcretsiz anahtar almak için: aistudio.google.com/app/apikey');
@@ -630,6 +653,63 @@
     if (!sayi && sayi !== 0) return '-';
     return '₺' + Number(sayi).toLocaleString('tr-TR');
   }
+
+  // 🔒 Ciro formatlama — gizli ise ₺•••• gösterir
+  function ciroFormat(sayi) {
+    if (ciroGizli) return '₺••••';
+    return paraFormat(sayi);
+  }
+
+  function ciroToggleButonGuncelle() {
+    const btn = document.getElementById('ciroToggleBtn');
+    if (btn) btn.textContent = ciroGizli ? '🔒' : '🔓';
+  }
+
+  function tumCiroYenile() {
+    try { dashboardGuncelle(); } catch(e) {}
+    try { aySecimGuncelle(); } catch(e) {}
+    try { haftayiYenile(); } catch(e) {}
+    try { listele(aramaKutusu.value); } catch(e) {}
+  }
+
+  function ciroToggle() {
+    if (!ciroGizli) {
+      ciroGizli = true;
+      ciroToggleButonGuncelle();
+      clearTimeout(window._ciroAutoHide);
+      tumCiroYenile();
+      return;
+    }
+    const girilen = prompt('🔒 Ciro bilgilerini görmek için şifre girin:\n\n(İlk şifre: promer2025 — değiştirmek için üstteki "🔐 Ciro Şifresi" butonunu kullanın)');
+    if (girilen === null) return;
+    if (girilen === CIRO_SIFRE) {
+      ciroGizli = false;
+      ciroToggleButonGuncelle();
+      tumCiroYenile();
+      // ⏱️ 2 dakika sonra otomatik gizle
+      clearTimeout(window._ciroAutoHide);
+      window._ciroAutoHide = setTimeout(() => {
+        ciroGizli = true;
+        ciroToggleButonGuncelle();
+        tumCiroYenile();
+      }, CIRO_OTO_GIZLE_MS);
+    } else {
+      alert('❌ Yanlış şifre!');
+    }
+  }
+
+  function ciroSifreDegistir() {
+    const mevcut = prompt('Mevcut ciro şifresini girin:');
+    if (mevcut === null) return;
+    if (mevcut !== CIRO_SIFRE) { alert('❌ Yanlış şifre!'); return; }
+    const yeni = prompt('Yeni şifre girin (en az 4 karakter):');
+    if (yeni === null) return;
+    if (yeni.length < 4) { alert('❌ Şifre en az 4 karakter olmalı!'); return; }
+    CIRO_SIFRE = yeni;
+    localStorage.setItem('ciro_sifre', yeni);
+    alert('✅ Ciro şifresi başarıyla değiştirildi!');
+  }
+
   function tarihFormat(t) {
     if (!t) return '-';
     const [y, m, g] = t.split('-');
@@ -751,7 +831,7 @@
     isler.forEach(m => {
       const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
       const saatMetni = m.saat || 'Saat belirtilmedi';
-      const fiyatMetni = m.fiyat ? `💰 ${paraFormat(m.fiyat)}` : '';
+      const fiyatMetni = m.fiyat ? `💰 ${ciroFormat(m.fiyat)}` : '';
       const yapildi = m.yapildi === true;
       const div = document.createElement('div');
       div.className = 'bugun-item' + (yapildi ? ' yapildi' : '');
@@ -768,6 +848,9 @@
   }
 
   function seciliGunIsListesiYazdir() {
+    if (ciroGizli) {
+      if (!confirm('⚠️ Ciro şu an gizli.\n\nYazdırılacak iş listesinde fiyatlar gerçek değerleriyle görünecek. Devam etmek istiyor musunuz?')) return;
+    }
     const gunler = haftaGunleriniAl();
     const gun = gunler[seciliGunIndex];
     const isler = musteriler.filter(m => m.sonrakiTarih === gun.iso || m.islemTarihi === gun.iso).sort((a, b) => (a.saat || '99:99').localeCompare(b.saat || '99:99'));
@@ -846,15 +929,15 @@
       if (panel) {
         document.getElementById('ayOzetBaslik').textContent = `${ayAdlari[Number(ay)]} ${yil}`;
         document.getElementById('ayOzetAdet').textContent = adet;
-        document.getElementById('ayOzetCiro').textContent = paraFormat(ciro);
+        document.getElementById('ayOzetCiro').textContent = ciroFormat(ciro);
         document.getElementById('ayOzetYapildi').textContent = yapildi;
         document.getElementById('ayOzetYapilmadi').textContent = yapilmadi;
-        document.getElementById('ayOzetOrtalama').textContent = adet > 0 ? paraFormat(Math.round(ciro / adet)) : paraFormat(0);
+        document.getElementById('ayOzetOrtalama').textContent = adet > 0 ? ciroFormat(Math.round(ciro / adet)) : ciroFormat(0);
         panel.style.display = 'block';
       }
     }
     document.getElementById('aySecimAdet').textContent = adet;
-    document.getElementById('aySecimCiro').textContent = paraFormat(ciro);
+    document.getElementById('aySecimCiro').textContent = ciroFormat(ciro);
     listele(aramaKutusu.value);
   }
 
@@ -994,7 +1077,7 @@
     document.getElementById('kartBugun').textContent = bugunSayi;
     document.getElementById('kartYaklasan').textContent = yaklasanSayi;
     document.getElementById('kartGecmis').textContent = gecmisSayi;
-    document.getElementById('kartCiroToplam').textContent = paraFormat(ciroToplam);
+    document.getElementById('kartCiroToplam').textContent = ciroFormat(ciroToplam);
     const gecmisKart = document.querySelector('.kart-gecmis');
     if (gecmisKart) {
       if (gecmisSayi > 0) { gecmisKart.style.animation = 'geciktiPulse 1.5s infinite'; gecmisKart.style.boxShadow = '0 0 20px rgba(231,76,60,0.6)'; }
@@ -1034,6 +1117,9 @@
 
   function excelAktar() {
     if (musteriler.length === 0) { alert('Aktarılacak kayıt yok!'); return; }
+    if (ciroGizli) {
+      if (!confirm('⚠️ Ciro şu an gizli.\n\nExcel çıktısında fiyatlar gerçek değerleriyle yer alacak. Devam etmek istiyor musunuz?')) return;
+    }
     const basliklar = ['Yapıldı','Tip','Ad/İşletme','Soyad','Telefon','İlçe','Mahalle','Sokak/Cadde','Bina No','Daire No','Haşere','Fiyat (₺)','İşlem Tarihi','Saat','Sonraki İşlem Tarihi','Notlar'];
     const satirlar = musteriler.map(m => [m.yapildi ? 'EVET' : 'HAYIR', m.tip === 'isletme' ? 'İşletme' : 'Konut', m.ad, m.soyad || '', m.telefon, m.ilce, m.mahalle, m.sokak, m.binaNo || '', m.daireNo || '', m.hasere, m.fiyat ? Number(m.fiyat).toLocaleString('tr-TR') : '', tarihFormat(m.islemTarihi), m.saat || '', m.sonrakiTarih ? tarihFormat(m.sonrakiTarih) : '', m.notlar || '']);
     const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
@@ -1201,7 +1287,7 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
       } else { islemGosterim = tarihFormat(m.islemTarihi); }
       const waDisabled = m.sonrakiTarih ? '' : 'disabled';
       const notGosterim = m.notlar ? `<div class="not-kutusu">📝 ${m.notlar.length > 80 ? m.notlar.substring(0, 80) + '...' : m.notlar}</div>` : '<em style="color:#bdc3c7; font-size:11px;">-</em>';
-      const fiyatGosterim = m.fiyat ? `<span class="fiyat">${paraFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
+      const fiyatGosterim = m.fiyat ? `<span class="fiyat">${ciroFormat(m.fiyat)}</span>` : '<span class="fiyat-belirtilmedi">-</span>';
       const tr = document.createElement('tr'); tr.className = satirClass;
       tr.innerHTML = `
         <td class="tik-hucre" data-label="✅"><input type="checkbox" class="tik-kutu" ${yapildi ? 'checked' : ''} onchange="tikDegistir('${m.id}')" title="Yapıldı olarak işaretle"></td>
@@ -1229,8 +1315,11 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
     document.getElementById('ozetAdet').textContent = gorunenAdet;
     document.getElementById('ozetYapildi').textContent = gorunenYapildi;
     document.getElementById('ozetYapilmadi').textContent = gorunenYapilmadi;
-    document.getElementById('ozetCiro').textContent = paraFormat(gorunenCiro);
+    document.getElementById('ozetCiro').textContent = ciroFormat(gorunenCiro);
   }
+
+  // İlk yüklemede kilit ikonunu ayarla
+  ciroToggleButonGuncelle();
 
   aramaKutusu.addEventListener('input', e => listele(e.target.value));
   document.getElementById('whatsappModal').addEventListener('click', function(e) { if (e.target === this) modalKapat(); });
@@ -1316,6 +1405,10 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
         }, (error) => { console.log("Bookings hatası:", error); });
       }
     } else {
+      // Çıkışta ciro tekrar gizlenir
+      ciroGizli = true;
+      clearTimeout(window._ciroAutoHide);
+      ciroToggleButonGuncelle();
       if (gate) gate.style.display = 'flex';
       if (mainContent) mainContent.style.visibility = 'hidden';
       if (loadingScreen) loadingScreen.style.display = 'none';
