@@ -543,11 +543,11 @@
       <div class="kart kart-ay-secim">
         <div class="baslik">📅 Aylık Ciro & Filtre</div>
         <div class="ay-secim-kutu">
-          <select id="aySecim" onchange="aySecimGuncelle()">
+          <select id="aySecim" onchange="aySecimSecildi()">
             <option value="">Tüm Zamanlar</option>
             <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option><option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option><option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option><option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
           </select>
-          <select id="yilSecim" onchange="aySecimGuncelle()"></select>
+          <select id="yilSecim" onchange="aySecimSecildi()"></select>
           <div class="sonuc">
             <div>İşlem<strong id="aySecimAdet">0</strong></div>
             <div>Ciro<strong id="aySecimCiro">₺••••</strong></div>
@@ -975,12 +975,29 @@
   }
   yilMenusunuDoldur();
 
-   function aySecimBaslat() {
-    // Varsayılan olarak ay filtresi seçili gelmesin (Tüm Zamanlar açık kalsın)
+  function aySecimBaslat() {
+    // Varsayılan olarak "Tüm Zamanlar" seçili gelsin
     document.getElementById('aySecim').value = '';
     document.getElementById('yilSecim').value = new Date().getFullYear();
   }
   aySecimBaslat();
+
+  function aySecimSecildi() {
+    // Tarih filtresini sıfırla
+    aktifTarihFiltre = '';
+    document.getElementById('tarihFiltreInput').value = '';
+    document.getElementById('tarihFiltreBilgi').textContent = '';
+
+    // Ay seçildiyse, soldaki menüyü otomatik "Tüm Kayıtlar"a geçir
+    if (document.getElementById('aySecim').value !== '') {
+      aktifFiltre = 'hepsi';
+      document.querySelectorAll('.filtre-sidebar button[data-filtre]').forEach(b => b.classList.remove('aktif'));
+      const btn = document.querySelector('.filtre-sidebar button[data-filtre="hepsi"]');
+      if (btn) btn.classList.add('aktif');
+    }
+    
+    aySecimGuncelle();
+  }
 
   function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
@@ -1037,7 +1054,7 @@
   }
   tipDegistir();
 
-    function filtreSec(btn) {
+  function filtreSec(btn) {
     document.querySelectorAll('.filtre-sidebar button[data-filtre]').forEach(b => b.classList.remove('aktif'));
     btn.classList.add('aktif');
     aktifFiltre = btn.dataset.filtre;
@@ -1054,7 +1071,6 @@
       document.getElementById('tarihFiltreBilgi').textContent = '';
     }
 
-    // aySecimGuncelle() içinde listele() çağrıldığı için listeyi otomatik yeniler
     aySecimGuncelle(); 
   }
 
