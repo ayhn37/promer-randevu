@@ -975,10 +975,10 @@
   }
   yilMenusunuDoldur();
 
-  function aySecimBaslat() {
-    const bugun = new Date();
-    document.getElementById('aySecim').value = bugun.getMonth();
-    document.getElementById('yilSecim').value = bugun.getFullYear();
+   function aySecimBaslat() {
+    // Varsayılan olarak ay filtresi seçili gelmesin (Tüm Zamanlar açık kalsın)
+    document.getElementById('aySecim').value = '';
+    document.getElementById('yilSecim').value = new Date().getFullYear();
   }
   aySecimBaslat();
 
@@ -1037,16 +1037,25 @@
   }
   tipDegistir();
 
-  function filtreSec(btn) {
+    function filtreSec(btn) {
     document.querySelectorAll('.filtre-sidebar button[data-filtre]').forEach(b => b.classList.remove('aktif'));
     btn.classList.add('aktif');
     aktifFiltre = btn.dataset.filtre;
-    if ((aktifFiltre === 'isletme' || aktifFiltre === 'konut') && document.getElementById('aySecim').value !== '') {
-      document.getElementById('aySecim').value = '';
-      aySecimGuncelle();
-      return;
+    
+    // Her filtre değişiminde Ay ve Tarih filtrelerini sıfırla
+    const aySecimEl = document.getElementById('aySecim');
+    if (aySecimEl && aySecimEl.value !== '') {
+      aySecimEl.value = '';
     }
-    listele(aramaKutusu.value);
+    
+    if (aktifTarihFiltre) {
+      aktifTarihFiltre = '';
+      document.getElementById('tarihFiltreInput').value = '';
+      document.getElementById('tarihFiltreBilgi').textContent = '';
+    }
+
+    // aySecimGuncelle() içinde listele() çağrıldığı için listeyi otomatik yeniler
+    aySecimGuncelle(); 
   }
 
   form.addEventListener('submit', async function(e) {
