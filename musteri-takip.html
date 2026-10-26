@@ -52,8 +52,10 @@
   .filtre-sidebar .filtre-bar button[data-filtre="bekleyen"].aktif { background: #8e44ad; border-color: #8e44ad; }
   .filtre-sidebar .filtre-bar button[data-filtre="isletme"].aktif { background: #3498db; border-color: #3498db; }
   .filtre-sidebar .filtre-bar button[data-filtre="konut"].aktif { background: #16a085; border-color: #16a085; }
+  .filtre-sidebar .filtre-bar button[data-filtre="periyodik"].aktif { background: #9b59b6; border-color: #9b59b6; box-shadow: 0 2px 8px rgba(155,89,182,0.4); }
   .filtre-sidebar .filtre-bar button[data-filtre="yapildi"].aktif { background: #1a5276; border-color: #1a5276; }
   .filtre-sidebar .filtre-bar button[data-filtre="hepsi"].aktif { background: #7f8c8d; border-color: #7f8c8d; }
+  
   .filtre-sidebar .excel-btn, .filtre-sidebar .ice-aktar-btn {
     width: 100%; margin: 0; padding: 10px 12px; font-size: 12px; font-weight: bold;
     border-radius: 6px; cursor: pointer; border: none; color: #fff;
@@ -416,6 +418,10 @@
     .filtre-sidebar .filtre-bar button.aktif {
       transform: translateY(-1px) !important;
       box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
+    }
+    /* Periyodik butonu tam genişlik */
+    .filtre-sidebar .filtre-bar button[data-filtre="periyodik"] {
+      grid-column: 1 / -1 !important;
     }
     .filtre-sidebar .excel-btn {
       grid-column: 1 / 2 !important;
@@ -850,6 +856,7 @@
     <div class="filtre-bar">
       <button type="button" data-filtre="konut" onclick="filtreSec(this)">🏠 Konutlar</button>
       <button type="button" data-filtre="isletme" onclick="filtreSec(this)">🏢 İşletmeler</button>
+      <button type="button" data-filtre="periyodik" onclick="filtreSec(this)">🔄 Periyodik</button>
     </div>
 
     <div class="sidebar-grup-baslik">Arşiv</div>
@@ -1711,6 +1718,9 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
 
       if (aktifFiltre === 'konut') return m.tip === 'konut' && !yapildi;
       if (aktifFiltre === 'isletme') return m.tip === 'isletme' && !yapildi;
+      
+      // Periyodik: Tekrar sıklığı 0'dan farklı olan TÜM kayıtlar (yapıldı + yapılmadı)
+      if (aktifFiltre === 'periyodik') return String(m.tekrarSikligi || '0') !== '0';
 
       if (aktifFiltre === 'yapildi') return yapildi;
       if (aktifFiltre === 'hepsi') return true;
