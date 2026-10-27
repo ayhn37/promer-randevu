@@ -533,17 +533,48 @@
       max-width: 100% !important; 
       box-sizing: border-box !important; 
     }
+    
+    /* ═══ 🎨 RANDEVU KARTLARI: YEŞİL VE BÜYÜK YAZILAR ═══ */
     .bugun-item { 
-      border-radius: 12px !important;
-      padding: 14px !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important; /* Tiksizken Yeşil */
+      color: #ffffff !important;
+      border-left: 5px solid #4ade80 !important;
+      box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4) !important;
+      padding: 16px !important;
+      border-radius: 14px !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
-    .bugun-item * { overflow-wrap: anywhere !important; word-break: break-word !important; }
-    .bugun-butonlar button {
-      border-radius: 10px !important;
-      padding: 12px 16px !important;
-      font-size: 13px !important;
+    
+    .bugun-item.yapildi {
+      background: #334155 !important; /* Tik atılınca eski koyu renk */
+      border-left: 5px solid #64748b !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+      opacity: 0.85 !important;
+    }
+
+    .bugun-item .saat { font-size: 18px !important; font-weight: 800 !important; }
+    .bugun-item .saat .badge { font-size: 13px !important; padding: 4px 10px !important; }
+    .bugun-item .isim { font-size: 19px !important; font-weight: 800 !important; margin-top: 6px !important; margin-bottom: 8px !important; color: #ffffff !important; }
+    .bugun-item .bilgi { font-size: 15px !important; line-height: 1.6 !important; font-weight: 500 !important; color: #f8fafc !important; display: flex; flex-direction: column; gap: 5px; }
+    
+    .bugun-item button {
+      font-size: 14px !important;
+      padding: 10px 16px !important;
+      border-radius: 8px !important;
+      margin-top: 12px !important;
+      background: rgba(255,255,255,0.2) !important;
+      border: 2px solid rgba(255,255,255,0.5) !important;
+      color: #fff !important;
+      font-weight: bold !important;
+    }
+    
+    .bugun-item .tik-kutu {
+      width: 30px !important;
+      height: 30px !important;
+      top: 14px !important;
+      right: 14px !important;
+      cursor: pointer !important;
     }
 
     /* ═══ AY ÖZET PANEL ═══ */
@@ -860,7 +891,11 @@
     .modal label { color: #cbd5e1 !important; }
     .hafta-bar button { background: #334155 !important; color: #e2e8f0 !important; }
     .hafta-bar button.aktif { background: #38bdf8 !important; color: #0f172a !important; }
-    .bugun-item { background: #334155 !important; color: #e2e8f0 !important; }
+    
+    /* Koyu temada bugun-item (yeşil tema için güncelleme) */
+    .bugun-item { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important; color: #ffffff !important; }
+    .bugun-item.yapildi { background: #334155 !important; color: #e2e8f0 !important; }
+    
     .bugun-item .bilgi { color: #cbd5e1 !important; }
     .ay-ozet-panel { background: #1e3a5f !important; }
     
@@ -877,8 +912,6 @@
     .ozet-bar span { font-size: 17px !important; }
     .modal h3 { font-size: 19px !important; }
     .modal label { font-size: 14px !important; }
-    .bugun-item .isim { font-size: 15px !important; }
-    .bugun-item .bilgi { font-size: 13px !important; }
   }
 
 </style>
