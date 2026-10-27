@@ -1599,10 +1599,28 @@
     setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
   }
 
-  function tarihFiltrele() { aktifTarihFiltre = document.getElementById('tarihFiltreInput').value; document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : ''; listele(aramaKutusu.value); }
-  function bugunTarihSec() { document.getElementById('tarihFiltreInput').value = bugunISO(); tarihFiltrele(); }
-  function tarihFiltreTemizle() { document.getElementById('tarihFiltreInput').value = ''; aktifTarihFiltre = ''; document.getElementById('tarihFiltreBilgi').textContent = ''; listele(aramaKutusu.value); }
+   function tarihFiltrele() {
+    aktifTarihFiltre = document.getElementById('tarihFiltreInput').value;
+    document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : '';
 
+    if (aktifTarihFiltre) {
+      const aySecimEl = document.getElementById('aySecim');
+      if (aySecimEl && aySecimEl.value !== '') {
+        aySecimEl.value = '';
+      }
+      aktifFiltre = 'hepsi';
+      document.querySelectorAll('.filtre-sidebar button[data-filtre]').forEach(b => b.classList.remove('aktif'));
+      const btn = document.querySelector('.filtre-sidebar button[data-filtre="hepsi"]');
+      if (btn) btn.classList.add('aktif');
+    }
+
+    aySecimGuncelle();
+  }
+
+  function bugunTarihSec() { 
+    document.getElementById('tarihFiltreInput').value = bugunISO(); 
+    tarihFiltrele(); 
+  }
   function excelAktar() {
     if (musteriler.length === 0) { alert('Aktarılacak kayıt yok!'); return; }
     if (ciroGizli) {
