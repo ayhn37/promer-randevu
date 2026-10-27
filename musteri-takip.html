@@ -813,6 +813,74 @@
     .kart .sayi { font-size: 22px !important; }
     h1 { font-size: 18px !important; }
   }
+
+  /* ============================================================ */
+  /* 🌙 MOBİL KOYU TEMA (DARK MODE) + BÜYÜK YAZILAR */
+  /* ============================================================ */
+  @media screen and (max-width: 1100px) {
+    body {
+      background: #0f172a !important;
+      color: #e2e8f0 !important;
+    }
+    h1 { color: #f1f5f9 !important; }
+    .ust-bar, .filtre-sidebar, .kart, .tarih-filtre, .ozet-bar, .modal, .ay-ozet-panel, .bugun-panel {
+      background: #1e293b !important;
+      color: #e2e8f0 !important;
+      border-color: #334155 !important;
+    }
+    tbody tr {
+      background: #1e293b !important;
+      color: #e2e8f0 !important;
+      border-left-color: #3498db !important;
+    }
+    tbody tr td {
+      color: #e2e8f0 !important;
+      border-bottom-color: #334155 !important;
+    }
+    tbody tr td::before { color: #94a3b8 !important; }
+    tbody td[data-label="Ad / İşletme"] strong { color: #f1f5f9 !important; }
+    tbody tr.yapildi-satir { background: #1e3a5f !important; }
+    tbody tr.gecmis { background: #7f1d1d !important; }
+    tbody tr.yaklasan { background: #422006 !important; }
+    tbody tr.bugun-satir { background: #14532d !important; }
+    .filtre-sidebar .filtre-bar button {
+      background: #334155 !important;
+      color: #e2e8f0 !important;
+    }
+    .filtre-sidebar .filtre-bar button:hover { background: #475569 !important; }
+    .arama, input, select, textarea {
+      background: #0f172a !important;
+      color: #e2e8f0 !important;
+      border-color: #334155 !important;
+    }
+    input::placeholder, textarea::placeholder { color: #64748b !important; }
+    .ozet-bar div { background: #334155 !important; color: #e2e8f0 !important; }
+    .ozet-bar span { color: #38bdf8 !important; }
+    .modal h3 { color: #38bdf8 !important; }
+    .modal label { color: #cbd5e1 !important; }
+    .hafta-bar button { background: #334155 !important; color: #e2e8f0 !important; }
+    .hafta-bar button.aktif { background: #38bdf8 !important; color: #0f172a !important; }
+    .bugun-item { background: #334155 !important; color: #e2e8f0 !important; }
+    .bugun-item .bilgi { color: #cbd5e1 !important; }
+    .ay-ozet-panel { background: #1e3a5f !important; }
+    
+    /* 🔠 YAZILARI BİR TIK BÜYÜT */
+    body { font-size: 15px !important; }
+    tbody td { font-size: 14px !important; }
+    .filtre-sidebar .filtre-bar button { font-size: 14px !important; }
+    .kart .baslik { font-size: 11px !important; }
+    .kart .alt { font-size: 11px !important; }
+    .ekle-btn { font-size: 14px !important; }
+    .arama { font-size: 15px !important; }
+    .tarih-filtre label, .tarih-filtre button { font-size: 14px !important; }
+    .ozet-bar div { font-size: 14px !important; }
+    .ozet-bar span { font-size: 17px !important; }
+    .modal h3 { font-size: 19px !important; }
+    .modal label { font-size: 14px !important; }
+    .bugun-item .isim { font-size: 15px !important; }
+    .bugun-item .bilgi { font-size: 13px !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -880,6 +948,7 @@
           <button type="button" class="ekle-btn" style="background:#8e44ad;" onclick="iceAktarmaAc()">📤 Toplu İçe Aktar</button>
           <button type="button" class="ekle-btn" style="background:#8e44ad;" onclick="apiKeyAyarla()">🧠 AI Ayarı</button>
           <button type="button" class="ekle-btn" style="background:#c0392b;" onclick="ciroSifreDegistir()">🔐 Ciro Şifresi</button>
+          <button type="button" id="bildirimBtn" class="ekle-btn" style="background:#f39c12;" onclick="bildirimIzniIste()">🔔 Bildirimleri Aç</button>
           <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış Yap</button>
         </div>
 
@@ -890,6 +959,7 @@
             <button type="button" onclick="iceAktarmaAc(); mobilMenuKapat()">📤 Toplu İçe Aktar</button>
             <button type="button" onclick="apiKeyAyarla(); mobilMenuKapat()">🧠 AI Ayarı</button>
             <button type="button" onclick="ciroSifreDegistir(); mobilMenuKapat()">🔐 Ciro Şifresi</button>
+            <button type="button" id="bildirimBtnMobile" onclick="bildirimIzniIste(); mobilMenuKapat()">🔔 Bildirimleri Aç</button>
             <hr style="margin: 4px 0; border: none; border-top: 1px solid #eee;">
             <button type="button" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout(); mobilMenuKapat()" style="color: #e74c3c;">🚪 Çıkış Yap</button>
           </div>
@@ -1080,6 +1150,105 @@
   let ciroGizli = true;
   const CIRO_OTO_GIZLE_MS = 120000;
 
+  // 🔔 BİLDİRİM SİSTEMİ
+  async function bildirimIzniIste() {
+    if (!('Notification' in window)) {
+      alert('⚠️ Tarayıcınız bildirimleri desteklemiyor.\n\nChrome veya Safari kullanın.');
+      return false;
+    }
+    if (Notification.permission === 'granted') {
+      alert('✅ Bildirimler zaten açık!');
+      return true;
+    }
+    if (Notification.permission === 'denied') {
+      alert('❌ Bildirimler engellenmiş.\n\nAçmak için:\n• Tarayıcı > Ayarlar > Site Ayarları > Bildirimler\n• Veya telefon ayarlarından bu siteye izin verin.');
+      return false;
+    }
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        bildirimGonder('🎉 Bildirimler Açıldı!', 'Artık iş tamamlandığında size haber vereceğiz.');
+        bildirimDurumGuncelle();
+        return true;
+      }
+      bildirimDurumGuncelle();
+    } catch (e) { console.error('Bildirim izni hatası:', e); }
+    return false;
+  }
+
+  window.bildirimGonder = bildirimGonder;
+  function bildirimGonder(baslik, icerik) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+    const icon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232c3e50'/%3E%3Ctext x='50' y='68' font-size='55' text-anchor='middle' fill='white'%3E🐜%3C/text%3E%3C/svg%3E";
+    try {
+      const n = new Notification(baslik, {
+        body: icerik,
+        icon: icon,
+        badge: icon,
+        tag: 'is-bildirim-' + Date.now(),
+        vibrate: [200, 100, 200],
+        silent: false,
+        requireInteraction: false
+      });
+      n.onclick = () => { window.focus(); n.close(); };
+      sesCal();
+    } catch (e) { console.error('Bildirim hatası:', e); }
+  }
+
+  function sesCal() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (e) {}
+  }
+
+  function bildirimDurumGuncelle() {
+    const butonlar = ['bildirimBtn', 'bildirimBtnMobile'];
+    butonlar.forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      if (!('Notification' in window)) {
+        btn.textContent = '🔕 Desteklenmiyor';
+        btn.disabled = true;
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        btn.textContent = '🔔 Bildirimler Açık';
+        btn.style.background = '#27ae60';
+      } else if (Notification.permission === 'denied') {
+        btn.textContent = '🔕 Bildirimler Engelli';
+        btn.style.background = '#e74c3c';
+      } else {
+        btn.textContent = '🔔 Bildirimleri Aç';
+        btn.style.background = '#f39c12';
+      }
+    });
+  }
+
+  function gunlukHatirlatmaKontrol() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    const bugun = bugunISO();
+    const bugunIsler = musteriler.filter(m => (m.islemTarihi === bugun || m.sonrakiTarih === bugun) && !m.yapildi);
+    if (bugunIsler.length === 0) return;
+    const anahtar = 'hatirlatma_' + bugun;
+    if (localStorage.getItem(anahtar)) return;
+    localStorage.setItem(anahtar, '1');
+    setTimeout(() => {
+      bildirimGonder('📅 Bugün ' + bugunIsler.length + ' işin var!', bugunIsler.slice(0, 3).map(m => m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`).join(', ') + (bugunIsler.length > 3 ? '...' : ''));
+    }, 2000);
+  }
+
   function mobilMenuToggle(e) {
     if (e) e.stopPropagation();
     const menu = document.getElementById('mobilMenu');
@@ -1233,12 +1402,18 @@
           };
           await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), yeniMusteri);
           alert(`✅ İş tamamlandı. Yeni randevu ${tarihFormat(yeniTarih)} tarihine eklendi!`);
+          const isimB = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
+          bildirimGonder('✅ İş Tamamlandı', `${isimB}\nYeni randevu: ${tarihFormat(yeniTarih)}`);
         } catch (e) { alert('Hata: ' + e.message); }
         return;
       } else { return; }
     }
     try {
       await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: !m.yapildi });
+      if (!m.yapildi) {
+        const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
+        bildirimGonder('✅ İş Tamamlandı', `${isim}\n${m.hasere}${m.fiyat ? ' • ' + paraFormat(m.fiyat) : ''}`);
+      }
     } catch (e) { alert('Hata: ' + e.message); }
   }
 
@@ -1486,6 +1661,8 @@
         veri.yapildi = false;
         await window.fbAddDoc(window.fbCollection(window.db, 'musteriler'), veri);
         alert('✅ Yeni müşteri başarıyla eklendi!');
+        const isim = veri.tip === 'isletme' ? veri.ad : `${veri.ad} ${veri.soyad || ''}`.trim();
+        bildirimGonder('➕ Yeni İş Eklendi', `${isim}\n${veri.hasere}${veri.fiyat ? ' • ' + paraFormat(veri.fiyat) : ''}`);
         modalKapat3();
       }
     } catch (error) { console.error(error); alert('Kayıt hatası: ' + error.message); }
@@ -1599,7 +1776,7 @@
     setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
   }
 
-   function tarihFiltrele() {
+  function tarihFiltrele() {
     aktifTarihFiltre = document.getElementById('tarihFiltreInput').value;
     document.getElementById('tarihFiltreBilgi').textContent = aktifTarihFiltre ? `Filtre: ${tarihFormat(aktifTarihFiltre)}` : '';
 
@@ -1621,6 +1798,14 @@
     document.getElementById('tarihFiltreInput').value = bugunISO(); 
     tarihFiltrele(); 
   }
+
+  function tarihFiltreTemizle() { 
+    document.getElementById('tarihFiltreInput').value = ''; 
+    aktifTarihFiltre = ''; 
+    document.getElementById('tarihFiltreBilgi').textContent = ''; 
+    listele(aramaKutusu.value); 
+  }
+
   function excelAktar() {
     if (musteriler.length === 0) { alert('Aktarılacak kayıt yok!'); return; }
     if (ciroGizli) {
@@ -1667,7 +1852,12 @@
       basarili++;
     });
     if (basarili === 0) { alert('❌ Hiçbir kayıt eklenemedi.\n\n' + hatalar.join('\n')); return; }
-    try { await batch.commit(); modalKapat2(); alert(`✅ ${basarili} kayıt eklendi!${hatalar.length ? '\n\n⚠️ Atlanan:\n' + hatalar.join('\n') : ''}`); }
+    try {
+      await batch.commit();
+      modalKapat2();
+      alert(`✅ ${basarili} kayıt eklendi!${hatalar.length ? '\n\n⚠️ Atlanan:\n' + hatalar.join('\n') : ''}`);
+      bildirimGonder('📤 Toplu İçe Aktarma', `${basarili} yeni kayıt listeye eklendi.`);
+    }
     catch (e) { alert('Hata: ' + e.message); }
   }
 
@@ -1737,7 +1927,7 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
       if (aktifFiltre === 'konut') return m.tip === 'konut' && !yapildi;
       if (aktifFiltre === 'isletme') return m.tip === 'isletme' && !yapildi;
       
-      // Periyodik: Sadece tekrar sıklığı olan ve HENÜZ YAPILMAMIŞ (aktif) kayıtlar
+      // Periyodik: Tekrar sıklığı 0'dan farklı olan ve HENÜZ YAPILMAMIŞ (aktif) kayıtlar
       if (aktifFiltre === 'periyodik') return String(m.tekrarSikligi || '0') !== '0' && !yapildi;
 
       if (aktifFiltre === 'yapildi') return yapildi;
@@ -1828,6 +2018,12 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
   aramaKutusu.addEventListener('input', e => listele(e.target.value));
   document.getElementById('whatsappModal').addEventListener('click', function(e) { if (e.target === this) modalKapat(); });
   document.getElementById('iceAktarModal').addEventListener('click', function(e) { if (e.target === this) modalKapat2(); });
+
+  // Sayfa açıldığında bildirim durumunu güncelle
+  bildirimDurumGuncelle();
+
+  // Bugün iş varsa hatırlatma
+  setTimeout(() => { try { gunlukHatirlatmaKontrol(); } catch(e) {} }, 3000);
 </script>
 
 <script type="module">
@@ -1860,11 +2056,31 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
       if (gate) gate.style.display = 'none';
       if (loadingScreen) loadingScreen.style.display = 'flex';
       if (!window.dbUnsubscribe) {
+        let ilkYuklemeTamam = false;
+
         window.dbUnsubscribe = onSnapshot(collection(db, 'musteriler'), (snapshot) => {
           let geciciMusteriler = [];
           snapshot.forEach(docSnap => { geciciMusteriler.push({ id: docSnap.id, ...docSnap.data() }); });
           musteriler.length = 0;
           musteriler.push(...geciciMusteriler);
+
+          // Başka bir kullanıcı iş eklediğinde bildirim
+          if (ilkYuklemeTamam) {
+            snapshot.docChanges().forEach(change => {
+              if (change.type === 'added') {
+                const data = change.doc.data();
+                const isim = data.tip === 'isletme' ? data.ad : `${data.ad || ''} ${data.soyad || ''}`.trim();
+                if (window.bildirimGonder) {
+                  window.bildirimGonder(
+                    '🆕 Başka Bir Kullanıcı İş Ekledi',
+                    `${isim}\n${data.hasere || ''}${data.fiyat ? ' • ₺' + Number(data.fiyat).toLocaleString('tr-TR') : ''}`
+                  );
+                }
+              }
+            });
+          }
+          ilkYuklemeTamam = true;
+
           listele(aramaKutusu.value);
           dashboardGuncelle();
           aySecimGuncelle();
@@ -1899,6 +2115,14 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
                   };
                   await setDoc(doc(db, 'musteriler', bookingId), yeniMusteri);
                   await updateDoc(doc(db, 'bookings', bookingId), { aktarildi: true });
+                  
+                  // Web sitesinden gelen randevu bildirimi
+                  try {
+                    const isimWeb = yeniMusteri.tip === 'isletme' ? yeniMusteri.ad : `${yeniMusteri.ad} ${yeniMusteri.soyad || ''}`.trim();
+                    if (window.bildirimGonder) {
+                      window.bildirimGonder('🌐 Web Sitesinden Yeni Randevu', `${isimWeb}\n${yeniMusteri.hasere}`);
+                    }
+                  } catch(e) {}
                 } catch (error) {
                   console.error("Aktarım hatası:", error);
                   islenenBookings.delete(bookingId);
