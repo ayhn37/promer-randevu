@@ -1730,12 +1730,16 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                     const data = await response.json();
                     typingIndicator.remove();
 
-                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                                      if (data.candidates && data.candidates[0].content.parts[0].text) {
                         const botReply = data.candidates[0].content.parts[0].text;
                         appendMessage('model', botReply);
                         chatHistory.push({ role: "model", text: botReply });
+                    } else if (data.error) {
+                        // Hata varsa ekrana yazdır (Hata Ayıklama)
+                        appendMessage('model', 'SİSTEM HATASI: ' + JSON.stringify(data.error));
                     } else {
-                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin veya 0850 466 00 22 numaralı hattımızı arayın.');
+                        // Beklenmeyen bir yanıt geldiyse ekrana yazdır
+                        appendMessage('model', 'BİLİNMEYEN YANIT: ' + JSON.stringify(data));
                     }
                 } catch (error) {
                     console.error('Chat Error:', error);
