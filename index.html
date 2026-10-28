@@ -1707,13 +1707,12 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                 chatWindow.classList.add('hidden-chat');
             });
 
-            // Mesaj Gönderme
+            // Mesaj Gönderme (Canlı Akış - Streaming)
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (!message) return;
 
-                // Kullanıcı mesajını ekrana bas
                 appendMessage('user', message);
                 chatInput.value = '';
                 
@@ -1727,23 +1726,55 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                         body: JSON.stringify({ messages: chatHistory })
                     });
 
-                    const data = await response.json();
                     typingIndicator.remove();
 
-                                      if (data.candidates && data.candidates[0].content.parts[0].text) {
-                        const botReply = data.candidates[0].content.parts[0].text;
-                        appendMessage('model', botReply);
-                        chatHistory.push({ role: "model", text: botReply });
-                    } else if (data.error) {
-                        // Hata varsa ekrana yazdır (Hata Ayıklama)
-                        appendMessage('model', 'SİSTEM HATASI: ' + JSON.stringify(data.error));
-                    } else {
-                        // Beklenmeyen bir yanıt geldiyse ekrana yazdır
-                        appendMessage('model', 'BİLİNMEYEN YANIT: ' + JSON.stringify(data));
+                    // Yapay zekanın cevap balonunu oluştur
+                    const aiMessageDiv = document.createElement('div');
+                    aiMessageDiv.className = `flex items-end gap-2 max-w-[85%] self-start`;
+                    aiMessageDiv.innerHTML = `
+                        <div class="w-8 h-8 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-robot text-white text-xs"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 text-slate-800 chat-bubble-ai shadow-sm p-3" id="ai-stream-text"></div>
+                    `;
+                    chatMessages.appendChild(aiMessageDiv);
+                    const aiTextContainer = aiMessageDiv.querySelector('#ai-stream-text');
+
+                    // Gelen veriyi canlı canlı oku
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+                    let fullBotReply = "";
+                    let buffer = "";
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop(); 
+
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const dataStr = line.slice(6).trim();
+                                if (dataStr === '[DONE]') continue;
+                                try {
+                                    const data = JSON.parse(dataStr);
+                                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                                        const textChunk = data.candidates[0].content.parts[0].text;
+                                        fullBotReply += textChunk;
+                                        // Harfler geldikçe ekrana yaz
+                                        aiTextContainer.innerHTML = fullBotReply.replace(/\n/g, '<br>');
+                                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                                    }
+                                } catch (e) {}
+                            }
+                        }
                     }
+                    chatHistory.push({ role: "model", text: fullBotReply });
                 } catch (error) {
                     console.error('Chat Error:', error);
-                    typingIndicator.remove();
+                    if(typingIndicator) typingIndicator.remove();
                     appendMessage('model', 'Bağlantı hatası oluştu. Lütfen bizi 0850 466 00 22 numaralı telefondan arayın.');
                 }
             });
