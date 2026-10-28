@@ -1603,5 +1603,200 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             console.log('Firebase başlatma hatası:', error);
         }
     </script>
+
+    <!-- ⭐ YAPAY ZEKA ASİSTANI BAŞLANGIÇ ⭐ -->
+    <style>
+        /* Sohbet penceresi animasyonları */
+        #ai-chat-window { transition: all 0.3s ease-in-out; transform-origin: bottom right; }
+        #ai-chat-window.hidden-chat { opacity: 0; transform: scale(0.9) translateY(20px); pointer-events: none; }
+        .chat-bubble-user { border-radius: 16px 16px 0px 16px; }
+        .chat-bubble-ai { border-radius: 16px 16px 16px 0px; }
+        /* Yazıyor animasyonu */
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+
+    <!-- Sohbet Butonu -->
+    <button id="ai-chat-toggle" class="fixed bottom-6 right-6 z-[90] bg-promer-navy hover:bg-promer-blue text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 group border-2 border-white">
+        <i class="fa-solid fa-robot text-2xl group-hover:animate-bounce"></i>
+    </button>
+
+    <!-- Sohbet Penceresi -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[350px] sm:w-[400px] h-[550px] max-h-[80vh] bg-white rounded-3xl shadow-2xl flex flex-col z-[90] overflow-hidden hidden-chat border border-slate-200">
+        
+        <!-- Başlık -->
+        <div class="bg-promer-navy text-white p-4 flex items-center justify-between shadow-md z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-headset text-promer-accent text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">Promer Asistan</h3>
+                    <p class="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span> Çevrimiçi
+                    </p>
+                </div>
+            </div>
+            <button id="ai-chat-close" class="text-white/70 hover:text-white transition-colors p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mesaj Alanı -->
+        <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 text-sm flex flex-col">
+            <!-- Karşılama Mesajı -->
+            <div class="flex items-end gap-2 max-w-[85%] self-start">
+                <div class="w-8 h-8 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-robot text-white text-xs"></i>
+                </div>
+                <div class="bg-white border border-slate-200 text-slate-800 p-3 shadow-sm chat-bubble-ai">
+                    Merhaba! Ben Promer İlaçlama asistanıyım. İlaçlama süreçleri, fiyatlar veya randevu hakkında size nasıl yardımcı olabilirim?
+                </div>
+            </div>
+        </div>
+
+        <!-- Giriş Alanı -->
+        <div class="p-3 bg-white border-t border-slate-200">
+            <form id="ai-chat-form" class="flex items-center gap-2">
+                <input type="text" id="ai-chat-input" placeholder="Sorunuzu yazın..." autocomplete="off" class="flex-1 bg-slate-100 border border-slate-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-promer-blue">
+                <button type="submit" id="ai-chat-submit" class="bg-promer-blue hover:bg-promer-navy text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors flex-shrink-0 shadow-md">
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+            </form>
+            <div class="text-center mt-2">
+                <span class="text-[9px] text-slate-400">Promer İlaçlama Yapay Zeka Asistanı</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatToggle = document.getElementById('ai-chat-toggle');
+            const chatWindow = document.getElementById('ai-chat-window');
+            const chatClose = document.getElementById('ai-chat-close');
+            const chatForm = document.getElementById('ai-chat-form');
+            const chatInput = document.getElementById('ai-chat-input');
+            const chatMessages = document.getElementById('ai-chat-messages');
+            
+            // Worker URL'niz
+            const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
+
+            // Sohbet Geçmişi (Bağlamı korumak için)
+            let chatHistory = [
+                {
+                    role: "user",
+                    text: "Sen Promer İlaçlama firmasının profesyonel yapay zeka asistanısın. Görevin müşterilere ilaçlama hizmetleri, ilaçlama sonrası süreçler (ne zaman eve girilir, temizlik ne zaman yapılır, evcil hayvanlar ne zaman eve alınır), haşere türleri ve fiyatlandırma hakkında bilgi vermektir. Kısa, net ve nazik cevaplar ver. Kesin fiyat veya özel indirim taleplerinde, randevu oluşturmaları veya 0850 466 00 22 numaralı telefonu aramaları gerektiğini belirt. Kesinlikle konu dışına çıkma."
+                },
+                {
+                    role: "model",
+                    text: "Anladım. Ben Promer İlaçlama asistanıyım. Müşterilere ilaçlama süreçleri, bekleme süreleri, evcil hayvan güvenliği ve hizmetlerimiz hakkında bilgi vereceğim. Fiyat ve randevu için onları yönlendireceğim."
+                }
+            ];
+
+            // Pencereyi Aç/Kapat
+            chatToggle.addEventListener('click', () => {
+                chatWindow.classList.toggle('hidden-chat');
+                if (!chatWindow.classList.contains('hidden-chat')) {
+                    chatInput.focus();
+                }
+            });
+
+            chatClose.addEventListener('click', () => {
+                chatWindow.classList.add('hidden-chat');
+            });
+
+            // Mesaj Gönderme
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Kullanıcı mesajını ekrana bas
+                appendMessage('user', message);
+                chatInput.value = '';
+                
+                // Yazıyor animasyonunu göster
+                const typingIndicator = showTyping();
+
+                // Geçmişe ekle
+                chatHistory.push({ role: "user", text: message });
+
+                try {
+                    const response = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: chatHistory })
+                    });
+
+                    const data = await response.json();
+                    
+                    // Yazıyor animasyonunu kaldır
+                    typingIndicator.remove();
+
+                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                        const botReply = data.candidates[0].content.parts[0].text;
+                        appendMessage('model', botReply);
+                        chatHistory.push({ role: "model", text: botReply });
+                    } else {
+                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin veya 0850 466 00 22 numaralı hattımızı arayın.');
+                    }
+                } catch (error) {
+                    console.error('Chat Error:', error);
+                    typingIndicator.remove();
+                    appendMessage('model', 'Bağlantı hatası oluştu. Lütfen internet bağlantınızı kontrol edin veya bizi 0850 466 00 22 numaralı telefondan arayın.');
+                }
+            });
+
+            // Mesajı HTML'e Ekle
+            function appendMessage(role, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex items-end gap-2 max-w-[85%] ${role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
+                
+                const avatar = role === 'user' 
+                    ? `<div class="w-8 h-8 bg-slate-300 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user text-white text-xs"></i></div>`
+                    : `<div class="w-8 h-8 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-white text-xs"></i></div>`;
+
+                const bubbleClass = role === 'user'
+                    ? 'bg-promer-blue text-white chat-bubble-user shadow-md'
+                    : 'bg-white border border-slate-200 text-slate-800 chat-bubble-ai shadow-sm';
+
+                // Metni güvenli bir şekilde HTML'e çevir (satır atlamaları vs.)
+                const formattedText = text.replace(/\n/g, '<br>');
+
+                messageDiv.innerHTML = `
+                    ${avatar}
+                    <div class="${bubbleClass} p-3">
+                        ${formattedText}
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // En alta kaydır
+            }
+
+            // Yazıyor Animasyonu
+            function showTyping() {
+                const div = document.createElement('div');
+                div.className = 'flex items-end gap-2 max-w-[85%] self-start typing-container';
+                div.innerHTML = `
+                    <div class="w-8 h-8 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-robot text-white text-xs"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl rounded-bl-none shadow-sm flex gap-1 items-center h-[42px]">
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                    </div>
+                `;
+                chatMessages.appendChild(div);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return div;
+            }
+        });
+    </script>
+    <!-- ⭐ YAPAY ZEKA ASİSTANI BİTİŞ ⭐ -->
+
 </body>
 </html>
