@@ -1708,19 +1708,16 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             });
 
             // Mesaj Gönderme
+                   // Mesaj Gönderme (Stabil Sürüm)
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (!message) return;
 
-                // Kullanıcı mesajını ekrana bas
                 appendMessage('user', message);
                 chatInput.value = '';
                 
-                // Yazıyor animasyonunu göster
                 const typingIndicator = showTyping();
-
-                // Geçmişe ekle
                 chatHistory.push({ role: "user", text: message });
 
                 try {
@@ -1731,21 +1728,25 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                     });
 
                     const data = await response.json();
-                    
-                    // Yazıyor animasyonunu kaldır
                     typingIndicator.remove();
 
                     if (data.candidates && data.candidates[0].content.parts[0].text) {
                         const botReply = data.candidates[0].content.parts[0].text;
                         appendMessage('model', botReply);
                         chatHistory.push({ role: "model", text: botReply });
+                    } else if (data.error) {
+                        // Eğer API hatası varsa konsola yazdır
+                        console.error("API Hatası:", data.error);
+                        appendMessage('model', 'Sistemde bir yoğunluk var. Lütfen 0850 466 00 22 numaralı hattımızı arayın.');
                     } else {
-                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin veya 0850 466 00 22 numaralı hattımızı arayın.');
+                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin.');
                     }
                 } catch (error) {
                     console.error('Chat Error:', error);
                     typingIndicator.remove();
-                    appendMessage('model', 'Bağlantı hatası oluştu. Lütfen internet bağlantınızı kontrol edin veya bizi 0850 466 00 22 numaralı telefondan arayın.');
+                    appendMessage('model', 'Bağlantı hatası oluştu. Lütfen bizi 0850 466 00 22 numaralı telefondan arayın.');
+                }
+            });
                 }
             });
 
