@@ -1680,12 +1680,12 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             const chatInput = document.getElementById('ai-chat-input');
             const chatMessages = document.getElementById('ai-chat-messages');
             
-            // Worker URL'niz
+            // Cloudflare Worker URL'niz
             const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
 
-            // Sohbet Geçmişi (Bağlamı korumak için)
+            // Sohbet Geçmişi ve Sitenin Kesin Kuralları
             let chatHistory = [
-                                {
+                {
                     role: "user",
                     text: "Sen Promer İlaçlama firmasının profesyonel yapay zeka asistanısın. Görevin müşterilere ilaçlama hizmetleri, ilaçlama sonrası süreçler, haşere türleri ve fiyatlandırma hakkında bilgi vermektir. Kısa, net ve nazik cevaplar ver. Kesinlikle konu dışına çıkma. İşte uyman gereken KESİN kurallar: 1) Pire İlaçlama: İnsanlar ve kedi 4-6 saat, köpekler 12 saat dışarıda kalmalı. En az 3 gün ıslak temizlik yapılmamalı, kuru süpürge yapılabilir. 2) Tahta Kurusu: 7-8 saat ev kapalı kalmalı, her seans ayrı ücretlidir. 3) Hamam Böceği: Alanın kapalı kalması gerekmez, jel ve sıvı uygulama yapılır. 4) Fare: Kapalı kalma süresi yoktur, günlük yaşama engel olmaz. Kesin fiyat veya özel indirim taleplerinde, randevu oluşturmaları veya 0850 466 00 22 numaralı telefonu aramaları gerektiğini belirt."
                 },
@@ -1708,12 +1708,12 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             });
 
             // Mesaj Gönderme
-                   // Mesaj Gönderme (Stabil Sürüm)
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (!message) return;
 
+                // Kullanıcı mesajını ekrana bas
                 appendMessage('user', message);
                 chatInput.value = '';
                 
@@ -1734,19 +1734,13 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                         const botReply = data.candidates[0].content.parts[0].text;
                         appendMessage('model', botReply);
                         chatHistory.push({ role: "model", text: botReply });
-                    } else if (data.error) {
-                        // Eğer API hatası varsa konsola yazdır
-                        console.error("API Hatası:", data.error);
-                        appendMessage('model', 'Sistemde bir yoğunluk var. Lütfen 0850 466 00 22 numaralı hattımızı arayın.');
                     } else {
-                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin.');
+                        appendMessage('model', 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar deneyin veya 0850 466 00 22 numaralı hattımızı arayın.');
                     }
                 } catch (error) {
                     console.error('Chat Error:', error);
                     typingIndicator.remove();
                     appendMessage('model', 'Bağlantı hatası oluştu. Lütfen bizi 0850 466 00 22 numaralı telefondan arayın.');
-                }
-            });
                 }
             });
 
@@ -1763,7 +1757,6 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                     ? 'bg-promer-blue text-white chat-bubble-user shadow-md'
                     : 'bg-white border border-slate-200 text-slate-800 chat-bubble-ai shadow-sm';
 
-                // Metni güvenli bir şekilde HTML'e çevir (satır atlamaları vs.)
                 const formattedText = text.replace(/\n/g, '<br>');
 
                 messageDiv.innerHTML = `
@@ -1774,7 +1767,7 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                 `;
                 
                 chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight; // En alta kaydır
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
             // Yazıyor Animasyonu
