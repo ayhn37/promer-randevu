@@ -1,542 +1,113 @@
-<!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Promer Yönetim Paneli</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ⭐ GÖMÜLÜ YAPAY ZEKA ASİSTANI SCRIPT'İ ⭐ -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: {
-                        promer: {
-                            navy: '#0f2b5c', blue: '#1e40af', lightBlue: '#3b82f6',
-                            accent: '#f97316', green: '#16a34a', greenDark: '#15803d'
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatForm = document.getElementById('ai-chat-form');
+            const chatInput = document.getElementById('ai-chat-input');
+            const chatMessages = document.getElementById('ai-chat-messages');
+            
+            const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
+
+            let chatHistory = [];
+            
+            // Firebase'den Admin Panelindeki Yazıyı Çek (Sayfa açıldığında)
+            setTimeout(async () => {
+                if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
+                    try {
+                        const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
+                        if (snap.exists() && snap.data().prompt) {
+                            chatHistory = [
+                                { role: "user", text: snap.data().prompt },
+                                { role: "model", text: "Anladım. Kurallarınıza harfiyen uyacağım." }
+                            ];
+                            console.log("✅ Prompt admin panelinden başarıyla yüklendi.");
+                            return;
                         }
-                    }
+                    } catch(e) { console.log("Prompt çekilemedi:", e); }
                 }
-            }
-        }
-    </script>
-</head>
-<body class="font-sans bg-slate-950 text-white min-h-screen antialiased">
+                // Veritabanında yoksa varsayılan kural
+                chatHistory = [
+                    { role: "user", text: "Sen Promer İlaçlama asistanısın. İlaçlama süreçleri ve sonrası hakkında kısa ve net bilgi ver. Fiyat için 0850 466 00 22'yi aramalarını söyle." },
+                    { role: "model", text: "Anladım. Size nasıl yardımcı olabilirim?" }
+                ];
+            }, 1000);
 
-    <!-- ================= GİRİŞ EKRANI ================= -->
-    <div id="auth-gate" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm space-y-4">
-            <div class="text-center mb-2">
-                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center mb-3">
-                    <i class="fa-solid fa-shield-virus text-promer-accent text-lg"></i>
-                </div>
-                <h2 class="font-black text-lg text-white">Yönetici Girişi</h2>
-                <p class="text-xs text-slate-500 mt-1">Promer Yönetim Paneli</p>
-            </div>
-            <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
-                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-promer-lightBlue" />
-            <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
-                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-promer-lightBlue" />
-            <button onclick="adminLogin()"
-                class="w-full bg-promer-blue hover:bg-promer-lightBlue rounded-lg py-2 font-bold text-sm text-white transition-all">
-                Giriş Yap
-            </button>
-            <p id="login-error" class="text-red-400 text-xs hidden text-center"></p>
-        </div>
-    </div>
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (!message) return;
 
-    <!-- ================= PANEL ================= -->
-    <div id="admin-app" class="hidden">
-
-        <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center">
-                        <i class="fa-solid fa-shield-virus text-promer-accent"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
-                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.4</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> Siteye Dön
-                    </a>
-                    <button onclick="adminLogout()" class="text-xs bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30 px-4 py-2 rounded-lg font-bold transition-all">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Çıkış
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- İSTATİSTİK KARTLARI -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-bold uppercase">Bugünkü Randevu</span>
-                        <i class="fa-solid fa-calendar-day text-promer-lightBlue"></i>
-                    </div>
-                    <div class="text-3xl font-black" id="stat-today">0</div>
-                </div>
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-bold uppercase">Toplam Randevu</span>
-                        <i class="fa-solid fa-list-check text-emerald-400"></i>
-                    </div>
-                    <div class="text-3xl font-black" id="stat-total">0</div>
-                </div>
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-bold uppercase">Dolu Saat</span>
-                        <i class="fa-solid fa-clock text-red-400"></i>
-                    </div>
-                    <div class="text-3xl font-black" id="stat-blocked">0</div>
-                </div>
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-bold uppercase">Aylık Ciro</span>
-                        <i class="fa-solid fa-turkish-lira-sign text-amber-400"></i>
-                    </div>
-                    <div class="text-3xl font-black" id="stat-revenue">0</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAKVİM -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="font-extrabold text-lg" id="calendar-title">Ekim 2026</h3>
-                        <p class="text-xs text-slate-500">Randevu ve doluluk durumunu görüntüleyin (Pazar günleri hariç)</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="prevMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
-                            <i class="fa-solid fa-chevron-left text-xs"></i>
-                        </button>
-                        <button onclick="goToday()" class="px-4 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold text-xs transition-all">
-                            Bugün
-                        </button>
-                        <button onclick="nextMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
-                            <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Pazar günü kaldırıldığı için 6 sütun (grid-cols-6) -->
-                <div class="grid grid-cols-6 gap-2 mb-2">
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Pzt</div>
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Sal</div>
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Çar</div>
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Per</div>
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cum</div>
-                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cmt</div>
-                </div>
-
-                <div id="calendar-grid" class="grid grid-cols-6 gap-2"></div>
-
-                <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                        <span>Boş Gün</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                        <span>Kısmen Dolu</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                        <span>Tamamen Dolu</span>
-                    </div>
-                    <div class="ml-auto flex items-center gap-1.5" id="fb-status">
-                        <span class="w-2 h-2 rounded-full bg-slate-500"></span>
-                        <span>Firebase bağlanıyor...</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇİLİ GÜN DETAYI -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 class="font-extrabold text-base flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-check text-promer-lightBlue"></i>
-                            <span id="selected-day-title">Gün Seçin</span>
-                        </h3>
-                        <p class="text-xs text-slate-500 mt-1" id="selected-day-subtitle">Yukarıdaki takvimden bir gün seçin</p>
-                    </div>
-                </div>
-
-                <div id="selected-day-content">
-                    <div class="text-center py-8 text-slate-500 text-xs">
-                        <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
-                        <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div><!-- /admin-app -->
-
-    <!-- ================= ANA SCRIPT ================= -->
-    <script>
-        const ALL_SLOTS = [
-            '09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30',
-            '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00',
-            '18:00 – 19:30'
-        ];
-
-        const AY_ADLARI = [
-            'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
-        ];
-
-        let currentDate = new Date();
-        let selectedDate = null;
-        let blockedSlotsCache = {};
-
-        function formatDateKey(d) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
-        }
-
-        // Pazar günü ise bir sonraki günü (Pazartesi) döndürür
-        function getValidToday() {
-            let d = new Date();
-            if (d.getDay() === 0) {
-                d.setDate(d.getDate() + 1);
-            }
-            return d;
-        }
-
-        function todayKey() {
-            return formatDateKey(getValidToday());
-        }
-
-        function setFbStatus(ok, text) {
-            const el = document.getElementById('fb-status');
-            if (!el) return;
-            el.innerHTML = `
-                <span class="w-2 h-2 rounded-full ${ok ? 'bg-emerald-500' : 'bg-red-500'}"></span>
-                <span>${text}</span>
-            `;
-        }
-
-        async function loadBlockedSlots() {
-            if (!window.firebaseDB) return;
-            try {
-                const blockedRef = window.firebaseCollection(window.firebaseDB, 'blocked_slots');
-                const snapshot = await window.firebaseGetDocs(blockedRef);
-
-                blockedSlotsCache = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.blocked) {
-                        const key = `${data.date}|${data.slot}`;
-                        blockedSlotsCache[key] = docSnap.id;
-                    }
-                });
-
-                setFbStatus(true, 'Firebase bağlı');
-                renderCalendar();
-                renderSelectedDay();
-                updateStats();
-            } catch (error) {
-                console.error('Firebase okuma hatası:', error);
-                setFbStatus(false, 'Firebase hatası');
-            }
-        }
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            document.getElementById('calendar-title').textContent = `${AY_ADLARI[month]} ${year}`;
-
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const daysInMonth = lastDay.getDate();
-
-            // Pazar günü 0'dır. Pazartesi=0, Salı=1... Cumartesi=5 olacak şekilde ayarlıyoruz.
-            let startDay = firstDay.getDay() === 0 ? 0 : firstDay.getDay() - 1;
-
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
-
-            // Ayın 1'i Pazar ise veya hafta içine denk geliyorsa boşlukları ekle
-            for (let i = 0; i < startDay; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'aspect-square rounded-lg';
-                grid.appendChild(empty);
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateObj = new Date(year, month, day);
+                appendMessage('user', message);
+                chatInput.value = '';
                 
-                // EĞER GÜN PAZAR İSE DÖNGÜYÜ ATLA (Takvimde gösterme)
-                if (dateObj.getDay() === 0) continue;
+                const typingIndicator = showTyping();
+                chatHistory.push({ role: "user", text: message });
 
-                const dateKey = formatDateKey(dateObj);
-                const isToday = dateKey === todayKey();
-                const isSelected = dateKey === selectedDate;
+                try {
+                    const response = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: chatHistory })
+                    });
 
-                let blockedCount = 0;
-                ALL_SLOTS.forEach(slot => {
-                    if (blockedSlotsCache[`${dateKey}|${slot}`]) blockedCount++;
-                });
+                    const data = await response.json();
+                    typingIndicator.remove();
 
-                let statusColor = 'bg-emerald-500';
-                if (blockedCount >= 7) statusColor = 'bg-red-500';
-                else if (blockedCount > 0) statusColor = 'bg-amber-500';
-
-                const cell = document.createElement('button');
-                cell.type = 'button';
-                cell.onclick = () => selectDay(dateKey);
-                cell.className = `aspect-square rounded-lg relative transition-all p-1.5 text-left flex flex-col justify-between ${
-                    isSelected
-                        ? 'bg-promer-blue ring-2 ring-promer-lightBlue shadow-lg'
-                        : isToday
-                            ? 'bg-slate-800 ring-2 ring-amber-500/60 hover:bg-slate-700'
-                            : 'bg-slate-950 hover:bg-slate-800 border border-slate-800'
-                }`;
-
-                cell.innerHTML = `
-                    <div class="flex items-start justify-between">
-                        <span class="text-sm font-black text-white">${day}</span>
-                        <span class="w-2 h-2 rounded-full ${statusColor}"></span>
-                    </div>
-                    ${blockedCount > 0
-                        ? `<div class="text-[9px] text-amber-400 font-bold"><i class="fa-solid fa-lock"></i> ${blockedCount}</div>`
-                        : `<div class="text-[9px] text-emerald-500/60"><i class="fa-solid fa-check"></i></div>`}
-                `;
-                grid.appendChild(cell);
-            }
-        }
-
-        function selectDay(dateKey) {
-            selectedDate = dateKey;
-            renderCalendar();
-            renderSelectedDay();
-        }
-
-        function renderSelectedDay() {
-            const content = document.getElementById('selected-day-content');
-            const title = document.getElementById('selected-day-title');
-            const subtitle = document.getElementById('selected-day-subtitle');
-
-            if (!selectedDate) {
-                title.textContent = 'Gün Seçin';
-                subtitle.textContent = 'Yukarıdaki takvimden bir gün seçin';
-                content.innerHTML = `
-                    <div class="text-center py-8 text-slate-500 text-xs">
-                        <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
-                        <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const [y, m, d] = selectedDate.split('-');
-            const dateObj = new Date(y, m - 1, d);
-            title.textContent = dateObj.toLocaleDateString('tr-TR', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-
-            let blockedCount = 0;
-            ALL_SLOTS.forEach(slot => {
-                if (blockedSlotsCache[`${selectedDate}|${slot}`]) blockedCount++;
-            });
-            subtitle.textContent = `${blockedCount} kapalı · ${ALL_SLOTS.length} saat dilimi`;
-
-            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
-            ALL_SLOTS.forEach(slot => {
-                const key = `${selectedDate}|${slot}`;
-                const isBlocked = !!blockedSlotsCache[key];
-
-                html += `
-                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <i class="fa-regular fa-clock text-slate-500 text-xs"></i>
-                            <span class="font-bold text-xs">${slot}</span>
-                            ${isBlocked
-                                ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>'
-                                : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}
-                        </div>
-                        <button onclick="toggleSlot('${selectedDate}', '${slot}')" class="text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${
-                            isBlocked
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
-                            : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'
-                        }">
-                            ${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}
-                        </button>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            content.innerHTML = html;
-        }
-
-        async function toggleSlot(dateKey, slot) {
-            if (!window.firebaseDB) {
-                alert('Firebase bağlantısı hazır değil.');
-                return;
-            }
-            const key = `${dateKey}|${slot}`;
-            const existingDocId = blockedSlotsCache[key];
-
-            try {
-                if (existingDocId) {
-                    await window.firebaseDeleteDoc(
-                        window.firebaseDoc(window.firebaseDB, 'blocked_slots', existingDocId)
-                    );
-                    delete blockedSlotsCache[key];
-                } else {
-                    const newDocRef = await window.firebaseAddDoc(
-                        window.firebaseCollection(window.firebaseDB, 'blocked_slots'),
-                        {
-                            date: dateKey,
-                            slot: slot,
-                            blocked: true,
-                            createdAt: new Date().toISOString()
-                        }
-                    );
-                    blockedSlotsCache[key] = newDocRef.id;
+                    if (data.choices && data.choices[0] && data.choices[0].message) {
+                        const botReply = data.choices[0].message.content;
+                        appendMessage('model', botReply);
+                        chatHistory.push({ role: "model", text: botReply });
+                    } else if (data.error) {
+                        appendMessage('model', 'HATA: ' + (data.error.message || JSON.stringify(data.error)));
+                    } else {
+                        appendMessage('model', 'Cevap alınamadı, lütfen tekrar deneyin.');
+                    }
+                } catch (error) {
+                    typingIndicator.remove();
+                    appendMessage('model', 'Bağlantı hatası: ' + error.message);
                 }
-                renderCalendar();
-                renderSelectedDay();
-                updateStats();
-            } catch (error) {
-                console.error('Firebase yazma hatası:', error);
-                alert('Hata oluştu: ' + error.message);
-            }
-        }
-
-        function prevMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        }
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        }
-        function goToday() {
-            currentDate = new Date();
-            // getValidToday() sayesinde bugün Pazar ise Pazartesi'yi seçer
-            selectedDate = todayKey(); 
-            renderCalendar();
-            renderSelectedDay();
-        }
-
-        function updateStats() {
-            const today = todayKey();
-            let todayCount = 0;
-            let totalBlocked = 0;
-
-            Object.keys(blockedSlotsCache).forEach(key => {
-                const [date] = key.split('|');
-                if (date === today) todayCount++;
-                totalBlocked++;
             });
 
-            document.getElementById('stat-today').textContent = todayCount;
-            document.getElementById('stat-total').textContent = '0';
-            document.getElementById('stat-blocked').textContent = totalBlocked;
-            document.getElementById('stat-revenue').textContent = '0 ₺';
-        }
+            function appendMessage(role, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex items-end gap-2 max-w-[90%] ${role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
+                
+                const avatar = role === 'user' 
+                    ? `<div class="w-6 h-6 bg-slate-300 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user text-white text-[10px]"></i></div>`
+                    : `<div class="w-6 h-6 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-white text-[10px]"></i></div>`;
 
-        window.addEventListener('firebaseReady', () => {
-            // getValidToday() sayesinde bugün Pazar ise açılışta Pazartesi'yi seçer
-            selectedDate = todayKey(); 
-            currentDate = new Date();
-            renderCalendar();
-            renderSelectedDay();
-            loadBlockedSlots();
+                const bubbleClass = role === 'user'
+                    ? 'bg-promer-blue text-white chat-bubble-user shadow-md'
+                    : 'bg-white border border-slate-200 text-slate-800 chat-bubble-ai shadow-sm';
+
+                const formattedText = text.replace(/\n/g, '<br>');
+
+                messageDiv.innerHTML = `
+                    ${avatar}
+                    <div class="${bubbleClass} p-2.5">
+                        ${formattedText}
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTyping() {
+                const div = document.createElement('div');
+                div.className = 'flex items-end gap-2 max-w-[90%] self-start typing-container';
+                div.innerHTML = `
+                    <div class="w-6 h-6 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-robot text-white text-[10px]"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1 items-center h-[36px]">
+                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
+                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
+                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
+                    </div>
+                `;
+                chatMessages.appendChild(div);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return div;
+            }
         });
     </script>
-
-    <!-- ================= FIREBASE SDK (module) ================= -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import {
-            getFirestore, collection, getDocs, addDoc, deleteDoc, doc
-        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        import {
-            getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
-        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
-            authDomain: "promer-randevu.firebaseapp.com",
-            projectId: "promer-randevu",
-            storageBucket: "promer-randevu.firebasestorage.app",
-            messagingSenderId: "406588092985",
-            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const firestore = getFirestore(app);
-            const auth = getAuth(app);
-
-            window.firebaseDB = firestore;
-            window.firebaseAddDoc = addDoc;
-            window.firebaseDeleteDoc = deleteDoc;
-            window.firebaseDoc = doc;
-            window.firebaseCollection = collection;
-            window.firebaseGetDocs = getDocs;
-            window.firebaseAuth = auth;
-
-            onAuthStateChanged(auth, (user) => {
-                const gate = document.getElementById('auth-gate');
-                const appEl = document.getElementById('admin-app');
-                if (!gate || !appEl) return;
-
-                if (user) {
-                    gate.classList.add('hidden');
-                    appEl.classList.remove('hidden');
-                    window.dispatchEvent(new Event('firebaseReady'));
-                } else {
-                    gate.classList.remove('hidden');
-                    appEl.classList.add('hidden');
-                }
-            });
-
-            window.adminLogin = async () => {
-                const email = document.getElementById('login-email').value.trim();
-                const pass = document.getElementById('login-pass').value;
-                const err = document.getElementById('login-error');
-                try {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    if (err) err.classList.add('hidden');
-                } catch (e) {
-                    let msg = 'Giriş başarısız';
-                    if (e.code === 'auth/invalid-credential') msg = 'E-posta veya şifre hatalı';
-                    else if (e.code === 'auth/invalid-email') msg = 'Geçersiz e-posta';
-                    else if (e.code === 'auth/too-many-requests') msg = 'Çok fazla deneme. Bekleyin.';
-                    else if (e.code === 'auth/configuration-not-found') msg = 'Firebase Auth yapılandırması eksik.';
-                    else msg = 'Hata: ' + e.code;
-                    if (err) {
-                        err.textContent = msg;
-                        err.classList.remove('hidden');
-                    }
-                }
-            };
-
-            window.adminLogout = () => signOut(auth);
-
-            console.log('Firebase hazır (Firestore + Auth)');
-        } catch (error) {
-            console.error('Firebase başlatma hatası:', error);
-        }
-    </script>
-
-</body>
-</html>
