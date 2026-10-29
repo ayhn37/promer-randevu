@@ -1,113 +1,35 @@
-    <!-- ⭐ GÖMÜLÜ YAPAY ZEKA ASİSTANI SCRIPT'İ ⭐ -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatForm = document.getElementById('ai-chat-form');
-            const chatInput = document.getElementById('ai-chat-input');
-            const chatMessages = document.getElementById('ai-chat-messages');
-            
-            const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
+<div style="background: #0f172a; padding: 20px; border-radius: 10px; margin: 20px;">
+    <h3 style="color: white; font-weight: bold; margin-bottom: 10px;">Yapay Zeka Ayarları</h3>
+    <textarea id="ai-prompt-input" style="width: 100%; height: 150px; background: #1e293b; color: white; padding: 10px; border-radius: 5px; border: 1px solid #334155;" placeholder="Yapay zekaya talimatlarınızı buraya yazın..."></textarea>
+    <br><br>
+    <button onclick="savePrompt()" style="background: #1e40af; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold;">Kaydet</button>
+    <span id="save-msg" style="color: #4ade80; display: none; margin-left: 10px;">Kaydedildi!</span>
+</div>
 
-            let chatHistory = [];
-            
-            // Firebase'den Admin Panelindeki Yazıyı Çek (Sayfa açıldığında)
-            setTimeout(async () => {
-                if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
-                    try {
-                        const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
-                        if (snap.exists() && snap.data().prompt) {
-                            chatHistory = [
-                                { role: "user", text: snap.data().prompt },
-                                { role: "model", text: "Anladım. Kurallarınıza harfiyen uyacağım." }
-                            ];
-                            console.log("✅ Prompt admin panelinden başarıyla yüklendi.");
-                            return;
-                        }
-                    } catch(e) { console.log("Prompt çekilemedi:", e); }
-                }
-                // Veritabanında yoksa varsayılan kural
-                chatHistory = [
-                    { role: "user", text: "Sen Promer İlaçlama asistanısın. İlaçlama süreçleri ve sonrası hakkında kısa ve net bilgi ver. Fiyat için 0850 466 00 22'yi aramalarını söyle." },
-                    { role: "model", text: "Anladım. Size nasıl yardımcı olabilirim?" }
-                ];
-            }, 1000);
-
-            chatForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                appendMessage('user', message);
-                chatInput.value = '';
-                
-                const typingIndicator = showTyping();
-                chatHistory.push({ role: "user", text: message });
-
+<script>
+    // Sayfa açılınca Firebase'den mevcut ayarı çek
+    window.addEventListener('load', () => {
+        setTimeout(async () => {
+            if(window.firebaseDB && window.firebaseDoc) {
                 try {
-                    const response = await fetch(WORKER_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ messages: chatHistory })
-                    });
-
-                    const data = await response.json();
-                    typingIndicator.remove();
-
-                    if (data.choices && data.choices[0] && data.choices[0].message) {
-                        const botReply = data.choices[0].message.content;
-                        appendMessage('model', botReply);
-                        chatHistory.push({ role: "model", text: botReply });
-                    } else if (data.error) {
-                        appendMessage('model', 'HATA: ' + (data.error.message || JSON.stringify(data.error)));
-                    } else {
-                        appendMessage('model', 'Cevap alınamadı, lütfen tekrar deneyin.');
+                    const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
+                    if (snap.exists() && snap.data().prompt) {
+                        document.getElementById('ai-prompt-input').value = snap.data().prompt;
                     }
-                } catch (error) {
-                    typingIndicator.remove();
-                    appendMessage('model', 'Bağlantı hatası: ' + error.message);
-                }
-            });
-
-            function appendMessage(role, text) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `flex items-end gap-2 max-w-[90%] ${role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
-                
-                const avatar = role === 'user' 
-                    ? `<div class="w-6 h-6 bg-slate-300 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user text-white text-[10px]"></i></div>`
-                    : `<div class="w-6 h-6 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-white text-[10px]"></i></div>`;
-
-                const bubbleClass = role === 'user'
-                    ? 'bg-promer-blue text-white chat-bubble-user shadow-md'
-                    : 'bg-white border border-slate-200 text-slate-800 chat-bubble-ai shadow-sm';
-
-                const formattedText = text.replace(/\n/g, '<br>');
-
-                messageDiv.innerHTML = `
-                    ${avatar}
-                    <div class="${bubbleClass} p-2.5">
-                        ${formattedText}
-                    </div>
-                `;
-                
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                } catch(e) { console.log(e); }
             }
+        }, 1500);
+    });
 
-            function showTyping() {
-                const div = document.createElement('div');
-                div.className = 'flex items-end gap-2 max-w-[90%] self-start typing-container';
-                div.innerHTML = `
-                    <div class="w-6 h-6 bg-promer-navy rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-robot text-white text-[10px]"></i>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1 items-center h-[36px]">
-                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
-                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
-                        <div class="w-1 h-1 bg-slate-400 rounded-full typing-dot"></div>
-                    </div>
-                `;
-                chatMessages.appendChild(div);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return div;
-            }
-        });
-    </script>
+    // Kaydet butonuna basınca Firebase'e yaz
+    async function savePrompt() {
+        const text = document.getElementById('ai-prompt-input').value;
+        if(window.firebaseDB && window.firebaseSetDoc) {
+            await window.firebaseSetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"), { prompt: text });
+            document.getElementById('save-msg').style.display = 'inline';
+            setTimeout(() => document.getElementById('save-msg').style.display = 'none', 3000);
+        } else {
+            alert("Firebase bağlantısı bekleniyor, lütfen sayfayı yenileyin.");
+        }
+    }
+</script>
