@@ -1,35 +1,429 @@
-<div style="background: #0f172a; padding: 20px; border-radius: 10px; margin: 20px;">
-    <h3 style="color: white; font-weight: bold; margin-bottom: 10px;">Yapay Zeka Ayarları</h3>
-    <textarea id="ai-prompt-input" style="width: 100%; height: 150px; background: #1e293b; color: white; padding: 10px; border-radius: 5px; border: 1px solid #334155;" placeholder="Yapay zekaya talimatlarınızı buraya yazın..."></textarea>
-    <br><br>
-    <button onclick="savePrompt()" style="background: #1e40af; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold;">Kaydet</button>
-    <span id="save-msg" style="color: #4ade80; display: none; margin-left: 10px;">Kaydedildi!</span>
-</div>
-
-<script>
-    // Sayfa açılınca Firebase'den mevcut ayarı çek
-    window.addEventListener('load', () => {
-        setTimeout(async () => {
-            if(window.firebaseDB && window.firebaseDoc) {
-                try {
-                    const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
-                    if (snap.exists() && snap.data().prompt) {
-                        document.getElementById('ai-prompt-input').value = snap.data().prompt;
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Promer Yönetim Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        promer: {
+                            navy: '#0f2b5c', blue: '#1e40af', lightBlue: '#3b82f6',
+                            accent: '#f97316', green: '#16a34a', greenDark: '#15803d'
+                        }
                     }
-                } catch(e) { console.log(e); }
+                }
             }
-        }, 1500);
-    });
-
-    // Kaydet butonuna basınca Firebase'e yaz
-    async function savePrompt() {
-        const text = document.getElementById('ai-prompt-input').value;
-        if(window.firebaseDB && window.firebaseSetDoc) {
-            await window.firebaseSetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"), { prompt: text });
-            document.getElementById('save-msg').style.display = 'inline';
-            setTimeout(() => document.getElementById('save-msg').style.display = 'none', 3000);
-        } else {
-            alert("Firebase bağlantısı bekleniyor, lütfen sayfayı yenileyin.");
         }
-    }
-</script>
+    </script>
+</head>
+<body class="font-sans bg-slate-950 text-white min-h-screen antialiased">
+
+    <!-- ================= GİRİŞ EKRANI ================= -->
+    <div id="auth-gate" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm space-y-4">
+            <div class="text-center mb-2">
+                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center mb-3">
+                    <i class="fa-solid fa-shield-virus text-promer-accent text-lg"></i>
+                </div>
+                <h2 class="font-black text-lg text-white">Yönetici Girişi</h2>
+                <p class="text-xs text-slate-500 mt-1">Promer Yönetim Paneli</p>
+            </div>
+            <input id="login-email" type="email" placeholder="E-posta" autocomplete="username"
+                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-promer-lightBlue" />
+            <input id="login-pass" type="password" placeholder="Şifre" autocomplete="current-password"
+                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-promer-lightBlue" />
+            <button onclick="adminLogin()"
+                class="w-full bg-promer-blue hover:bg-promer-lightBlue rounded-lg py-2 font-bold text-sm text-white transition-all">
+                Giriş Yap
+            </button>
+            <p id="login-error" class="text-red-400 text-xs hidden text-center"></p>
+        </div>
+    </div>
+
+    <!-- ================= PANEL ================= -->
+    <div id="admin-app" class="hidden">
+
+        <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-promer-navy to-promer-blue rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-shield-virus text-promer-accent"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-base leading-tight">PROMER <span class="text-amber-500">Yönetim</span></h1>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">Yönetici Modülü v3.4</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition-all">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Siteye Dön
+                    </a>
+                    <button onclick="adminLogout()" class="text-xs bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30 px-4 py-2 rounded-lg font-bold transition-all">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Çıkış
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- İSTATİSTİK KARTLARI -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-bold uppercase">Bugünkü Randevu</span>
+                        <i class="fa-solid fa-calendar-day text-promer-lightBlue"></i>
+                    </div>
+                    <div class="text-3xl font-black" id="stat-today">0</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-bold uppercase">Toplam Randevu</span>
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                    </div>
+                    <div class="text-3xl font-black" id="stat-total">0</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-bold uppercase">Dolu Saat</span>
+                        <i class="fa-solid fa-clock text-red-400"></i>
+                    </div>
+                    <div class="text-3xl font-black" id="stat-blocked">0</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-bold uppercase">Aylık Ciro</span>
+                        <i class="fa-solid fa-turkish-lira-sign text-amber-400"></i>
+                    </div>
+                    <div class="text-3xl font-black" id="stat-revenue">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAKVİM -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="font-extrabold text-lg" id="calendar-title">Ekim 2026</h3>
+                        <p class="text-xs text-slate-500">Randevu ve doluluk durumunu görüntüleyin (Pazar günleri hariç)</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="prevMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <button onclick="goToday()" class="px-4 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold text-xs transition-all">
+                            Bugün
+                        </button>
+                        <button onclick="nextMonth()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-6 gap-2 mb-2">
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Pzt</div>
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Sal</div>
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Çar</div>
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Per</div>
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cum</div>
+                    <div class="text-center text-[10px] font-bold text-slate-500 uppercase py-2">Cmt</div>
+                </div>
+
+                <div id="calendar-grid" class="grid grid-cols-6 gap-2"></div>
+
+                <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Boş Gün</span></div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span>Kısmen Dolu</span></div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span>Tamamen Dolu</span></div>
+                    <div class="ml-auto flex items-center gap-1.5" id="fb-status"><span class="w-2 h-2 rounded-full bg-slate-500"></span><span>Firebase bağlanıyor...</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇİLİ GÜN DETAYI -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-extrabold text-base flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check text-promer-lightBlue"></i>
+                            <span id="selected-day-title">Gün Seçin</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1" id="selected-day-subtitle">Yukarıdaki takvimden bir gün seçin</p>
+                    </div>
+                </div>
+                <div id="selected-day-content">
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        <i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i>
+                        <p>Gün detaylarını görmek için takvimden bir gün seçin.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- YAPAY ZEKA AYARLARI -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-extrabold text-base flex items-center gap-2 text-white">
+                            <i class="fa-solid fa-robot text-promer-accent"></i>
+                            <span>Yapay Zeka Asistan Ayarları</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1">Asistanın kurallarını ve bilgi birikimini buradan yönetin.</p>
+                    </div>
+                    <span id="prompt-save-status" class="text-xs font-bold text-emerald-400 hidden">
+                        <i class="fa-solid fa-check-circle mr-1"></i> Kaydedildi
+                    </span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Sistem Prompt'u (Asistanın Beyni)</label>
+                        <textarea id="ai-prompt-input" rows="12" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 focus:outline-none focus:border-promer-lightBlue font-mono" placeholder="Yapay zekaya talimatlarınızı buraya yazın..."></textarea>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] text-slate-500 max-w-lg">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            Buraya yazdığınız metin, web sitenizdeki yapay zekanın kişiliğini ve kurallarını belirler.
+                        </p>
+                        <button onclick="saveAiPrompt()" class="bg-promer-blue hover:bg-promer-lightBlue text-white font-bold px-6 py-3 rounded-xl transition-all shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Ayarları Kaydet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /admin-app -->
+
+    <!-- ================= ANA SCRIPT ================= -->
+    <script>
+        const ALL_SLOTS = ['09:00 – 10:30', '10:30 – 12:00', '12:00 – 13:30', '13:30 – 15:00', '15:00 – 16:30', '16:30 – 18:00', '18:00 – 19:30'];
+        const AY_ADLARI = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+        let currentDate = new Date();
+        let selectedDate = null;
+        let blockedSlotsCache = {};
+
+        function formatDateKey(d) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function getValidToday() {
+            let d = new Date();
+            if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+            return d;
+        }
+
+        function todayKey() { return formatDateKey(getValidToday()); }
+
+        function setFbStatus(ok, text) {
+            const el = document.getElementById('fb-status');
+            if (el) el.innerHTML = `<span class="w-2 h-2 rounded-full ${ok ? 'bg-emerald-500' : 'bg-red-500'}"></span><span>${text}</span>`;
+        }
+
+        async function loadBlockedSlots() {
+            if (!window.firebaseDB) return;
+            try {
+                const snapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDB, 'blocked_slots'));
+                blockedSlotsCache = {};
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.blocked) blockedSlotsCache[`${data.date}|${data.slot}`] = docSnap.id;
+                });
+                setFbStatus(true, 'Firebase bağlı');
+                renderCalendar();
+                renderSelectedDay();
+                updateStats();
+            } catch (error) {
+                setFbStatus(false, 'Firebase hatası');
+            }
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('calendar-title').textContent = `${AY_ADLARI[month]} ${year}`;
+            const firstDay = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let startDay = firstDay.getDay() === 0 ? 0 : firstDay.getDay() - 1;
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'aspect-square rounded-lg';
+                grid.appendChild(empty);
+            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDay() === 0) continue;
+                const dateKey = formatDateKey(dateObj);
+                const isToday = dateKey === todayKey();
+                const isSelected = dateKey === selectedDate;
+                let blockedCount = 0;
+                ALL_SLOTS.forEach(slot => { if (blockedSlotsCache[`${dateKey}|${slot}`]) blockedCount++; });
+                let statusColor = 'bg-emerald-500';
+                if (blockedCount >= 7) statusColor = 'bg-red-500';
+                else if (blockedCount > 0) statusColor = 'bg-amber-500';
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.onclick = () => selectDay(dateKey);
+                cell.className = `aspect-square rounded-lg relative transition-all p-1.5 text-left flex flex-col justify-between ${isSelected ? 'bg-promer-blue ring-2 ring-promer-lightBlue shadow-lg' : isToday ? 'bg-slate-800 ring-2 ring-amber-500/60 hover:bg-slate-700' : 'bg-slate-950 hover:bg-slate-800 border border-slate-800'}`;
+                cell.innerHTML = `<div class="flex items-start justify-between"><span class="text-sm font-black text-white">${day}</span><span class="w-2 h-2 rounded-full ${statusColor}"></span></div>${blockedCount > 0 ? `<div class="text-[9px] text-amber-400 font-bold"><i class="fa-solid fa-lock"></i> ${blockedCount}</div>` : `<div class="text-[9px] text-emerald-500/60"><i class="fa-solid fa-check"></i></div>`}`;
+                grid.appendChild(cell);
+            }
+        }
+
+        function selectDay(dateKey) { selectedDate = dateKey; renderCalendar(); renderSelectedDay(); }
+
+        function renderSelectedDay() {
+            const content = document.getElementById('selected-day-content');
+            const title = document.getElementById('selected-day-title');
+            const subtitle = document.getElementById('selected-day-subtitle');
+            if (!selectedDate) {
+                title.textContent = 'Gün Seçin';
+                subtitle.textContent = 'Yukarıdaki takvimden bir gün seçin';
+                content.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs"><i class="fa-solid fa-hand-pointer text-2xl mb-2 opacity-30"></i><p>Gün detaylarını görmek için takvimden bir gün seçin.</p></div>`;
+                return;
+            }
+            const [y, m, d] = selectedDate.split('-');
+            const dateObj = new Date(y, m - 1, d);
+            title.textContent = dateObj.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            let blockedCount = 0;
+            ALL_SLOTS.forEach(slot => { if (blockedSlotsCache[`${selectedDate}|${slot}`]) blockedCount++; });
+            subtitle.textContent = `${blockedCount} kapalı · ${ALL_SLOTS.length} saat dilimi`;
+            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
+            ALL_SLOTS.forEach(slot => {
+                const key = `${selectedDate}|${slot}`;
+                const isBlocked = !!blockedSlotsCache[key];
+                html += `<div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-2"><div class="flex items-center gap-2 min-w-0"><i class="fa-regular fa-clock text-slate-500 text-xs"></i><span class="font-bold text-xs">${slot}</span>${isBlocked ? '<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">KAPALI</span>' : '<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">MÜSAİT</span>'}</div><button onclick="toggleSlot('${selectedDate}', '${slot}')" class="text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all flex-shrink-0 ${isBlocked ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30'}">${isBlocked ? '<i class="fa-solid fa-lock-open"></i>' : '<i class="fa-solid fa-lock"></i>'}</button></div>`;
+            });
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        async function toggleSlot(dateKey, slot) {
+            if (!window.firebaseDB) return alert('Firebase bağlantısı hazır değil.');
+            const key = `${dateKey}|${slot}`;
+            const existingDocId = blockedSlotsCache[key];
+            try {
+                if (existingDocId) {
+                    await window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'blocked_slots', existingDocId));
+                    delete blockedSlotsCache[key];
+                } else {
+                    const newDocRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'blocked_slots'), { date: dateKey, slot: slot, blocked: true, createdAt: new Date().toISOString() });
+                    blockedSlotsCache[key] = newDocRef.id;
+                }
+                renderCalendar(); renderSelectedDay(); updateStats();
+            } catch (error) { alert('Hata oluştu: ' + error.message); }
+        }
+
+        function prevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); }
+        function nextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); }
+        function goToday() { currentDate = new Date(); selectedDate = todayKey(); renderCalendar(); renderSelectedDay(); }
+
+        function updateStats() {
+            const today = todayKey();
+            let todayCount = 0, totalBlocked = 0;
+            Object.keys(blockedSlotsCache).forEach(key => {
+                const [date] = key.split('|');
+                if (date === today) todayCount++;
+                totalBlocked++;
+            });
+            document.getElementById('stat-today').textContent = todayCount;
+            document.getElementById('stat-total').textContent = '0';
+            document.getElementById('stat-blocked').textContent = totalBlocked;
+            document.getElementById('stat-revenue').textContent = '0 ₺';
+        }
+
+        async function loadAiPrompt() {
+            if (!window.firebaseDB || !window.firebaseDoc || !window.firebaseGetDoc) return;
+            try {
+                const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
+                if (snap.exists() && snap.data().prompt) {
+                    document.getElementById('ai-prompt-input').value = snap.data().prompt;
+                } else {
+                    document.getElementById('ai-prompt-input').value = "Sen Promer İlaçlama firmasının profesyonel yapay zeka asistanısın. Kısa, net ve nazik cevaplar ver. Kesin fiyat taleplerinde 0850 466 00 22 numaralı telefonu aramaları gerektiğini belirt.";
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        async function saveAiPrompt() {
+            if (!window.firebaseDB || !window.firebaseSetDoc) return alert("Firebase bağlantısı hazır değil.");
+            const promptText = document.getElementById('ai-prompt-input').value;
+            const statusEl = document.getElementById('prompt-save-status');
+            try {
+                await window.firebaseSetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"), { prompt: promptText, updatedAt: new Date().toISOString() });
+                statusEl.classList.remove('hidden');
+                setTimeout(() => statusEl.classList.add('hidden'), 3000);
+            } catch (e) { alert("Kaydedilirken hata oluştu: " + e.message); }
+        }
+
+        window.addEventListener('firebaseReady', () => {
+            selectedDate = todayKey(); currentDate = new Date();
+            renderCalendar(); renderSelectedDay(); loadBlockedSlots(); loadAiPrompt(); 
+        });
+    </script>
+
+    <!-- ================= FIREBASE SDK (module) ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
+            authDomain: "promer-randevu.firebaseapp.com",
+            projectId: "promer-randevu",
+            storageBucket: "promer-randevu.firebasestorage.app",
+            messagingSenderId: "406588092985",
+            appId: "1:406588092985:web:2dbfd67c04a7c1ba2f13e8"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const firestore = getFirestore(app);
+            const auth = getAuth(app);
+            window.firebaseDB = firestore;
+            window.firebaseAddDoc = addDoc; window.firebaseDeleteDoc = deleteDoc;
+            window.firebaseDoc = doc; window.firebaseCollection = collection;
+            window.firebaseGetDocs = getDocs; window.firebaseGetDoc = getDoc;
+            window.firebaseSetDoc = setDoc; window.firebaseAuth = auth;
+
+            onAuthStateChanged(auth, (user) => {
+                const gate = document.getElementById('auth-gate');
+                const appEl = document.getElementById('admin-app');
+                if (!gate || !appEl) return;
+                if (user) {
+                    gate.classList.add('hidden'); appEl.classList.remove('hidden');
+                    window.dispatchEvent(new Event('firebaseReady'));
+                } else {
+                    gate.classList.remove('hidden'); appEl.classList.add('hidden');
+                }
+            });
+
+            window.adminLogin = async () => {
+                const email = document.getElementById('login-email').value.trim();
+                const pass = document.getElementById('login-pass').value;
+                const err = document.getElementById('login-error');
+                try {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                    if (err) err.classList.add('hidden');
+                } catch (e) {
+                    let msg = e.code === 'auth/invalid-credential' ? 'E-posta veya şifre hatalı' : 'Giriş Hatası: ' + e.code;
+                    if (err) { err.textContent = msg; err.classList.remove('hidden'); }
+                }
+            };
+            window.adminLogout = () => signOut(auth);
+        } catch (error) { console.error('Firebase başlatma hatası:', error); }
+    </script>
+</body>
+</html>
