@@ -266,7 +266,7 @@
                             <option value="Kulağakaçan İlaçlama">Kulağakaçan İlaçlama</option>
                         </select>
                         
-                        <!-- ⭐ YENİ GÖMÜLÜ YAPAY ZEKA ASİSTANI ALANI ⭐ -->
+                        <!-- ⭐ GÖMÜLÜ YAPAY ZEKA ASİSTANI ALANI ⭐ -->
                         <div id="embedded-ai-container" class="mt-4 bg-white border-2 border-promer-blue rounded-2xl overflow-hidden shadow-md flex flex-col h-[400px]">
                             <!-- Başlık -->
                             <div class="bg-promer-navy text-white p-3 flex items-center justify-between shadow-sm z-10">
@@ -771,9 +771,6 @@
             const pestSelect = document.getElementById('pest-select');
             state.pestType = pestSelect.value;
 
-            const details = PEST_DETAILS[state.pestType] || { desc: "Promer standart ilaçlama protokolü uygulanır.", time: "1 Saat havalandırma yeterlidir.", isWarning: false };
-            // Not: Bilgi kutularını kaldırdığımız için artık sadece haşere türünü alıyoruz.
-
             if (SPECIAL_PRICING[state.pestType]) {
                 const special = SPECIAL_PRICING[state.pestType];
                 document.getElementById('m2-section').style.display = 'none';
@@ -1045,7 +1042,7 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyAzjuXlGU6114aT0610kezQG2Ictf7Y9_w",
@@ -1064,6 +1061,8 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             window.firebaseGetDocs = getDocs;
             window.firebaseCollection = collection;
             window.firebaseAddDoc = addDoc;
+            window.firebaseDoc = doc;
+            window.firebaseGetDoc = getDoc;
             
             window.dispatchEvent(new Event('firebaseReady'));
         } catch (error) {
@@ -1080,16 +1079,29 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             
             const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
 
-            let chatHistory = [
-                {
-                    role: "user",
-                    text: "Sen Promer İlaçlama firmasının profesyonel yapay zeka asistanısın. Görevin müşterilere ilaçlama hizmetleri, ilaçlama sonrası süreçler, haşere türleri ve fiyatlandırma hakkında bilgi vermektir. Kısa, net ve nazik cevaplar ver. Kesinlikle konu dışına çıkma. İşte uyman gereken KESİN kurallar: 1) Pire İlaçlama: İnsanlar ve kedi 4-6 saat, köpekler 12 saat dışarıda kalmalı. En az 3 gün ıslak temizlik yapılmamalı, kuru süpürge yapılabilir. 2) Tahta Kurusu: 7-8 saat ev kapalı kalmalı, her seans ayrı ücretlidir. 3) Hamam Böceği: Alanın kapalı kalması gerekmez, jel ve sıvı uygulama yapılır. 4) Fare: Kapalı kalma süresi yoktur, günlük yaşama engel olmaz. Kesin fiyat veya özel indirim taleplerinde, randevu oluşturmaları veya 0850 466 00 22 numaralı telefonu aramaları gerektiğini belirt."
-                },
-                {
-                    role: "model",
-                    text: "Anladım. Ben Promer İlaçlama asistanıyım. Müşterilere ilaçlama süreçleri, bekleme süreleri, evcil hayvan güvenliği ve hizmetlerimiz hakkında bilgi vereceğim. Fiyat ve randevu için onları yönlendireceğim."
+            let chatHistory = [];
+            
+            // Firebase'den Admin Panelindeki Yazıyı Çek (Sayfa açıldığında)
+            setTimeout(async () => {
+                if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
+                    try {
+                        const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
+                        if (snap.exists() && snap.data().prompt) {
+                            chatHistory = [
+                                { role: "user", text: snap.data().prompt },
+                                { role: "model", text: "Anladım. Kurallarınıza harfiyen uyacağım." }
+                            ];
+                            console.log("✅ Prompt admin panelinden başarıyla yüklendi.");
+                            return;
+                        }
+                    } catch(e) { console.log("Prompt çekilemedi:", e); }
                 }
-            ];
+                // Veritabanında yoksa varsayılan kural
+                chatHistory = [
+                    { role: "user", text: "Sen Promer İlaçlama asistanısın. İlaçlama süreçleri ve sonrası hakkında kısa ve net bilgi ver. Fiyat için 0850 466 00 22'yi aramalarını söyle." },
+                    { role: "model", text: "Anladım. Size nasıl yardımcı olabilirim?" }
+                ];
+            }, 1000);
 
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
