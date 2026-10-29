@@ -1070,7 +1070,7 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
         }
     </script>
 
-    <!-- ⭐ GÖMÜLÜ YAPAY ZEKA ASİSTANI SCRIPT'İ ⭐ -->
+        <!-- ⭐ GÖMÜLÜ YAPAY ZEKA ASİSTANI SCRIPT'İ ⭐ -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const chatForm = document.getElementById('ai-chat-form');
@@ -1080,9 +1080,10 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
             const WORKER_URL = 'https://gemini-proxy.promerilaclama.workers.dev';
 
             let chatHistory = [];
+            let isPromptLoaded = false;
             
-            // Firebase'den Admin Panelindeki Yazıyı Çek (Sayfa açıldığında)
-            setTimeout(async () => {
+            // Firebase'den Admin Panelindeki Yazıyı Çek
+            async function loadPromptFromFirebase() {
                 if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
                     try {
                         const snap = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDB, "settings", "ai_config"));
@@ -1091,22 +1092,44 @@ NOT: Açık adres bilgisi WhatsApp üzerinden tarafımızca talep edilecektir.`;
                                 { role: "user", text: snap.data().prompt },
                                 { role: "model", text: "Anladım. Kurallarınıza harfiyen uyacağım." }
                             ];
+                            isPromptLoaded = true;
                             console.log("✅ Prompt admin panelinden başarıyla yüklendi.");
-                            return;
+                        } else {
+                            console.log("⚠️ Admin panelinde henüz prompt kaydedilmemiş.");
+                            useDefaultPrompt();
                         }
-                    } catch(e) { console.log("Prompt çekilemedi:", e); }
+                    } catch(e) { 
+                        console.log("Prompt çekilemedi, tekrar denenecek:", e); 
+                        setTimeout(loadPromptFromFirebase, 1000);
+                    }
+                } else {
+                    // Firebase henüz hazır değilse bekle ve tekrar dene
+                    setTimeout(loadPromptFromFirebase, 500);
                 }
-                // Veritabanında yoksa varsayılan kural
+            }
+
+            // Eğer veritabanında hiç yoksa kullanılacak kural
+            function useDefaultPrompt() {
                 chatHistory = [
-                    { role: "user", text: "Sen Promer İlaçlama asistanısın. İlaçlama süreçleri ve sonrası hakkında kısa ve net bilgi ver. Fiyat için 0850 466 00 22'yi aramalarını söyle." },
-                    { role: "model", text: "Anladım. Size nasıl yardımcı olabilirim?" }
+                    { role: "user", text: "Sen Promer İlaçlama asistanısın. Akrep için 3-4 saat kapalı kalır, ücretsiz 2. seans veya 21 gün kuralı yoktur. Fiyat için 0850 466 00 22'yi aramalarını söyle." },
+                    { role: "model", text: "Anladım." }
                 ];
-            }, 1000);
+                isPromptLoaded = true;
+            }
+
+            // Sayfa yüklendiğinde prompt'u çekmeye başla
+            loadPromptFromFirebase();
 
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (!message) return;
+
+                // Eğer prompt hala yüklenmediyse kullanıcıyı uyar
+                if (!isPromptLoaded) {
+                    appendMessage('model', 'Sistem başlatılıyor, lütfen 1-2 saniye sonra tekrar sorunuz.');
+                    return;
+                }
 
                 appendMessage('user', message);
                 chatInput.value = '';
