@@ -831,7 +831,7 @@
             } else if (state.pestType === 'Fare & Kemirgen İlaçlama') {
                 secondSessionBox.innerHTML = '<strong>Promer Kemirgen Protokolü:</strong> Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde 2. seans desteği sağlanır.';
             } else if (state.pestType === 'Akrep İlaçlama') {
-                secondSessionBox.innerHTML = '<strong>Promer Akrep Protokolü:</strong> Uygulama sonrası <strong>ücretsiz kontrol ziyareti</strong> ve ihtiyaç halinde 2. seans desteği sağlanır.';
+                                secondSessionBox.innerHTML = '<strong>Promer Akrep Protokolü:</strong> Akrep ilaçlamasında sorun devam ederse, yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak yapılır. İlaç kuruyana kadar 3-4 saat alan kapalı tutulmalıdır.';
             } else {
                 const secondPrice = Math.round((subtotal * 0.5) * 1.20);
                 secondSessionBox.innerHTML = `<strong>2. Seans Promer İndirimi:</strong> İhtiyaç duyulması halinde yapılacak 2. seans uygulaması <strong>%50 İNDİRİMLİ</strong> olarak <strong>${secondPrice.toLocaleString('tr-TR')} TL</strong> (KDV Dahil) fiyattan uygulanır.`;
