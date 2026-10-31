@@ -1778,7 +1778,7 @@
     return Math.ceil((hedef - bugun) / (1000*60*60*24));
   }
 
-  function dashboardGuncelle() {
+    function dashboardGuncelle() {
     let toplam = musteriler.length, bugunSayi = 0, yaklasanSayi = 0, gecmisSayi = 0, konutSayi = 0, isletmeSayi = 0, ciroToplam = 0, yapildiSayi = 0;
     musteriler.forEach(m => {
       if (m.tip === 'konut') konutSayi++; else isletmeSayi++;
@@ -1791,7 +1791,10 @@
           else if (fark < 0) gecmisSayi++;
         }
       }
-      ciroToplam += Number(m.fiyat) || 0;
+      // Sadece YAPILDI olan işleri ciroya ekle
+      if (m.yapildi === true) {
+          ciroToplam += Number(m.fiyat) || 0;
+      }
     });
     document.getElementById('kartToplam').textContent = toplam;
     document.getElementById('kartToplamAlt').textContent = `🏠 ${konutSayi}  •  🏢 ${isletmeSayi}`;
