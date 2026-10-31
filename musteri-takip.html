@@ -2155,7 +2155,15 @@ Müşteri: ${isim} | Adres: ${adres} | Haşere: ${m.hasere} | Notlar: ${m.notlar
           snapshot.forEach(docSnap => { geciciMusteriler.push({ id: docSnap.id, ...docSnap.data() }); });
           musteriler.length = 0;
           musteriler.push(...geciciMusteriler);
-
+          // GEÇMİŞ KAYITLARI ONAR: Eski "yapıldı"ların tarihini doldur
+          geciciMusteriler.forEach(async (m) => {
+              if (m.yapildi === true && !m.yapildiTarihi) {
+                  const tahminiTarih = m.islemTarihi || new Date().toISOString().split('T')[0];
+                  try {
+                      await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', m.id), { yapildiTarihi: tahminiTarih });
+                  } catch(e) {}
+              }
+          });
           if (ilkYuklemeTamam) {
             snapshot.docChanges().forEach(change => {
               if (change.type === 'added') {
