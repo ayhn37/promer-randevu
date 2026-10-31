@@ -1622,12 +1622,21 @@
     aySecimGuncelle();
   }
 
-  function aySecimGuncelle() {
+    function aySecimGuncelle() {
     const ay = document.getElementById('aySecim').value;
     const yil = document.getElementById('yilSecim').value;
     let adet = 0, ciro = 0, yapildi = 0, yapilmadi = 0;
+    
     if (ay === '') {
-      musteriler.forEach(m => { adet++; ciro += Number(m.fiyat) || 0; if (m.yapildi === true) yapildi++; else yapilmadi++; });
+      musteriler.forEach(m => { 
+        adet++; 
+        if (m.yapildi === true) {
+            ciro += Number(m.fiyat) || 0; 
+            yapildi++; 
+        } else {
+            yapilmadi++; 
+        }
+      });
       const panel = document.getElementById('ayOzetPanel');
       if (panel) panel.style.display = 'none';
     } else {
@@ -1636,8 +1645,31 @@
         let islemUygun = false, sonrakiUygun = false;
         if (m.islemTarihi) { const [y, a] = m.islemTarihi.split('-').map(Number); if (y === yilNum && (a - 1) === ayNum) islemUygun = true; }
         if (m.sonrakiTarih) { const [y, a] = m.sonrakiTarih.split('-').map(Number); if (y === yilNum && (a - 1) === ayNum) sonrakiUygun = true; }
-        if (islemUygun || sonrakiUygun) { adet++; ciro += Number(m.fiyat) || 0; if (m.yapildi === true) yapildi++; else yapilmadi++; }
+        
+        if (m.yapildi === true) {
+            // Yapıldıysa, YAPILDIĞI TARİHİN ayına bak
+            let yapildiAyUygun = false;
+            if (m.yapildiTarihi) { 
+                const [y, a] = m.yapildiTarihi.split('-').map(Number); 
+                if (y === yilNum && (a - 1) === ayNum) yapildiAyUygun = true; 
+            } else if (islemUygun) {
+                yapildiAyUygun = true;
+            }
+            
+            if (yapildiAyUygun) {
+                adet++; 
+                ciro += Number(m.fiyat) || 0; 
+                yapildi++;
+            }
+        } else {
+            // Yapılmadıysa planlanan tarihe bak
+            if (islemUygun || sonrakiUygun) { 
+                adet++; 
+                yapilmadi++; 
+            }
+        }
       });
+      
       const ayAdlari = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
       const panel = document.getElementById('ayOzetPanel');
       if (panel) {
