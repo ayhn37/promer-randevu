@@ -1429,17 +1429,24 @@
   async function tikDegistir(id) {
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
+    
+    const bugunTarih = new Date().toISOString().split('T')[0];
+    
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
       const bazTarihStr = m.sonrakiTarih || m.islemTarihi || bugunISO();
       const baz = new Date(bazTarihStr + 'T00:00:00');
       baz.setDate(baz.getDate() + gun);
-      const bugunTarih = new Date(); bugunTarih.setHours(0,0,0,0);
-      if (baz < bugunTarih) { baz.setTime(bugunTarih.getTime()); baz.setDate(baz.getDate() + gun); }
+      const bugunTarihObj = new Date(); bugunTarihObj.setHours(0,0,0,0);
+      if (baz < bugunTarihObj) { baz.setTime(bugunTarihObj.getTime()); baz.setDate(baz.getDate() + gun); }
       const yeniTarih = `${baz.getFullYear()}-${String(baz.getMonth()+1).padStart(2,'0')}-${String(baz.getDate()).padStart(2,'0')}`;
+      
       if (confirm(`✅ İş tamamlandı olarak işaretlenecek.\n\n📅 Bu müşteri ${gun} günde bir tekrar ediyor.\n\nPlanlanan tarih: ${tarihFormat(bazTarihStr)}\n+ ${gun} gün\n= Yeni randevu: ${tarihFormat(yeniTarih)}\n\nEski kayıt ciro olarak saklanacak, ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecek. Onaylıyor musunuz?`)) {
         try {
-          await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: true });
+          await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
+            yapildi: true,
+            yapildiTarihi: bugunTarih 
+          });
           const yeniMusteri = {
             tip: m.tip, ad: m.ad, soyad: m.soyad, telefon: m.telefon,
             ilce: m.ilce, mahalle: m.mahalle, sokak: m.sokak, binaNo: m.binaNo, daireNo: m.daireNo,
@@ -1455,8 +1462,12 @@
         return;
       } else { return; }
     }
+    
     try {
-      await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { yapildi: !m.yapildi });
+      await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
+        yapildi: !m.yapildi,
+        yapildiTarihi: !m.yapildi ? bugunTarih : '' 
+      });
       if (!m.yapildi) {
         const isim = m.tip === 'isletme' ? m.ad : `${m.ad} ${m.soyad || ''}`.trim();
         bildirimGonder('✅ İş Tamamlandı', `${isim}\n${m.hasere}${m.fiyat ? ' • ' + paraFormat(m.fiyat) : ''}`);
