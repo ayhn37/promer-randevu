@@ -998,12 +998,19 @@
   </aside>
 
   <div class="ana-icerik">
-        <div class="ust-bar">
+           <div class="ust-bar">
       <button type="button" class="ekle-btn" onclick="yeniMusteriAc()">➕ Yeni Müşteri Ekle</button>
       
-      <div class="ust-sag-alan">
-        <button type="button" id="bildirimBtn" class="ekle-btn" style="background:#f39c12;" onclick="bildirimIzniIste()">🔔 Bildirim</button>
-        <button type="button" class="cikis-btn" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout()">🚪 Çıkış</button>
+      <div class="ust-sag-alan" style="position: relative;">
+        <button type="button" class="mobil-menu-btn" onclick="mobilMenuToggle(event)" style="background:#2c3e50; color:#fff; padding:12px 18px; font-size:22px; border-radius:10px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.1); cursor:pointer;">☰</button>
+        
+        <div class="mobil-menu-icerik" id="mobilMenu">
+          <button type="button" onclick="excelAktar(); mobilMenuKapat()">📥 Excel'e Aktar</button>
+          <button type="button" onclick="iceAktarmaAc(); mobilMenuKapat()">📤 Toplu İçe Aktar</button>
+          <hr style="margin: 6px 0; border: none; border-top: 1px solid #e2e8f0;">
+          <button type="button" id="bildirimBtnMobile" onclick="bildirimIzniIste(); mobilMenuKapat()">🔔 Bildirimleri Aç</button>
+          <button type="button" onclick="if(confirm('Çıkış yapmak istiyor musunuz?'))window.adminLogout(); mobilMenuKapat()" style="color: #e74c3c; font-weight: bold;">🚪 Çıkış Yap</button>
+        </div>
       </div>
     </div>
 
