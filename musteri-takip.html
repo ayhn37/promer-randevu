@@ -1430,7 +1430,9 @@
     const m = musteriler.find(x => x.id === id);
     if (!m || !window.db) return;
     
-    const bugunTarih = new Date().toISOString().split('T')[0];
+    // BUGÜNÜN TARİHİNİ YYYY-MM-DD FORMATINDA AL
+    const bugun = new Date();
+    const bugunTarih = `${bugun.getFullYear()}-${String(bugun.getMonth()+1).padStart(2,'0')}-${String(bugun.getDate()).padStart(2,'0')}`;
     
     if (!m.yapildi && m.tekrarSikligi && m.tekrarSikligi !== "0") {
       const gun = parseInt(m.tekrarSikligi);
@@ -1443,10 +1445,12 @@
       
       if (confirm(`✅ İş tamamlandı olarak işaretlenecek.\n\n📅 Bu müşteri ${gun} günde bir tekrar ediyor.\n\nPlanlanan tarih: ${tarihFormat(bazTarihStr)}\n+ ${gun} gün\n= Yeni randevu: ${tarihFormat(yeniTarih)}\n\nEski kayıt ciro olarak saklanacak, ${tarihFormat(yeniTarih)} tarihine yeni bir randevu eklenecek. Onaylıyor musunuz?`)) {
         try {
+          // YAPILDI TARİHİNİ KAYDET
           await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
             yapildi: true,
             yapildiTarihi: bugunTarih 
           });
+          
           const yeniMusteri = {
             tip: m.tip, ad: m.ad, soyad: m.soyad, telefon: m.telefon,
             ilce: m.ilce, mahalle: m.mahalle, sokak: m.sokak, binaNo: m.binaNo, daireNo: m.daireNo,
@@ -1464,6 +1468,7 @@
     }
     
     try {
+      // YAPILDI TARİHİNİ KAYDET VEYA SİL
       await window.fbUpdateDoc(window.fbDoc(window.db, 'musteriler', id), { 
         yapildi: !m.yapildi,
         yapildiTarihi: !m.yapildi ? bugunTarih : '' 
